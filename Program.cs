@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Text;
-using System.Collections;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace TestCodeasyNet
 {
@@ -43,7 +44,217 @@ namespace TestCodeasyNet
             cp.BackGroundColor = _backgroundColor;
             cp.ColoredPrint(text);
         }
+        public int GenresCounter(string[] lopit)
+        {
+            int _genresCount = 0;
+            foreach (string item in lopit)
+            {
+                if (item.Contains("{") || item.Contains("}") || item.Contains("Name") || item.Contains("ReleaseDate") || item.Contains("Genres") || item.Contains("[") || item.Contains("]"))
+                { }
+                else
+                { ++_genresCount; }
+            }
+            return _genresCount;
+        }
     }
+        #region Encapsulation
+        //  The Commander 
+        //  The next day, I was walking down the corridor when I heard Infinity's voice coming 
+        //  from the conference room. She sounded very stressed, which was far from her typical 
+        //  confident demeanor. The talk must be significant, I thought, and before I could stop 
+        //  myself, I began to eavesdrop. "What do you mean, faster? I have all of my resources 
+        //  working on Rust; there's nothing left to add!" Infinity shouted.
+        //  "It's too slow. You haven't made any attacks during the last month," the male voice 
+        //  answered. "My sister was kidnapped; she barely survived," Infinity shot back. 
+        //  "We couldn't just leave her there to be interrogated." "You're putting your own interest 
+        //  higher than our mission. Your sister is just a programmer, we lose more and more 
+        //  every day," the voice said. There was a pause. A long one. Even though I wasn't 
+        //  participating in the discussion, I could feel the tremendous tension in the air. 
+        //  Finally, Infinity got her voice back. "You are right, Commander. It won't happen 
+        //  again. Our mission is more important than my sister's life." It was clear that this 
+        //  was what the commander was looking for Inifinity to say. But how does someone will 
+        //  themselves to say something so coarse and lifeless? It's easy to hear such phrases 
+        //  in movies, where the actors are playing roles, but to hear it in the context of an 
+        //  actual human life... Infinity giving her word that the next time there was a choice 
+        //  between completing a mission and saving her sister's life, she would choose the former. 
+        //  Scary. Is this why she was chosen as the leader of the resistance in Wonderland? 
+        //  Was it out of weakness or strength that she could decided to put the mission before 
+        //  her family? Who was the commander asking her to give up so much? Noname would probably 
+        //  know. With his deep access in the network, he probably had access to personnel files. 
+        //  "Noname, who is in the conference room now?" I asked silently.
+        //  "Hi Teo, just one person, Infinity," Noname replied.
+        //  "She was talking to someone. Please check again," I said.
+        //  "In the modern world, Teo, there are ways to talk to people even if they're not in 
+        //  the same room! My records are spotty that far back, but I'm pretty sure it was possible 
+        //  in your time, 2018, as well. Maybe called a conference call? Such simple technology!"
+        //  "Noname, who was she talking to?" I began to miss the straight-to-the-point British 
+        //  personality Noname used to have. "The channel was encrypted. I don't have any way to 
+        //  retrieve the credentials of whoever was talking to Infinity, sorry."
+        //  "That's fine, don't worry, friend," I replied. Who was this Commander? 
+        //  Encapsulation 
+        //  In class the next day, we learned a new topic - encapsulation. Sintia was wearing 
+        //  jeans and a t-shirt, casual as usual. "Have you ever heard the term 'encapsulation'? 
+        //  No? This is one of the fundamental concepts in object-oriented programming. 
+
+        //  Encapsulation has two goals:" 
+        //  Keeping the data, and methods for working with the data, in one unit 
+        //              (such as a class or struct in C#)
+        //  Restricting direct access to some of the unit's components
+        //  "Sintia..." two students said over one another.
+        //  "I know, I know. Far too abstract. I'll explain by example. Take a look at this code snippet:" 
+        //  class Car
+        //  {
+        //      public void PrintPrice(decimal price)
+        //      {
+        //          Console.WriteLine($"Car costs {price}");
+        //      }
+
+        //      public void PrintDiscountPrice(decimal price, int discount)
+        //      {
+        //          Console.WriteLine($"Price with discount is {price - discount}");
+        //      }
+        //  }
+
+        //  class CarSetup
+        //  {
+        //      public static void Main()
+        //      {
+        //          var carPrice = decimal.Parse(Console.ReadLine());
+        //          var carDiscount = int.Parse(Console.ReadLine());
+
+        //          var car = new Car();
+        //          car.PrintPrice(carPrice);
+        //          car.PrintDiscountPrice(carPrice, carDiscount);
+        //      }
+        //  }
+        //  "Does anything about this code jump out at you?" Sintia asked.
+        //  "Is anyone else using variables carPrice and carDiscount?" I asked.
+        //  "No, they are used only to call methods on an object of type Car."
+        //  "Then I don't see any sense in keeping carPrice and carDiscount 
+        //  outside of the class Car," I said."Good, Teo. So how would you rewrite this code snippet? 
+        //  Here, I'll show the result to the class," Sintia said, swiping on her tablet to 
+        //  show my work on the wall. I rewrote the code as follows: 
+        //  class Car
+        //  {
+        //      public decimal Price;
+        //      public int Discount;
+
+        //      public void PrintPrice()
+        //      {
+        //          Console.WriteLine($"Car costs {Price}");
+        //      }
+
+        //      public void PrintDiscountPrice()
+        //      {
+        //          Console.WriteLine($"Price with discount is {Price - Discount}");
+        //      }
+        //  }
+
+        //  class CarSetup
+        //  {
+        //      public static void Main()
+        //      {
+        //          var carPrice = decimal.Parse(Console.ReadLine());
+        //          var carDiscount = int.Parse(Console.ReadLine());
+
+        //          var car = new Car
+        //          {
+        //              Price = carPrice,
+        //              Discount = carDiscount
+        //          };
+
+        //          car.PrintPrice();
+        //          car.PrintDiscountPrice();
+        //      }
+        //  }
+        //  "Exactly how I would do it!" Sintia declared, sounding genuinely impressed.
+        //  "This code is a good representation of the first encapsulation concept: to keep 
+        //  data and methods that work with that data in one class. Class Car contains data 
+        //  fields Discount and Price, as well as the methods that work with those, 
+        //  PrintPrice and PrintDiscount," Sintia said. 
+ 
+        //  "I can improve this code snipped even further!" said one of the students in the room.
+        //  "Go ahead!" Sintia projected the results of his work to the wall: 
+        //  class Car
+        //  {
+        //      public decimal Price { get; }
+        //      public int Discount { get; }
+
+        //      public Car(decimal price, int discount)
+        //      {
+        //          Price = price;
+        //          Discount = discount;
+        //      }
+
+        //      public void PrintPrice()
+        //      {
+        //          Console.WriteLine($"Car costs {Price}");
+        //      }
+
+        //      public void PrintDiscountPrice()
+        //      {
+        //          Console.WriteLine($"Price with discount is {Price - Discount}");
+        //      }
+        //  }
+
+        //  class SomeOtherClass
+        //  {
+        //      public static void Main()
+        //      {
+        //          var carPrice = decimal.Parse(Console.ReadLine());
+        //          var carDiscount = int.Parse(Console.ReadLine());
+
+        //          var car = new Car(carPrice, carDiscount);
+
+        //          car.PrintPrice();
+        //          car.PrintDiscountPrice();
+        //      }
+        //  }
+        //  "Okay, and can you explain why this is an improvement?" Sintia asked the student.
+        //  "Because this code corresponds to the second encapsulation concept: it restricts a 
+        //  direct access to all fields and sets the value through the constructor." 
+        //  "Well done! In general, Public fields are usually not welcome in C#. 
+        //  Public fields expose the inner state of your class, allowing anyone to change it," 
+        //  Sintia summed up, adding, " The handout you picked up at the beginning of class lists 
+        //  more advantages of using encapsulation. Read it over, take a quick break, and we'll 
+        //  start coding in ten minutes." Controls values that are assigned to the inner state of 
+        //  your class. For example, if you have a public field Age, anyone can assign it an 
+        //  incorrect value, such as a negative number. In the case of properties, by 
+        //  encapsulating this field, you can add a validation step before storing a value for Age. 
+        //  Maintains consistency of the inner state of a class. Sometimes several objects are 
+        //  intending to change the same field in an object of your class. It may even happen 
+        //  simultaneously. To prevent collisions in simultaneous access to the same data and 
+        //  take control over the inner state of the class, you can make the field private or 
+        //  use a property. Thus, the changes in the inner state of your object could only be 
+        //  done by your object itself, not by others. Correct usage of encapsulation guarantees 
+        //  that no one can get direct access to the inner state of your class. It can only be 
+        //  accessed by using methods or properties. 
+        //  Makes it easier to change a publicly used class. Imagine that your class is used by 
+        //  dozens of other teams of coders in different projects, applications, countries... 
+        //  Then, changing the name of a single public method or field can lead to thousands 
+        //  of users with broken software. Sounds like a catastrophe, right? In contrast, 
+        //  changing the name of a private method or field is safe because no one can use 
+        //  it except your class itself. 
+        //  "It feels like we're advancing into software architecture principles and best practices!" 
+        //  I told Sintia during the break. "Exactly, Teo. To be a good programmer, you need 
+        //  to know more than just the syntax of a programming language. You have to have the right mindset." 
+        //  "Okay everyone, take your seats," Sintia said. */  
+#endregion
+        //TODO:
+    //    "Here are the tasks I want you to work through." 
+    //    Change public fields in the class Elevator to properties with the same name and type. 
+    //    Leave getters and setters with default access modifiers. 
+    //    Code!
+
+    //    Change public fields in the class User to properties with the same name and type. Leave getters and setters with default access modifiers. In the setter of the property Name, check whether the string is null or empty. If it is, do not assign that value. 
+    //    Code!
+
+    //    Change public fields in the class Shop and GeoLocation to properties with the same names and types. Leave getters with default access modifiers and change access for setters to private. Add constructors to Shop and GeoLocation that take values for every property as parameters and assigns them. 
+    //    Code!
+
+    //    Despite the fact that Wonderland has an idyllic name, crimes are still present here. We recently noticed that one particular coder is decreasing the value of every good they buy by 1 virus in order to save on every purchase.
+    //    Change the class Good to use properties with public getters and setters. The current code should still work, but decreasing of the price should have no effect. To achieve this, change the code in the Price's setter. You are not allowed to change any code outside of the Good class. 
+    //    Code!                           Email:info@codeasy.net
     class Box
     {
         public int Length;
@@ -63,7 +274,7 @@ namespace TestCodeasyNet
         public int CompareTo(Box box2)
         {
             Util util = new Util(ConsoleColor.Green, ConsoleColor.Black);
-            util.PrintInColor($"\nbox1(Length={Length}, Width={Width}, Height={Height})Area = {this.Area}");
+            util.PrintInColor($"box1(Length={Length}, Width={Width}, Height={Height})Area = {this.Area}");
             int iReturn;
             if (this.Area == box2.Area)
             {
@@ -93,6 +304,259 @@ namespace TestCodeasyNet
             util.PrintInColor($"\nbox(Length={Length}, Width={Width}, Height={Height})Area = {boxArea}\n");
         }
     }
+    // Using object initializer
+    class objectInitializer
+    {
+        #region objectInitializerText
+        //  "To create a property, use the same syntax as for fields, but add a get; to generate a getter 
+        //  and a set; to generate a setter. Then use the property the same as you do a field." 
+        //      class Student
+        //      {
+        //          public int Age { get; set; }
+        //          public string Name { get; private set; }
+        //  
+        //          public Student() // Empty constructor
+        //          {}
+
+        //          var student = new Student
+        //          {
+        //              Age = 20, // Work with Age just like a public field
+        //              Name = "John" // ERROR: setter for the Name is private
+        //          };
+
+        //  Using classic approach
+        //          var student = new Student();
+        //          student.Age = 20; // Work with Age just like a public field
+        //          student.Name = "John" // ERROR: setter for the Name is private
+
+        //  Using a constructor that sets age
+        //          var student = new Student(20, "John");
+        //      }
+        //  }
+        //  "Is this clear?" Noname asked.  "What type can the property have?" I asked.
+        //  "There are no limitations to a property's type. Think of it as a field 
+        //  with 2 additional methods - get and set."  "Got it," I said confidently, 
+        //  hoping that the lesson in class would clear it up a bit more. 
+        //  "Note that getters and setters are public by default unless you use a private keyword. 
+        //  Here are some exercises for you." 
+        
+        #endregion
+    }
+    class Flower
+    {
+        //  Create a class Flower with 4 public properties: 
+        //  string Name, string Color, int Age, and bool IsEndangered. 
+        //  Do not add any access modifiers to getters or setters.    
+        public string Name
+            { set; get; }
+        public string Color
+            { set; get; }
+        public int Age
+        { set; get; }
+        public bool IsEndangered
+            { set; get; }
+        public Flower(string name, string color, int age, bool isEndangered)
+        {
+            Name = name;
+            Color = color;
+            Age = age;
+            IsEndangered = isEndangered;
+            WriteFlower();
+        }
+        public void WriteFlower()
+        {
+            Util util = new Util(ConsoleColor.Red, ConsoleColor.Black);
+            util.PrintInColor($"Flower: {Name}, {Color}, {Age.ToString()}, ");
+            util.PrintInColor((IsEndangered) ? "Is Endangered\n" : "Is Not Endangered\n");
+        }
+    }
+        //  Code!
+
+        //  Create a class ChickenFarm with 4 public properties: 
+        //  double Longitude, double Latitude, int Capacity, and string Identifier. 
+        //  Make a setter for the Identifier - private. 
+        //  Remove the setter for the Capacity. 
+        //  Leave all other getters and setters as-is without any access modifiers. 
+    class ChickenFarm
+    {           /*  */
+        public double Longitude { set; get; }
+        public double Latitude { set; get; }
+        public int Capacity { get; }
+        public string Identifier { set; get; }
+        public ChickenFarm(double longitude, double latitude, int capacity, string identifier)
+        {
+            Longitude = longitude;
+            Latitude = latitude;
+            Capacity = capacity;
+            Identifier = identifier;
+            WriteChickenFarm();
+        }
+        public void WriteChickenFarm()
+        {
+            Util util = new Util(ConsoleColor.Red, ConsoleColor.Black);
+            util.PrintInColor($"Chicken Farm: ID={Identifier}, Capacity={Capacity}, Lat={Latitude}, Long={Longitude}\n");
+        }
+    }
+     class Geolocation
+    {   //  Extract the Latitude and Longitude from the ResistanceBase to a separate class 
+        //  called GeoLocation. Add a property of type GeoLocation named Location to the ResistanceBase, 
+        //  and leave the getter and setter with default access.   
+        public double Latitude { set; get; }
+        public double Longitude { set; get; }
+        public Geolocation(double lat, double llong)
+        {            Latitude = lat;            Longitude = llong;        }
+    }
+    class ResistanceBase
+    {        //  Rename the ChickenFarm class from the previous task to ResistanceBase.
+        public int Capacity { get; }
+        public string Identifier { set; get; }
+        public ResistanceBase(double longitude, double latitude, int capacity, string identifier)
+        {
+            Capacity = capacity;
+            Identifier = identifier;
+            WriteResistanceBase(new Geolocation(latitude, longitude));
+        }
+        //public class Person : Tuple<string, string>
+        //{
+        //    private Tuple<string,string> person { nam}
+        //    public void Key(string name, string age) { }
+
+        //    public string Name => Item1;
+        //    public string Age => Item2;
+        //}
+        public void WriteResistanceBase(Geolocation loc)
+        {
+            Util util = new Util(ConsoleColor.Red, ConsoleColor.Black);
+            util.PrintInColor($"Resistance Base: ID={Identifier}, Capacity={Capacity}, Location=({loc.Latitude},{loc.Longitude})\n");
+        }
+    }
+    //  "Noname, these properties look simple, but I'm not sure I see their utility. 
+    //  What's the benefit of having a private field with two methods, get and set, 
+    //  rather than just having a public field?" 
+    //  
+    //  "One of the easiest ways to understand the convenience of properties is to implement a 
+    //  custom setter or getter. The code block for the get accessor is executed when 
+    //  the property is read; the code block for the set accessor is executed when the 
+    //  property is assigned a new value. Properties with an empty getter or setter, 
+    //  like those we've been looking at, are called auto-implemented properties. 
+    //  You can extend an auto-implemented property with a custom getter or setter, like this:" //  
+
+    //  private int _age;
+
+    //  public int Age
+    //  {
+    //      get    {       return _age;      }
+    //      set    {       _age = value;     }
+    //  }
+    //  "In case of not auto-implemented properties, backing private field is not auto-implemented,
+    //  and you need to create it yourself. As you could see, I've created a field _age," Noname explained.
+    /*  public int Age
+    //  {
+    //      get; // This is auto-implemented
+    //      set  // This is not auto-implemented. Error!
+    //      {
+    //          ...
+    //      }
+    //  }
+
+    //  -------------------------------------------------------------------------
+    //  public int Age { get; set; } // Getter and setter auto-implemented. Correct.
+    //  -------------------------------------------------------------------------
+    //  private int _age;
+    //  public int Age
+    //  {
+    //      get   { return _age; }    // This is custom, not auto-implemented
+    //      set   { _age = value; }   // This is custom, not auto-implemented. Correct
+    //  }
+    //  "What does value in this code mean?" I asked.
+    //  "Value is a placeholder for the value that is assigned to the property Age. 
+    //  Because we defined the getter and setter, we can implement other features, 
+    //  such as inputting a parameter to the setter. This allows us to add custom 
+    //  logic to a setter. For example, we never want age to be input as less than zero. 
+    //  We can prevent anyone from setting a negative age like this," Noname said, 
+    //  refreshing the image of the code in my head. 
+    //  class Tiger
+    //  {
+    //      private int _age;
+    //      public int Age
+    //      {
+    //          get    { return _age; }
+    //          set    { (value > 0) ? _age = value; : _age = 0;// Check for the valid age
+    //      }
+    //  }
+    //  public static void Main()
+    //  {
+    //      var tiger = new Tiger();
+    //      tiger.Age = 2;                 // Ok, valid age
+    //      tiger.Age = -2;                // Invalid value, age set to 0
+    //      Console.WriteLine(tiger.Age);  // Outputs 0
+    //  }
+    //  "Noname, can you use a property without a backing field?" I queried.
+    //  "Good question, Teo! Sometimes data can have different representations. 
+    //  For example, taking the previous example with age, say you want to separate 
+    //  young tigers from old tigers in a zoo. There's no need for additional fields 
+    //  - you can achieve this by adding just one property." 
+    //  class Tiger
+    //  {
+    //      private int _age;
+    //      public int Age
+    //      {
+    //          get    { return _age; }
+    //          set    { if (value > 0) { _age = value; }  // Check for the valid age
+    //      }
+            public bool IsOld
+    //      {
+    //          get    { return _age > 20; }
+    //      }
+    //  "In the above example, IsOld could have been a method instead," Noname added.
+    //  "This is fascinating Noname, and it'll put me ahead of the class. Thanks for sharing 
+    //  this!" I said, before adding "Is there anything I can do for you?" Thinking back to our 
+    //  earlier conversation, I wanted to make sure I held up my end of the partnership.
+    //  "Learn C#, be my teammate, and together we'll save the world," Noname answered.
+    //  Noname's reply lifted my spirits. For a second, all my doubts were out of mind and I 
+    //  felt confident that all of this hard work would actually change the world and create a 
+    //  brighter future for millions of people.
+    //  After a small pause Noname added, "And please, never set anything in a getter. 
+    //  In the getter you get a value, and in the setter you set it. Don't confuse the two."
+
+    //  Replace getter and setter methods with corresponding properties. 
+    //  The property's name should be the same as its originating methods, 
+    //  but without "Get" and "Set". For example, if the method had a name int GetSize(), 
+    //  then the property should have type int and name Size. 
+    //  Leave all access modifiers the same: private setters should stay private. 
+    //  Delete backing fields if possible. Code!
+ */
+    class StudentGetterSetter
+    {
+        private int _age;
+
+        public int GetAge()
+        {
+            return _age;
+        }
+
+        public void SetAge(int age)
+        {
+            _age = age;
+        }
+    }
+    class Student
+    {
+        private int _age;
+        public string Name { get; set; }
+        public Student(string name, int age)
+        { Name = name; SetAge(GetAge(age)); }
+        public int GetAge()
+        {
+            return _age;
+        }
+
+        public void SetAge(int age)
+        {
+            _age = age;
+        }
+
+    }
     class NullAndThis
     {
         private bool _enterInput = false;
@@ -103,16 +567,17 @@ namespace TestCodeasyNet
         public static void RunNAT()
         {
             AdvancedDroid ad = new AdvancedDroid(0, 0); ad.MoveTo(2, 2);
-            Guess guess = new Guess(6); bool control = false; int i = 1;
-            while (!control)
-            {
-                i++; control = guess.YouGuessed(i);
-            }
+            new Guess(6); 
             Box box1 = new Box(1, 2, 3);
             Box box2 = new Box(1, 2, 4);
-            int cbox = box1.CompareTo(box2);
-            NullTest nullTest = new NullTest("son of a beache");
-            nullTest.TestNull(cbox.ToString());
+            int cbox = box1.CompareTo(box2);string line = "fucking ugly bitch";
+            NullTest nullTest = new NullTest(line);
+            nullTest.TestNull(cbox.ToString());nullTest.PigLatin(line);
+            string line2 = nullTest._newlyCreated;    nullTest.PrintPL(line, line2);
+            nullTest.JobsIO(@"C:\Users\Brice16\Documents\Resumes\JobsOct19-252019.txt");
+            new Flower("Rose", "Red", 10, false);
+            new ChickenFarm(62.9856, 168.333365, 10, "Red Rooster");
+            new ResistanceBase(62.9856, 168.333365, 21, "RedDroid");
         }
     }
     //  "This is a keyword in C# that represents the current object of a class. 
@@ -146,28 +611,20 @@ namespace TestCodeasyNet
             util.PrintInColor($"exiting MoveTo,  (P)x={x}, (P)y={y}, xpos={xPosition}, ypos={yPosition}, this.xpos={this.xPosition}, this.ypos={this.yPosition}\n");
         }
     }
-    //  You've met another droid that knows a secret integer between 1 and 8. 
-    //  Add or remove this modifiers to enable a guessing game where the user should 
-    //  guess that secret number. (In this case, it is 6) Code!
+    
     class Guess
     {
         private int _secretNumberToGuess;
         public Guess(int secretNumberToGuess)
         {
-            this._secretNumberToGuess = secretNumberToGuess;
+            this._secretNumberToGuess = secretNumberToGuess; int i = 0;
             Util util = new Util(ConsoleColor.Green, ConsoleColor.Black);
-            util.PrintInColor($"exiting Guess, (P)secretNumber={secretNumberToGuess}, _secretNumber={_secretNumberToGuess}, this._secretNumber={this._secretNumberToGuess}\n");
-        }
-        public bool YouGuessed(int yourGuess)
-        {
-            Util util = new Util(ConsoleColor.Green, ConsoleColor.Black);
-            if (this._secretNumberToGuess == yourGuess)
+            while (++i < this._secretNumberToGuess)
             {
-                util.PrintInColor($"Congratulations!: you guessed the secret Number: {yourGuess.ToString()}");
-                return true;
+                util.PrintInColor($"Try again:  you did not guess the secret Number: {i.ToString()}\n");
             }
-            util.PrintInColor($"Try again:  you did not guess the secret Number: {yourGuess.ToString()}\n");
-            return false;
+            util.PrintInColor($"Congratulations!: you guessed the secret Number: {_secretNumberToGuess.ToString()}\n");
+            util.PrintInColor($"exiting Guess, (P)secretNumber={secretNumberToGuess}, _secretNumber={_secretNumberToGuess}, this._secretNumber={this._secretNumberToGuess}\n");
         }
     }
     //  Infinity added, "One more interesting use of this it to pass current object 
@@ -206,23 +663,24 @@ namespace TestCodeasyNet
             return 0;
         }
     }
-    //  "Noname! Just the specifics," I shouted in my mind.  "Broadcast null."
-    //  "What is null?"   "Null represents an empty reference, 
-    //  i.e., one that does not refer to any object. 
-    //  null is the default value of reference-type fields."
-    //  "And the default value is the one that is assigned to an object 
-    //  before we use the new operator?" I asked.  "Let's get there step by step, 
-    //  sir. Fist important fact to remember: local variables should always 
-    //  have some value assigned before you work with them. 
-    //  Otherwise, your program won't compile. This holds for reference 
-    //  and value types," Noname said. */
+        //  "Noname! Just the specifics," I shouted in my mind.  "Broadcast null."
+        //  "What is null?"   "Null represents an empty reference, 
+        //  i.e., one that does not refer to any object. 
+        //  null is the default value of reference-type fields."
+        //  "And the default value is the one that is assigned to an object 
+        //  before we use the new operator?" I asked.  "Let's get there step by step, 
+        //  sir. Fist important fact to remember: local variables should always 
+        //  have some value assigned before you work with them. 
+        //  Otherwise, your program won't compile. This holds for reference 
+        //  and value types," Noname said. */
     class NullTest
     {
         private string _text;
+        public string _newlyCreated;
         public NullTest(string text1)
-        {
-            _text = text1;
-        }
+            {
+                _text = text1;
+            }
         public void TestNull(string text)
         {       //Fix the code to make program compile. Code! 
             Util util = new Util(ConsoleColor.White, ConsoleColor.Black);
@@ -233,36 +691,229 @@ namespace TestCodeasyNet
             int n = 0; // n is unassigned
             util.PrintInColor($"nameof(s)={nameof(s)}\n");
             n++;   // COMPILE ERROR: Can't use unassigned variable  //  key-value pair
-            string json = @"{ 'Name': 'Bad Boys', 'ReleaseDate': '1995-4-7T00:00:00'}";  //  , 'Genres': [ 'Action', 'Comedy' ] }";
-            var dict = json.Split(',').Select(x => x.Split(':')).ToDictionary(x => x[0], x => x[1]);
-            foreach (var item in dict)
+            string badboy = @"{ 'Name': 'Bad Boys', 'ReleaseDate': '1995-4-7T00:00:00', 'Genres': ['Action', 'Comedy'] }";
+            object pop = JsonConvert.DeserializeObject(badboy);
+            string poppy = JsonConvert.SerializeObject(pop);
+            Movie bbm = JsonConvert.DeserializeObject<Movie>(badboy); util.PrintInColor($"bbm:{bbm.ToString()}.\n"); util.PrintInColor($"bbm.Genres[0]={bbm.Genres[0]}, bbm.Genres[1]={bbm.Genres[1]}.\n");
+            #region dsobj<Movie>
+            //  nameof(s)=s
+            //  pop ={
+            //  "Name": "Bad Boys",
+            //  "ReleaseDate": "1995-4-7T00:00:00",
+            //  "Genres": [
+            //  "Action",
+            //  "Comedy"
+            //  ]
+            //  }  
+
+            /*util.PrintInColor($"pop ={pop.ToString()}. poppy={poppy}\n");
+            string[] lopit = pop.ToString().Split("\r\n");
+            int iName = -1, iRD = -1, iGenresA = -1, iGenresB = -1, ikvp = -1; ;
+            int genresCount=util.GenresCounter(lopit);
+            Movie badBoysMovie = new Movie("", new DateTime(), new string[genresCount]);
+            string[] divideName,RDdivide,genresA,genresB; string[] bbMg = new string[genresCount];
+            foreach (string item in lopit)
             {
-                util.PrintInColor(item.Key + "=" + item.Value + "\n");
+                if (item == "{" || item == "}" || item.Contains("Genres") || item.Contains("]"))
+                {
+                    if (item.Contains("]")) 
+                    {
+                        badBoysMovie.Genres = bbMg;
+                    }
+                }
+                else if (item.Contains("Name"))
+                { divideName= item.Split(": ");
+                    foreach (string Nameitem in divideName)
+                    {
+                        util.PrintInColor($"divideName[{++iName}]={Nameitem}");
+                        if (iName > 0 )
+                        {
+                            badBoysMovie.Name = Nameitem.TrimStart().Substring(1, Nameitem.Length - 3);
+                        }
+                    }
+                    util.PrintInColor("\n");
+                }
+                else if (item.Contains("ReleaseDate"))
+                { RDdivide =  item.Split(": ");
+                    foreach (string  rditem in RDdivide)
+                    {
+                        util.PrintInColor($"RDdivide[{++iRD}]={rditem}");
+                        if (iRD > 0)
+                        { badBoysMovie.ReleaseDate = Convert.ToDateTime(rditem.Trim().Substring(1, rditem.Length - 3)); }
+                    }
+                    util.PrintInColor("\n");
+                }
+                else if (item.Contains(","))
+                {
+                    genresA = item.Split("\""); 
+                    foreach (string gAitem in genresA)
+                    {
+                        util.PrintInColor($"genresA[{++iGenresA}]={gAitem}");
+                        if (iGenresA == 1) { bbMg[++ikvp] = gAitem; }
+                    }
+                    util.PrintInColor("\n");
+                }
+                else { genresB = item.Split("\"");
+                    foreach (string gbitem in genresB)
+                    {
+                        util.PrintInColor($"genresB[{++iGenresB}]={gbitem}");
+                        if (iGenresB == 1) { bbMg[++ikvp] = gbitem; }
+                    }
+                    util.PrintInColor("\n");
+                }
             }
-            string[] stringSeparators = new string[] { "\', \'", "{ \'" };
-            string[] keypairs = json.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);int ctr = 0;
-            foreach (string item in keypairs)
-            {
-                util.PrintInColor($"item{++ctr}={item}, ");
-            }                            //  Movie m = JsonConvert.DeserializeObject<Movie>(json);
-            util.PrintInColor("\n");
+            util.PrintInColor($"badboysMovie={badBoysMovie.ToString()}\n");    */
+            //  lopit[0]={
+            //  lopit[1]=  "Name": "Bad Boys",
+            //  lopit[2]=  "ReleaseDate": "1995-4-7T00:00:00",
+            //  lopit[3]=  "Genres": [
+            //  lopit[4]=    "Action",
+            //  lopit[5]=    "Comedy"
+            //  lopit[6]=  ]
+            //  lopit[7]=} */
+            //  var dict = badboy.Split(',').Select(x => x.Split(':')).ToDictionary(x => x[0], x => x[1]);
+            //  foreach (var item in dict)            {                util.PrintInColor(item.Key + "=" + item.Value + "\n");            }
+            //  string[] stringSeparators = new string[] { "\', \'", "{ \'" };
+            //  string[] keypairs = badboy.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);int ctr = 0;
+            //  foreach (string item in keypairs)            {                util.PrintInColor($"item{++ctr}={item}, ");            }                            //  Movie m = JsonConvert.DeserializeObject<Movie>(json);
+            //  util.PrintInColor("\n");
             //
-                            //    string name = m.Name;     // Bad Boys
-                            //    Product product = new Product();
-                            //    product.Name = "Apple";
-                            //    product.Expiry = new DateTime(2008, 12, 28);
-                            //    product.Sizes = new string[] { "Small" };
-                            //    string json = JsonConvert.SerializeObject(product);
-                            //    {   "Name": "Apple", "Expiry": "2008-12-28T00:00:00", "Sizes": [ "Small" ]   } 
-        }   //  public void TestNull()
+            //    string name = m.Name;     // Bad Boys
+            //    Product product = new Product();
+            //    product.Name = "Apple";
+            //    product.Expiry = new DateTime(2008, 12, 28);
+            //    product.Sizes = new string[] { "Small" };
+            //    string json = JsonConvert.SerializeObject(product);
+            //    {   "Name": "Apple", "Expiry": "2008-12-28T00:00:00", "Sizes": [ "Small" ]   } 
+            #endregion
+            }   //  public void TestNull()
+
+        //  You've met another droid that knows a secret integer between 1 and 8. 
+        //  Add or remove this modifiers to enable a guessing game where the user should 
+        //  guess that secret number. (In this case, it is 6) Code!
+        //  
+        //      As soon as I sent the message, the remaining droids immediately stopped. 
+        //  I was hoping this would prove to be the hardest part of the rescue.
+        //  We entered the building and found Infinity's sister in some kind of Faraday cage. 
+        //  To open the cage and save the captive, you need to enter the code phrase in a 
+        //  simplified Pig Latin language. Infinity is working hard to find the code phrase; 
+        //  your job is to write a converter for English to Pig Latin. In the Main method, 
+        //  read a string from the console, treating a space as a word separator. 
+        //  Output this string in simplified Pig Latin. Ignore double spaces. 
+        //  The code phrase contains only lower case letters. English is translated 
+        //  to a simplified Pig Latin by taking the first letter of every word, 
+        //  moving it to the end of the word, and adding "ay". For example: 
+        //  >the quick brown fox
+        //      hetay uickqay rownbay oxfay
+
+        public void PigLatin(string line)
+        {
+            StringBuilder sb = new StringBuilder(""); string[] lopall = line.Split(" ");
+            foreach (string item in lopall)
+            {
+                sb.Append(item.Substring(1) + item[0] + "ay ");
+            }
+            _newlyCreated = sb.ToString();
+        }
+        public void PrintPL(string line, string line2)
+        {
+            Util util = new Util(ConsoleColor.Red, ConsoleColor.Black); util.PrintInColor($"Original Line = {line}, Newly Created = {line2}\n");
+        }
+
+        public StringBuilder JobTextFix(StringBuilder jobs)
+        {
+            #region jobs
+            //  Junior Web Developer
+            //  Pixel Motion2 reviews - Irvine, CA
+            //  Moved to Applied 20 hours ago
+            //  Mobile Developer
+            //  Sevenlogics, Inc2 reviews- Diamond Bar, CA
+            #endregion
+            int jobNum = 0; StringBuilder sb = new StringBuilder($"{++jobNum}. ");
+            string[] jobArr = jobs.ToString().Split("\r\n");
+            foreach (string item in jobArr)
+            {
+                if (item.Contains("reviews"))
+                {
+                    string[] pop = item.Split(" reviews"); int minusCount = 0;
+                    string lopity = pop[0];
+                    for (int i = lopity.Length - 1; i >= 0; i--)
+                    {
+                        if (lopity[i].Equals('1') || lopity[i].Equals('2') ||
+                            lopity[i].Equals('3') || lopity[i].Equals('4') ||
+                            lopity[i].Equals('5') || lopity[i].Equals('6') ||
+                            lopity[i].Equals('7') || lopity[i].Equals('8') ||
+                            lopity[i].Equals('9')) { ++minusCount; }
+                        else
+                        { break; }
+                    }  //  for (int i = lopity.Length - 1; i >= 0; i--)
+                    //  pop[0] = lopity.Substring(0, lopity.Length - minusCount);
+                    lopity = pop[0].Substring(0, pop[0].Length - minusCount);
+                    sb.AppendLine(lopity + " " + pop[1]);
+                }   //  if (item.Contains("reviews"))
+                else if (item.Contains("Moved to Applied "))
+                {
+                    sb.AppendLine(""); sb.Append($"{++jobNum}. ");
+                }
+                else
+                {
+                    sb.AppendLine(item);
+                }
+            }
+            return sb;
+        }
+
+        public void JobsIO(string path)
+        {
+            StringBuilder strArray = new StringBuilder("");
+            try
+            {
+                using (StreamReader sr = new StreamReader(path))
+                {
+                    while (sr.Peek() >= 0)
+                    {
+                        strArray.AppendLine(sr.ReadLine());
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("The process failed: {0}", e.ToString());
+            }
+            Util util = new Util(ConsoleColor.White, ConsoleColor.Blue);
+            StringBuilder sb = JobTextFix(strArray); util.PrintInColor(sb.ToString());
+        }   //  public void JobsIO(string path)
     }       //  Class NullTest
     class Movie
-    {
+    {               //  { 'Name': 'Bad Boys', 'ReleaseDate': '1995-4-7T00:00:00', 'Genres': [ 'Action', 'Comedy' ] }";
         private string _name;
-        private DateTime _datetime;
-        public Movie(string name, DateTime dateTime) 
-        { }
+        public Movie(string name, DateTime releaseDate, string[] genres) 
+        {
+            _name = name; ReleaseDate = releaseDate; Genres = genres;
+        }
+        public string Name
+        {
+            get            {            return _name;            }
+            set            {             _name = value;           }
+        }
+        public DateTime ReleaseDate
+        {            get;            set;        }
+        public string[] Genres
+        {            get;            set;        }
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder("");int ipop = 0;
+            sb.Append($"Name={Name}, ReleaseDate={ReleaseDate.ToShortDateString()}, Genres=");
+            foreach (string item in Genres)
+            {
+                if (ipop < Genres.Length - 1) {                   sb.Append(item + ", ");         }
+                else                          {                   sb.Append(item);                }
+                ++ipop;
+            }
+                return sb.ToString();
+        }
     }
+    
     //  Wonderland has a formal president. He is a bit eccentric, and likes it 
     //  when all text that he reads is placed in a frame of stars: *. For example, 
     //  instead of "Hello, sir," he expects to see:
