@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Text;
 using System.IO;
-using System.Runtime.Serialization;
-using System.Linq;
 using Newtonsoft.Json;
-
+using System.Collections.Generic;
+using TestCodeasyNet;    //using ClassObjectNAccessor;    //using RunProgram;
 namespace TestCodeasyNet
 {
     //  Printing with Color:
@@ -32,7 +31,8 @@ namespace TestCodeasyNet
             _foregroundColor = ForeGrndColor;
         }
         public string TextRepeater(string text2, int numOfRepetitions)
-        { StringBuilder sb = new StringBuilder("");
+        {
+            StringBuilder sb = new StringBuilder("");
             for (int i = 0; i < numOfRepetitions; i++)
             { sb.Append(text2); }
             return sb.ToString();
@@ -57,203 +57,232 @@ namespace TestCodeasyNet
             return _genresCount;
         }
     }
-        #region Encapsulation
-        //  The Commander 
-        //  The next day, I was walking down the corridor when I heard Infinity's voice coming 
-        //  from the conference room. She sounded very stressed, which was far from her typical 
-        //  confident demeanor. The talk must be significant, I thought, and before I could stop 
-        //  myself, I began to eavesdrop. "What do you mean, faster? I have all of my resources 
-        //  working on Rust; there's nothing left to add!" Infinity shouted.
-        //  "It's too slow. You haven't made any attacks during the last month," the male voice 
-        //  answered. "My sister was kidnapped; she barely survived," Infinity shot back. 
-        //  "We couldn't just leave her there to be interrogated." "You're putting your own interest 
-        //  higher than our mission. Your sister is just a programmer, we lose more and more 
-        //  every day," the voice said. There was a pause. A long one. Even though I wasn't 
-        //  participating in the discussion, I could feel the tremendous tension in the air. 
-        //  Finally, Infinity got her voice back. "You are right, Commander. It won't happen 
-        //  again. Our mission is more important than my sister's life." It was clear that this 
-        //  was what the commander was looking for Inifinity to say. But how does someone will 
-        //  themselves to say something so coarse and lifeless? It's easy to hear such phrases 
-        //  in movies, where the actors are playing roles, but to hear it in the context of an 
-        //  actual human life... Infinity giving her word that the next time there was a choice 
-        //  between completing a mission and saving her sister's life, she would choose the former. 
-        //  Scary. Is this why she was chosen as the leader of the resistance in Wonderland? 
-        //  Was it out of weakness or strength that she could decided to put the mission before 
-        //  her family? Who was the commander asking her to give up so much? Noname would probably 
-        //  know. With his deep access in the network, he probably had access to personnel files. 
-        //  "Noname, who is in the conference room now?" I asked silently.
-        //  "Hi Teo, just one person, Infinity," Noname replied.
-        //  "She was talking to someone. Please check again," I said.
-        //  "In the modern world, Teo, there are ways to talk to people even if they're not in 
-        //  the same room! My records are spotty that far back, but I'm pretty sure it was possible 
-        //  in your time, 2018, as well. Maybe called a conference call? Such simple technology!"
-        //  "Noname, who was she talking to?" I began to miss the straight-to-the-point British 
-        //  personality Noname used to have. "The channel was encrypted. I don't have any way to 
-        //  retrieve the credentials of whoever was talking to Infinity, sorry."
-        //  "That's fine, don't worry, friend," I replied. Who was this Commander? 
-        //  Encapsulation 
-        //  In class the next day, we learned a new topic - encapsulation. Sintia was wearing 
-        //  jeans and a t-shirt, casual as usual. "Have you ever heard the term 'encapsulation'? 
-        //  No? This is one of the fundamental concepts in object-oriented programming. 
+    class Utl
+    {
+        public  Utl()
+        {
+        }
+        public static void PrintColoredA(ConsoleColor foreGC = ConsoleColor.White, ConsoleColor backGC = ConsoleColor.Black, string text = "")
+        {
+            Util util = new Util(foreGC, backGC);
+            util.PrintInColor(text);
+        }
+    }
+    static class AStringToStringBuilderAppendLine
+    {
+        //  private StringBuilder _stringBuilder;
+        static public void ToBuilderStringAppendLine(this string line, StringBuilder sb)
+        {
+            sb.AppendLine(line);
+        }
+    }
+    #region Encapsulation
+    //  The Commander 
+    //  The next day, I was walking down the corridor when I heard Infinity's voice coming 
+    //  from the conference room. She sounded very stressed, which was far from her typical 
+    //  confident demeanor. The talk must be significant, I thought, and before I could stop 
+    //  myself, I began to eavesdrop. "What do you mean, faster? I have all of my resources 
+    //  working on Rust; there's nothing left to add!" Infinity shouted.
+    //  "It's too slow. You haven't made any attacks during the last month," the male voice 
+    //  answered. "My sister was kidnapped; she barely survived," Infinity shot back. 
+    //  "We couldn't just leave her there to be interrogated." "You're putting your own interest 
+    //  higher than our mission. Your sister is just a programmer, we lose more and more 
+    //  every day," the voice said. There was a pause. A long one. Even though I wasn't 
+    //  participating in the discussion, I could feel the tremendous tension in the air. 
+    //  Finally, Infinity got her voice back. "You are right, Commander. It won't happen 
+    //  again. Our mission is more important than my sister's life." It was clear that this 
+    //  was what the commander was looking for Inifinity to say. But how does someone will 
+    //  themselves to say something so coarse and lifeless? It's easy to hear such phrases 
+    //  in movies, where the actors are playing roles, but to hear it in the context of an 
+    //  actual human life... Infinity giving her word that the next time there was a choice 
+    //  between completing a mission and saving her sister's life, she would choose the former. 
+    //  Scary. Is this why she was chosen as the leader of the resistance in Wonderland? 
+    //  Was it out of weakness or strength that she could decided to put the mission before 
+    //  her family? Who was the commander asking her to give up so much? Noname would probably 
+    //  know. With his deep access in the network, he probably had access to personnel files. 
+    //  "Noname, who is in the conference room now?" I asked silently.
+    //  "Hi Teo, just one person, Infinity," Noname replied.
+    //  "She was talking to someone. Please check again," I said.
+    //  "In the modern world, Teo, there are ways to talk to people even if they're not in 
+    //  the same room! My records are spotty that far back, but I'm pretty sure it was possible 
+    //  in your time, 2018, as well. Maybe called a conference call? Such simple technology!"
+    //  "Noname, who was she talking to?" I began to miss the straight-to-the-point British 
+    //  personality Noname used to have. "The channel was encrypted. I don't have any way to 
+    //  retrieve the credentials of whoever was talking to Infinity, sorry."
+    //  "That's fine, don't worry, friend," I replied. Who was this Commander? 
+    //  Encapsulation 
+    //  In class the next day, we learned a new topic - encapsulation. Sintia was wearing 
+    //  jeans and a t-shirt, casual as usual. "Have you ever heard the term 'encapsulation'? 
+    //  No? This is one of the fundamental concepts in object-oriented programming. 
 
-        //  Encapsulation has two goals:" 
-        //  Keeping the data, and methods for working with the data, in one unit 
-        //              (such as a class or struct in C#)
-        //  Restricting direct access to some of the unit's components
-        //  "Sintia..." two students said over one another.
-        //  "I know, I know. Far too abstract. I'll explain by example. Take a look at this code snippet:" 
-        //  class Car
-        //  {
-        //      public void PrintPrice(decimal price)
-        //      {
-        //          Console.WriteLine($"Car costs {price}");
-        //      }
+    //  Encapsulation has two goals:" 
+    //  Keeping the data, and methods for working with the data, in one unit 
+    //              (such as a class or struct in C#)
+    //  Restricting direct access to some of the unit's components
+    //  "Sintia..." two students said over one another.
+    //  "I know, I know. Far too abstract. I'll explain by example. Take a look at this code snippet:" 
+    //  class Car
+    //  {
+    //      public void PrintPrice(decimal price)
+    //      {
+    //          Console.WriteLine($"Car costs {price}");
+    //      }
 
-        //      public void PrintDiscountPrice(decimal price, int discount)
-        //      {
-        //          Console.WriteLine($"Price with discount is {price - discount}");
-        //      }
-        //  }
+    //      public void PrintDiscountPrice(decimal price, int discount)
+    //      {
+    //          Console.WriteLine($"Price with discount is {price - discount}");
+    //      }
+    //  }
 
-        //  class CarSetup
-        //  {
-        //      public static void Main()
-        //      {
-        //          var carPrice = decimal.Parse(Console.ReadLine());
-        //          var carDiscount = int.Parse(Console.ReadLine());
+    //  class CarSetup
+    //  {
+    //      public static void Main()
+    //      {
+    //          var carPrice = decimal.Parse(Console.ReadLine());
+    //          var carDiscount = int.Parse(Console.ReadLine());
 
-        //          var car = new Car();
-        //          car.PrintPrice(carPrice);
-        //          car.PrintDiscountPrice(carPrice, carDiscount);
-        //      }
-        //  }
-        //  "Does anything about this code jump out at you?" Sintia asked.
-        //  "Is anyone else using variables carPrice and carDiscount?" I asked.
-        //  "No, they are used only to call methods on an object of type Car."
-        //  "Then I don't see any sense in keeping carPrice and carDiscount 
-        //  outside of the class Car," I said."Good, Teo. So how would you rewrite this code snippet? 
-        //  Here, I'll show the result to the class," Sintia said, swiping on her tablet to 
-        //  show my work on the wall. I rewrote the code as follows: 
-        //  class Car
-        //  {
-        //      public decimal Price;
-        //      public int Discount;
+    //          var car = new Car();
+    //          car.PrintPrice(carPrice);
+    //          car.PrintDiscountPrice(carPrice, carDiscount);
+    //      }
+    //  }
+    //  "Does anything about this code jump out at you?" Sintia asked.
+    //  "Is anyone else using variables carPrice and carDiscount?" I asked.
+    //  "No, they are used only to call methods on an object of type Car."
+    //  "Then I don't see any sense in keeping carPrice and carDiscount 
+    //  outside of the class Car," I said."Good, Teo. So how would you rewrite this code snippet? 
+    //  Here, I'll show the result to the class," Sintia said, swiping on her tablet to 
+    //  show my work on the wall. I rewrote the code as follows: 
+    //  class Car
+    //  {
+    //      public decimal Price;
+    //      public int Discount;
 
-        //      public void PrintPrice()
-        //      {
-        //          Console.WriteLine($"Car costs {Price}");
-        //      }
+    //      public void PrintPrice()
+    //      {
+    //          Console.WriteLine($"Car costs {Price}");
+    //      }
 
-        //      public void PrintDiscountPrice()
-        //      {
-        //          Console.WriteLine($"Price with discount is {Price - Discount}");
-        //      }
-        //  }
+    //      public void PrintDiscountPrice()
+    //      {
+    //          Console.WriteLine($"Price with discount is {Price - Discount}");
+    //      }
+    //  }
 
-        //  class CarSetup
-        //  {
-        //      public static void Main()
-        //      {
-        //          var carPrice = decimal.Parse(Console.ReadLine());
-        //          var carDiscount = int.Parse(Console.ReadLine());
+    //  class CarSetup
+    //  {
+    //      public static void Main()
+    //      {
+    //          var carPrice = decimal.Parse(Console.ReadLine());
+    //          var carDiscount = int.Parse(Console.ReadLine());
 
-        //          var car = new Car
-        //          {
-        //              Price = carPrice,
-        //              Discount = carDiscount
-        //          };
+    //          var car = new Car
+    //          {
+    //              Price = carPrice,
+    //              Discount = carDiscount
+    //          };
 
-        //          car.PrintPrice();
-        //          car.PrintDiscountPrice();
-        //      }
-        //  }
-        //  "Exactly how I would do it!" Sintia declared, sounding genuinely impressed.
-        //  "This code is a good representation of the first encapsulation concept: to keep 
-        //  data and methods that work with that data in one class. Class Car contains data 
-        //  fields Discount and Price, as well as the methods that work with those, 
-        //  PrintPrice and PrintDiscount," Sintia said. 
- 
-        //  "I can improve this code snipped even further!" said one of the students in the room.
-        //  "Go ahead!" Sintia projected the results of his work to the wall: 
-        //  class Car
-        //  {
-        //      public decimal Price { get; }
-        //      public int Discount { get; }
+    //          car.PrintPrice();
+    //          car.PrintDiscountPrice();
+    //      }
+    //  }
+    //  "Exactly how I would do it!" Sintia declared, sounding genuinely impressed.
+    //  "This code is a good representation of the first encapsulation concept: to keep 
+    //  data and methods that work with that data in one class. Class Car contains data 
+    //  fields Discount and Price, as well as the methods that work with those, 
+    //  PrintPrice and PrintDiscount," Sintia said. 
 
-        //      public Car(decimal price, int discount)
-        //      {
-        //          Price = price;
-        //          Discount = discount;
-        //      }
+    //  "I can improve this code snipped even further!" said one of the students in the room.
+    //  "Go ahead!" Sintia projected the results of his work to the wall: 
+    //  class Car
+    //  {
+    //      public decimal Price { get; }
+    //      public int Discount { get; }
 
-        //      public void PrintPrice()
-        //      {
-        //          Console.WriteLine($"Car costs {Price}");
-        //      }
+    //      public Car(decimal price, int discount)
+    //      {
+    //          Price = price;
+    //          Discount = discount;
+    //      }
 
-        //      public void PrintDiscountPrice()
-        //      {
-        //          Console.WriteLine($"Price with discount is {Price - Discount}");
-        //      }
-        //  }
+    //      public void PrintPrice()
+    //      {
+    //          Console.WriteLine($"Car costs {Price}");
+    //      }
 
-        //  class SomeOtherClass
-        //  {
-        //      public static void Main()
-        //      {
-        //          var carPrice = decimal.Parse(Console.ReadLine());
-        //          var carDiscount = int.Parse(Console.ReadLine());
+    //      public void PrintDiscountPrice()
+    //      {
+    //          Console.WriteLine($"Price with discount is {Price - Discount}");
+    //      }
+    //  }
 
-        //          var car = new Car(carPrice, carDiscount);
+    //  class SomeOtherClass
+    //  {
+    //      public static void Main()
+    //      {
+    //          var carPrice = decimal.Parse(Console.ReadLine());
+    //          var carDiscount = int.Parse(Console.ReadLine());
 
-        //          car.PrintPrice();
-        //          car.PrintDiscountPrice();
-        //      }
-        //  }
-        //  "Okay, and can you explain why this is an improvement?" Sintia asked the student.
-        //  "Because this code corresponds to the second encapsulation concept: it restricts a 
-        //  direct access to all fields and sets the value through the constructor." 
-        //  "Well done! In general, Public fields are usually not welcome in C#. 
-        //  Public fields expose the inner state of your class, allowing anyone to change it," 
-        //  Sintia summed up, adding, " The handout you picked up at the beginning of class lists 
-        //  more advantages of using encapsulation. Read it over, take a quick break, and we'll 
-        //  start coding in ten minutes." Controls values that are assigned to the inner state of 
-        //  your class. For example, if you have a public field Age, anyone can assign it an 
-        //  incorrect value, such as a negative number. In the case of properties, by 
-        //  encapsulating this field, you can add a validation step before storing a value for Age. 
-        //  Maintains consistency of the inner state of a class. Sometimes several objects are 
-        //  intending to change the same field in an object of your class. It may even happen 
-        //  simultaneously. To prevent collisions in simultaneous access to the same data and 
-        //  take control over the inner state of the class, you can make the field private or 
-        //  use a property. Thus, the changes in the inner state of your object could only be 
-        //  done by your object itself, not by others. Correct usage of encapsulation guarantees 
-        //  that no one can get direct access to the inner state of your class. It can only be 
-        //  accessed by using methods or properties. 
-        //  Makes it easier to change a publicly used class. Imagine that your class is used by 
-        //  dozens of other teams of coders in different projects, applications, countries... 
-        //  Then, changing the name of a single public method or field can lead to thousands 
-        //  of users with broken software. Sounds like a catastrophe, right? In contrast, 
-        //  changing the name of a private method or field is safe because no one can use 
-        //  it except your class itself. 
-        //  "It feels like we're advancing into software architecture principles and best practices!" 
-        //  I told Sintia during the break. "Exactly, Teo. To be a good programmer, you need 
-        //  to know more than just the syntax of a programming language. You have to have the right mindset." 
-        //  "Okay everyone, take your seats," Sintia said. */  
-#endregion
-        //TODO:
+    //          var car = new Car(carPrice, carDiscount);
+
+    //          car.PrintPrice();
+    //          car.PrintDiscountPrice();
+    //      }
+    //  }
+    //  "Okay, and can you explain why this is an improvement?" Sintia asked the student.
+    //  "Because this code corresponds to the second encapsulation concept: it restricts a 
+    //  direct access to all fields and sets the value through the constructor." 
+    //  "Well done! In general, Public fields are usually not welcome in C#. 
+    //  Public fields expose the inner state of your class, allowing anyone to change it," 
+    //  Sintia summed up, adding, " The handout you picked up at the beginning of class lists 
+    //  more advantages of using encapsulation. Read it over, take a quick break, and we'll 
+    //  start coding in ten minutes." Controls values that are assigned to the inner state of 
+    //  your class. For example, if you have a public field Age, anyone can assign it an 
+    //  incorrect value, such as a negative number. In the case of properties, by 
+    //  encapsulating this field, you can add a validation step before storing a value for Age. 
+    //  Maintains consistency of the inner state of a class. Sometimes several objects are 
+    //  intending to change the same field in an object of your class. It may even happen 
+    //  simultaneously. To prevent collisions in simultaneous access to the same data and 
+    //  take control over the inner state of the class, you can make the field private or 
+    //  use a property. Thus, the changes in the inner state of your object could only be 
+    //  done by your object itself, not by others. Correct usage of encapsulation guarantees 
+    //  that no one can get direct access to the inner state of your class. It can only be 
+    //  accessed by using methods or properties. 
+    //  Makes it easier to change a publicly used class. Imagine that your class is used by 
+    //  dozens of other teams of coders in different projects, applications, countries... 
+    //  Then, changing the name of a single public method or field can lead to thousands 
+    //  of users with broken software. Sounds like a catastrophe, right? In contrast, 
+    //  changing the name of a private method or field is safe because no one can use 
+    //  it except your class itself. 
+    //  "It feels like we're advancing into software architecture principles and best practices!" 
+    //  I told Sintia during the break. "Exactly, Teo. To be a good programmer, you need 
+    //  to know more than just the syntax of a programming language. You have to have the right mindset." 
+    //  "Okay everyone, take your seats," Sintia said. */  
+    #endregion
+    //TODO:
     //    "Here are the tasks I want you to work through." 
     //    Change public fields in the class Elevator to properties with the same name and type. 
     //    Leave getters and setters with default access modifiers. 
     //    Code!
 
-    //    Change public fields in the class User to properties with the same name and type. Leave getters and setters with default access modifiers. In the setter of the property Name, check whether the string is null or empty. If it is, do not assign that value. 
+    //    Change public fields in the class User to properties with the same name and type. 
+    //    Leave getters and setters with default access modifiers. 
+    //    In the setter of the property Name, check whether the string is null or empty. 
+    //    If it is, do not assign that value. 
     //    Code!
 
-    //    Change public fields in the class Shop and GeoLocation to properties with the same names and types. Leave getters with default access modifiers and change access for setters to private. Add constructors to Shop and GeoLocation that take values for every property as parameters and assigns them. 
+    //    Change public fields in the class Shop and GeoLocation to properties 
+    //    with the same names and types. Leave getters with default access modifiers 
+    //    and change access for setters to private. Add constructors to Shop and GeoLocation 
+    //    that take values for every property as parameters and assigns them. 
     //    Code!
 
-    //    Despite the fact that Wonderland has an idyllic name, crimes are still present here. We recently noticed that one particular coder is decreasing the value of every good they buy by 1 virus in order to save on every purchase.
-    //    Change the class Good to use properties with public getters and setters. The current code should still work, but decreasing of the price should have no effect. To achieve this, change the code in the Price's setter. You are not allowed to change any code outside of the Good class. 
+    //    Despite the fact that Wonderland has an idyllic name, crimes are still present here. 
+    //    We recently noticed that one particular coder is decreasing the value of every good 
+    //    they buy by 1 virus in order to save on every purchase. Change the class Good to use 
+    //    properties with public getters and setters. The current code should still work, 
+    //    but decreasing of the price should have no effect. To achieve this, 
+    //    change the code in the Price's setter. You are not allowed to change any code outside of the Good class. 
     //    Code!                           Email:info@codeasy.net
     class Box
     {
@@ -271,26 +300,49 @@ namespace TestCodeasyNet
         {
             Area = Length * Width * Height; return Area;
         }
+        public enum eComp
+        {
+            IsGreat = 0,
+            IsLess = 1,
+            IsEqual = 2
+        }
+
         public int CompareTo(Box box2)
         {
+            #region CompareTo
+            //  Infinity added, "One more interesting use of this it to pass current object 
+            //  somewhere; for example, to a method." 
+            //  Method Comparator.Compare compares 2 boxes by their volume 
+            //  and returns 1 if the first one is bigger than the second one, 
+            //  -1 if the second one is bigger than the first one, 
+            //  or 0 if the boxes are equal. Modify the code in a way 
+            //  that class Box uses the Comparator.Compare method to be compared to another box.
+            //  Depending on the result of the comparison, 
+            //  CompareTo should return "Bigger" if the current box is bigger than box, 
+            //  "Smaller" if the current box is smaller than box, and 
+            //  "Equal" if the boxes are equal.  
+            //  In the Main, method, read Width, Height, and Length from the console 
+            //  for two boxes and output the result of box1.CompareTo(box2).
+            //  For example:
+            //  >100
+            //  >200
+            //  >300
+            //  >4
+            //  >5
+            //  >6
+            //  Bigger    Code!
+            #endregion
+            List<string> scomp = new List<string>() { " is equal to ", " is less than ", " is greater than " };
+            string[] sComp = { " is equal to ", " is less than ", " is greater than " };
             Util util = new Util(ConsoleColor.Green, ConsoleColor.Black);
             util.PrintInColor($"box1(Length={Length}, Width={Width}, Height={Height})Area = {this.Area}");
-            int iReturn;
+            int iReturn; const string isgreater = " is equal to ", isless = " is less than ";
             if (this.Area == box2.Area)
-            {
-                util.PrintInColor($" is equal to ");
-                iReturn = 0;
-            }
+            { util.PrintInColor(sComp[Convert.ToInt32(eComp.IsGreat)]); iReturn = 0; }
             else if (this.Area < box2.Area)
-            {
-                util.PrintInColor($" is less than ");
-                iReturn = -1;
-            }
+            { util.PrintInColor(isless); iReturn = -1; }
             else
-            {
-                util.PrintInColor($" is greater than ");
-                iReturn = 1;
-            }
+            { util.PrintInColor(scomp[3]); iReturn = 1; }
             util.PrintInColor($"box2(L={box2.Length},W={box2.Width},H={box2.Height})A={box2.Area}\n");
             return iReturn;
         }
@@ -339,7 +391,6 @@ namespace TestCodeasyNet
         //  hoping that the lesson in class would clear it up a bit more. 
         //  "Note that getters and setters are public by default unless you use a private keyword. 
         //  Here are some exercises for you." 
-        
         #endregion
     }
     class Flower
@@ -348,13 +399,13 @@ namespace TestCodeasyNet
         //  string Name, string Color, int Age, and bool IsEndangered. 
         //  Do not add any access modifiers to getters or setters.    
         public string Name
-            { set; get; }
+        { set; get; }
         public string Color
-            { set; get; }
+        { set; get; }
         public int Age
         { set; get; }
         public bool IsEndangered
-            { set; get; }
+        { set; get; }
         public Flower(string name, string color, int age, bool isEndangered)
         {
             Name = name;
@@ -370,15 +421,15 @@ namespace TestCodeasyNet
             util.PrintInColor((IsEndangered) ? "Is Endangered\n" : "Is Not Endangered\n");
         }
     }
-        //  Code!
+    //  Code!
 
+    class ChickenFarm
+    {           /*  */
         //  Create a class ChickenFarm with 4 public properties: 
         //  double Longitude, double Latitude, int Capacity, and string Identifier. 
         //  Make a setter for the Identifier - private. 
         //  Remove the setter for the Capacity. 
         //  Leave all other getters and setters as-is without any access modifiers. 
-    class ChickenFarm
-    {           /*  */
         public double Longitude { set; get; }
         public double Latitude { set; get; }
         public int Capacity { get; }
@@ -397,14 +448,14 @@ namespace TestCodeasyNet
             util.PrintInColor($"Chicken Farm: ID={Identifier}, Capacity={Capacity}, Lat={Latitude}, Long={Longitude}\n");
         }
     }
-     class Geolocation
+    class Geolocation
     {   //  Extract the Latitude and Longitude from the ResistanceBase to a separate class 
         //  called GeoLocation. Add a property of type GeoLocation named Location to the ResistanceBase, 
         //  and leave the getter and setter with default access.   
         public double Latitude { set; get; }
         public double Longitude { set; get; }
         public Geolocation(double lat, double llong)
-        {            Latitude = lat;            Longitude = llong;        }
+        { Latitude = lat; Longitude = llong; }
     }
     class ResistanceBase
     {        //  Rename the ChickenFarm class from the previous task to ResistanceBase.
@@ -543,19 +594,34 @@ namespace TestCodeasyNet
     class Student
     {
         private int _age;
-        public string Name { get; set; }
+        private string _name;//public string Name { get; set; }
         public Student(string name, int age)
-        { Name = name; SetAge(GetAge(age)); }
+        {
+            //Util util = new Util(ConsoleColor.Red, ConsoleColor.Black);
+            Console.WriteLine($"Student: Name={0}, Age={1}", name, (age > 0) ? age.ToString() : "0");
+        }
+        public string GetName()
+        {
+            return _name;
+        }
+        public void SetName(string name)
+        { _name = name; }
         public int GetAge()
         {
             return _age;
         }
-
         public void SetAge(int age)
         {
-            _age = age;
+            if (age > 0)
+                _age = age;
+            else
+                _age = 0;
         }
-
+        public void PrintStudent(string name, int age)
+        {
+            Util util = new Util(ConsoleColor.Red, ConsoleColor.Black);
+            util.PrintInColor($"Student: Name={name},");
+        }
     }
     class NullAndThis
     {
@@ -564,22 +630,124 @@ namespace TestCodeasyNet
         {
             _enterInput = enterConsoleInput;
         }
-        public static void RunNAT()
+        public static void RunNAT()  //  Chapter 2.2 Null and This
         {
             AdvancedDroid ad = new AdvancedDroid(0, 0); ad.MoveTo(2, 2);
-            new Guess(6); 
-            Box box1 = new Box(1, 2, 3);
-            Box box2 = new Box(1, 2, 4);
-            int cbox = box1.CompareTo(box2);string line = "fucking ugly bitch";
+            new Guess(6);
+            Box box1 = new Box(1, 2, 3) { IsOpened = false };
+            Box box2 = new Box(1, 2, 4) { IsOpened = false };
+            int cbox = box1.CompareTo(box2); string line = "freaking stunning beach";
             NullTest nullTest = new NullTest(line);
-            nullTest.TestNull(cbox.ToString());nullTest.PigLatin(line);
-            string line2 = nullTest._newlyCreated;    nullTest.PrintPL(line, line2);
+            nullTest.TestNull(cbox.ToString()); nullTest.PigLatin(line);
+            string line2 = nullTest._newlyCreated; nullTest.PrintPL(line, line2);
             nullTest.JobsIO(@"C:\Users\Brice16\Documents\Resumes\JobsOct19-252019.txt");
+            //  Chapter 3.1 Properties
             new Flower("Rose", "Red", 10, false);
             new ChickenFarm(62.9856, 168.333365, 10, "Red Rooster");
-            new ResistanceBase(62.9856, 168.333365, 21, "RedDroid");
+            new ResistanceBase(62.9856, 168.333365, 21, "Red Droid");
+            new ConsoleReadLineA();    //  Beginning C# Chapter~4-6???
         }
     }
+    class ConsoleReadLineA
+    {
+        public ConsoleReadLineA()
+        {
+            Util sutil = new Util(ConsoleColor.White, ConsoleColor.Black);
+            sutil.PrintInColor("You Entered your name: Ritchie: "); bool testit = true;
+            if (testit)                //if (Console.ReadLine() == "Ritchie")
+                sutil.PrintInColor("Access granted\n");
+            else
+                sutil.PrintInColor("Security Alert! You are under arrest for treason...");
+            sutil.PrintInColor("How are you? You said fine");
+            if (testit)//  if (Console.ReadLine() == "fine")
+                sutil.PrintInColor("Life is great!");
+            else
+                sutil.PrintInColor("Everything's gonna be alright");
+            sutil.PrintInColor("Input your name, please.");
+            string name = "Brice Ulwelling"; //  Console.ReadLine();
+            sutil.PrintInColor($"My greetings, {name}!");
+            sutil.PrintInColor("The Max of 2: Num1 Hit Enter;");
+            int aInt = int.Parse("653");  //  Console.ReadLine());    // Read a line and convert it to int (short version)
+            sutil.PrintInColor("              Num2 Hit Enter;");
+            int bInt = int.Parse("23");   //  Console.ReadLine());    // Read a line and convert it to int (short version)
+            if (aInt > bInt)
+                sutil.PrintInColor($"Max:a={aInt.ToString()}");
+            else
+                sutil.PrintInColor($"Max:b={bInt.ToString()}");
+            if (aInt < bInt)
+                sutil.PrintInColor($"Min:a={aInt.ToString()}");
+            else
+                sutil.PrintInColor($"Min:b={bInt.ToString()}");
+            sutil.PrintInColor("What Temperature is it? (enter an integer of degrees Celcius");
+            if (Convert.ToInt32("-33") < 5)    //  Console.ReadLine()) < 5)
+                sutil.PrintInColor("Wear a coat");
+            else
+                sutil.PrintInColor("Wear a jacket");
+
+            sutil.PrintInColor("Enter Your First Name:");
+            string firstName = "Brice";  //  Console.ReadLine();     //  Read a line from the screen
+            sutil.PrintInColor("Enter Your Last Name:");
+            string secondName = "Ulwelling"; //  Console.ReadLine(); //  Read a line from the screen
+            sutil.PrintInColor($"Should I call you {firstName} or {secondName}?    ");
+            string numberOfBoxesString = "6"; //   Console.ReadLine();  //  Read a line from the console
+            string weightString = "4";        //   Console.ReadLine();  // Read a line from the console
+            sutil.PrintInColor($"You Entered Number of Boxes:{numberOfBoxesString}");
+            int numberOfBoxes = Convert.ToInt32(numberOfBoxesString);     //  Convert numberOfBoxesString to an integer
+            sutil.PrintInColor($"You Entered Weight of Boxes:{weightString}");
+            int weight = Convert.ToInt32(weightString);         // to an integer
+            if (numberOfBoxes * weight > 30)
+                sutil.PrintInColor("No, Your boxes weigh too much");
+            else
+                sutil.PrintInColor("Yes, our droids can fly your boxes.   ");
+
+            string inputAsString = "652";      //  Console.ReadLine(); // Read a line from the screen
+            sutil.PrintInColor($"Zanabar Game: Your Input number ={inputAsString}"); int myNumber = Convert.ToInt32(inputAsString); // Convert inputAsString to int
+            Console.WriteLine($" :  {++myNumber}, I won!");    // Do some magic with myNumber
+
+            //  string aString = Console.ReadLine();  //  Read a line from the console
+            //  string bString = Console.ReadLine();  //  Read a line from the console
+            //  string cString = Console.ReadLine();  //  Read a line from the console
+            int a = 66, b = 44, c = 69;
+            sutil.PrintInColor("The Middle: Num1={a}, Num2={b}, Num3={c}\n");
+            //  int a = Convert.ToInt32(Console.ReadLine());      //  to an integer
+            //  Console.WriteLine("    Num2 Hit Enter;");
+            //  int b = Convert.ToInt32(Console.ReadLine());      //  to an integer
+            //  Console.WriteLine("    Num3 Hit Enter;");
+            //  int c = Convert.ToInt32(Console.ReadLine());      //  to an integer
+
+            if (a > b)
+            {
+                if (b > c)
+                    sutil.PrintInColor(b.ToString());
+                #region skip if b is middle
+                //skip this if: we know b is the middle
+                //  if (a > c)      // a>b>c           // a=3;b=2;c=1
+                //  {
+                //
+                //  }
+                //  else impossible
+                #endregion
+                else
+                    if (a > c)   // a>b<c a>c           // a=3;b=1;c=2
+                    sutil.PrintInColor(c.ToString());
+                else         // a>b<c a<c           // a=2;b=1;c=3
+                    sutil.PrintInColor(a.ToString());
+            }
+            else
+            {
+                if (b > c)
+                {
+                    if (a > c)   // a<b>c a>c           // a=2;b=3;c=1 
+                        sutil.PrintInColor(a.ToString());
+                    else         // a<b>c a<c           // a=1;b=3;c=2
+                        sutil.PrintInColor(c.ToString());
+                }
+                else             // a<b<c a>c           // a=1;b=2;c=3
+                    sutil.PrintInColor(b.ToString());               // skip if (a > c) and  else
+            }
+        }
+    }   //  ConsoleReadLineA
+
     //  "This is a keyword in C# that represents the current object of a class. 
     //  That object is where the code is running." Maybe I was in a bit over my head. 
     //  "Where is it used? Why is it useful? Why does this code refer to private variables 
@@ -611,7 +779,7 @@ namespace TestCodeasyNet
             util.PrintInColor($"exiting MoveTo,  (P)x={x}, (P)y={y}, xpos={xPosition}, ypos={yPosition}, this.xpos={this.xPosition}, this.ypos={this.yPosition}\n");
         }
     }
-    
+
     class Guess
     {
         private int _secretNumberToGuess;
@@ -627,27 +795,6 @@ namespace TestCodeasyNet
             util.PrintInColor($"exiting Guess, (P)secretNumber={secretNumberToGuess}, _secretNumber={_secretNumberToGuess}, this._secretNumber={this._secretNumberToGuess}\n");
         }
     }
-    //  Infinity added, "One more interesting use of this it to pass current object 
-    //  somewhere; for example, to a method." 
-    //  Method Comparator.Compare compares 2 boxes by their volume 
-    //  and returns 1 if the first one is bigger than the second one, 
-    //  -1 if the second one is bigger than the first one, 
-    //  or 0 if the boxes are equal. Modify the code in a way 
-    //  that class Box uses the Comparator.Compare method to be compared to another box.
-    //  Depending on the result of the comparison, 
-    //  CompareTo should return "Bigger" if the current box is bigger than box, 
-    //  "Smaller" if the current box is smaller than box, and 
-    //  "Equal" if the boxes are equal.  
-    //  In the Main, method, read Width, Height, and Length from the console 
-    //  for two boxes and output the result of box1.CompareTo(box2).
-    //  For example:
-    //  >100
-    //  >200
-    //  >300
-    //  >4
-    //  >5
-    //  >6
-    //  Bigger    Code!
     class Comparator
     {
         public Box boxy = new Box(1, 2, 3);
@@ -663,24 +810,24 @@ namespace TestCodeasyNet
             return 0;
         }
     }
-        //  "Noname! Just the specifics," I shouted in my mind.  "Broadcast null."
-        //  "What is null?"   "Null represents an empty reference, 
-        //  i.e., one that does not refer to any object. 
-        //  null is the default value of reference-type fields."
-        //  "And the default value is the one that is assigned to an object 
-        //  before we use the new operator?" I asked.  "Let's get there step by step, 
-        //  sir. Fist important fact to remember: local variables should always 
-        //  have some value assigned before you work with them. 
-        //  Otherwise, your program won't compile. This holds for reference 
-        //  and value types," Noname said. */
+    //  "Noname! Just the specifics," I shouted in my mind.  "Broadcast null."
+    //  "What is null?"   "Null represents an empty reference, 
+    //  i.e., one that does not refer to any object. 
+    //  null is the default value of reference-type fields."
+    //  "And the default value is the one that is assigned to an object 
+    //  before we use the new operator?" I asked.  "Let's get there step by step, 
+    //  sir. Fist important fact to remember: local variables should always 
+    //  have some value assigned before you work with them. 
+    //  Otherwise, your program won't compile. This holds for reference 
+    //  and value types," Noname said. */
     class NullTest
     {
         private string _text;
         public string _newlyCreated;
         public NullTest(string text1)
-            {
-                _text = text1;
-            }
+        {
+            _text = text1;
+        }
         public void TestNull(string text)
         {       //Fix the code to make program compile. Code! 
             Util util = new Util(ConsoleColor.White, ConsoleColor.Black);
@@ -786,7 +933,7 @@ namespace TestCodeasyNet
             //    string json = JsonConvert.SerializeObject(product);
             //    {   "Name": "Apple", "Expiry": "2008-12-28T00:00:00", "Sizes": [ "Small" ]   } 
             #endregion
-            }   //  public void TestNull()
+        }   //  public void TestNull()
 
         //  You've met another droid that knows a secret integer between 1 and 8. 
         //  Add or remove this modifiers to enable a guessing game where the user should 
@@ -887,236 +1034,43 @@ namespace TestCodeasyNet
     class Movie
     {               //  { 'Name': 'Bad Boys', 'ReleaseDate': '1995-4-7T00:00:00', 'Genres': [ 'Action', 'Comedy' ] }";
         private string _name;
-        public Movie(string name, DateTime releaseDate, string[] genres) 
+        public Movie(string name, DateTime releaseDate, string[] genres)
         {
             _name = name; ReleaseDate = releaseDate; Genres = genres;
         }
         public string Name
         {
-            get            {            return _name;            }
-            set            {             _name = value;           }
+            get { return _name; }
+            set { _name = value; }
         }
         public DateTime ReleaseDate
-        {            get;            set;        }
+        { get; set; }
         public string[] Genres
-        {            get;            set;        }
+        { get; set; }
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder("");int ipop = 0;
+            StringBuilder sb = new StringBuilder(""); int ipop = 0;
             sb.Append($"Name={Name}, ReleaseDate={ReleaseDate.ToShortDateString()}, Genres=");
             foreach (string item in Genres)
             {
-                if (ipop < Genres.Length - 1) {                   sb.Append(item + ", ");         }
-                else                          {                   sb.Append(item);                }
+                if (ipop < Genres.Length - 1) { sb.Append(item + ", "); }
+                else { sb.Append(item); }
                 ++ipop;
             }
-                return sb.ToString();
+            return sb.ToString();
         }
     }
-    
-    //  Wonderland has a formal president. He is a bit eccentric, and likes it 
-    //  when all text that he reads is placed in a frame of stars: *. For example, 
-    //  instead of "Hello, sir," he expects to see:
-    //  **************
-    //  * Hello, sir *
-    //  **************
-    //  Create a static class TextFramePretifier. It should contain a 
-    //  private static int field, _textsPretified, that increments 
-    //  for every text that this class processes. Add a static constructor 
-    //  that initializes _textsPretified to zero. Also add a 
-    //  public static method Prettify that takes a string text and returns void. 
-    //  The method should first print a sentence "Processing text: {_textsPretified}" 
-    //  that indicates how many texts have been processed. Then, from the new line, 
-    //  it should print the given text into a frame of stars. The input text is guaranteed 
-    //  to take no more than one line. The user string should have one space before and after 
-    //  the frame, as shown in the below example.
-    //  In the Main method, read a string from the console and call your method with this input.
-    //  Repeat this until user inputs "exit". For example:    
-    //  >Why frame is so important, sir?
-    //  Processing text: 1
-    //  ***********************************
-    //  * Why frame is so important, sir? *
-    //  ***********************************
-    //  >You look great today, sir!
-    //      Processing text: 2
-    //  ******************************
-    //  * You look great today, sir! *
-    //  ******************************
-    //  >exit
-    static class TextFramePretifier
-    {
-        private static int _textsPretified;
-        static TextFramePretifier() { _textsPretified = 0; }
-        public static void Prettify(string text)
-        {   int astlen = text.Length + 4;
-            Util util = new Util(ConsoleColor.Red, ConsoleColor.White );
-            _textsPretified++;
-            util.PrintInColor($"Processing text: {_textsPretified.ToString()}\n");
-            string opo = util.TextRepeater("*", astlen);
-            util.PrintInColor(opo + "\n");
-            util.PrintInColor("* " + text + " *\n");
-            util.PrintInColor(opo + "\n"); 
-        }
-    }
-    //  The president was happy with your implementation of the TextFramePretifier... 
-    //  for one day. Then he decided that he wants to control the width of the frame. 
-    //  Take the code of the previous task and modify it to take an integer 
-    //  that represents the width of the frame and then print a message in the frame as you did in previous task, 
-    //  but using the given width this time. Write as many words as you can in each line; 
-    //  if there is an empty space, fill it with spaces. The number of words 
-    //  in a message will not exceed 100. All words are guaranteed 
-    //  to be shorter than (frameWidth - 4). Treat spaces as word separators 
-    //  and all other symbols, such as commas or question marks, as part of the word 
-    //  they're connected to. The text is guaranteed to have only single spaces.
-    //      For example:
-    //  >15
-    //  >You look great today, sir!
-    //  Processing text: 1
-    //  ***************
-    //  * You look*
-    //  * great       *
-    //  * today, sir! *
-    //  ***************
-    //  >A zebra does not change its spots.
-    //  Processing text: 2
-    //  ***************
-    //  * A zebra     *
-    //  * does not    *
-    //  * change its  *
-    //  * spots.      *
-    //  ***************
-    //  >exit
-    static class WTextFramePretifier
-    {
-        private static int _textsPretified;
-        static WTextFramePretifier() { _textsPretified = 0; }
-        public static void Prettify(int widthOfFrame, string text)
-        {
-            Util util = new Util(ConsoleColor.Red, ConsoleColor.White);
-            StringBuilder sb = new StringBuilder("* ");
-            _textsPretified++;
-            util.PrintInColor($"Processing text: {_textsPretified.ToString()}\n");
-            string opo = util.TextRepeater("*", widthOfFrame);
-            util.PrintInColor(opo + "\n");    //util.PrintInColor("* " + text + " *\n");
-            string[] strArray = text.Split(' ');
-            foreach (var item in strArray)
-            {
-                if ( sb.Length == 2 )
-                {
-                    sb.Append(item);
-                }
-                else
-                {
-                    if ((item.Length + sb.Length + 3 ) > (widthOfFrame - 4))
-                    {
-                        PrettyPrintLine(widthOfFrame, util, sb);
-                        sb.Clear(); sb.Append("* " + item.ToString());
-                    }         //  Write frame use item in else sb.Append(" "+item 
-                    else
-                    {
-                        sb.Append(" " + item.ToString());
-                    }   //    if (item.Length + sb.Length + 3 > WidthOfTexts): else
-                }  //  if (sb.Length == 3)
-            }   // foreach (var item in strArray)     
-            PrettyPrintLine(widthOfFrame, util, sb);
-            util.PrintInColor(opo + "\n");
-        }
-        private static void PrettyPrintLine(int widthOfFrame, Util util, StringBuilder sb)
-        {           //  Dont put this in Util you would have to repass the colors!!!!
-            int currMinusTextWidth = 0;
-            if (widthOfFrame - (sb.Length + 2) > 0)
-                currMinusTextWidth = widthOfFrame - (sb.Length + 2);
-            util.PrintInColor(sb.ToString() 
-                + util.TextRepeater(" ", currMinusTextWidth) + " *\n");
-        }  //  private static void PrettyPrintLine(int widthOfFrame, Util util, StringBuilder sb)
-    }      //  static class WTextFramePretifier
-    //  Create a class that has one public static method, GetSumBetween, 
-    //  that takes two integers, a and b, and returns as an integer the sum of all integers between a and b (including a and b). 
-    //  In the Main method, read two integers from the console, 
-    //  call GetSumBetween, and print the returned number to the console.
-    //  For example(don't output the green text):
-    //  >6
-    //  >10
-    //  40  // 6 + 7 + 8 + 9 + 10 = 40
-    class SumBetween
-    {
-        public static int GetSumBetween(int a, int b)
-        {
-            ColorPrint colorPrint = new ColorPrint(); colorPrint.ForeGroundColor = ConsoleColor.Red; colorPrint.BackGroundColor = ConsoleColor.White;
-            int c = 0;
-            for (int i = a; i <= b; i++)
-            {                c = c + i;            }
-            colorPrint.ColoredPrint($"The numbers between {a} and {b} sum to {c}\n"); return c;
-        }
-    }
-    //  Measuring distance is an essential task at Wonderland. 
-    //  Create a static class, DistanceMeasurer, that has one public method, 
-    //  GetDistance, with a return type of double, that takes 4 int parameters 
-    //  that represent 2D point coordinates: x1, y1, x2, y2. 
-    //  The GetDistance method should output the distance 
-    //  between the two given points (x and y) on a plane.
-    //  In the Main method, read 4 integers from the console, 
-    //  execute GetDistance, and output the result to the screen.
-    //  For example:
-    //  >2
-    //  >1
-    //  >3
-    //  >4
-    //  3.16227766016838                Code!
-    static class DistanceMeasurer
-    {
-        public static double GetDistance(int x1, int y1, int x2, int y2)
-        {
-            double firstq = Math.Pow(x1 - x2, 2.0);      //  = (x1 - x2)2
-            double second = Math.Pow(y1 - y2, 2.0);      //  = (y1 - y2)2
-            double thirdq = Math.Sqrt(firstq + second);
-            return thirdq;
-        }
-    }
-    //  Create a class Car. Inside the class, 
-    //  create a public static int field CarsCount 
-    //  and increment it in the constructor.
-    //  In the Main method, create 5 objects of the type Car.
-    //  Then, output a string containing the number of cars created to the screen, 
-    //  "Number of created cars is {CarsCount}", using the value of the static field for it.   //  Code!
-    class Car
-    {
-        public static int CarsCount = 0;
-        private string _model;
-        private int _year;
-        public Car(string model, int year)
-        {
-            _model = model;
-            _year = year;
-            CarsCount++;
-        }
-        static public void CarLogic()
-        {
-            Car corolla = new Car("Corolla", 2004); 
-            Car buick = new Car("Buick", 1997);
-            Car sienna = new Car("Sienna", 1999);
-            Car car123 = new Car("Car4", 2014);
-            Car prius = new Car("Prius", 2013);
-            Util util = new Util(ConsoleColor.Red, ConsoleColor.Yellow);
-            util.PrintInColor($"{corolla._model}, {buick._model}, {sienna._model}, {car123._model}, {prius._model}, so Car Count = {CarsCount}\n");
-        }
-    }
-    class ClassObjectsAndAccessors
-    {
-        public static bool enterInput = false;
-        public ClassObjectsAndAccessors(bool enterConsoleInput = false)
-        {
-            enterInput = enterConsoleInput;
-        }
-        static public void RunCOAA()
-        {
-            Console.WriteLine("Hello World!");
-            Box box = new Box(14554, 25794, 98758) { IsOpened = true };
-            box.PrintBoxArea(box.Area); if (box.IsOpened) { box.CloseBox(); }
-            else { box.OpenBox(); }
 
-            User user = new User { Age = 21, Name = "Brice Ulwelling" }; user.PrintUser();
-
+}
+namespace Chap1ClassObjCarUserGlass
+{
+    class RunNamespaceCSIChap1
+    {
+        public static void RunCSIChap1()
+        {
+            Utl.PrintColoredA(ConsoleColor.Red, ConsoleColor.Black, $"\nYou are entering CSharp-Intermediate: Chapter 1: Class and Object.\n\n");
+            User user = new User { Age = 21, Name = "Brice Ulwelling" }; user.PrintUser();  //  public Age, Name
+            Car.CarLogic();
             #region Glass class     // that rhymes!
             /*
             //   We are prototyping a robot that refills glasses during dinner. 
@@ -1153,71 +1107,347 @@ namespace TestCodeasyNet
             //  This glass contains 200ml of liquid. 
             //  > stop */
             #endregion
-            Glass glass = new Glass() { LiquidLevel = 200 }; String line = "Drink 0";
-            if (!enterInput)
-            {
-                glass.Drink(50); glass.PrintGlass(); glass.Drink(49); glass.PrintGlass(); glass.Drink(44); glass.PrintGlass();
-            }
-            else
-            {
-                while (line != "Stop")
-                {
-                    //  string pep = "0"; int millilitters = 0;
-                    string[] pop = line.Split(' ');
-                    if (pop.Length > 1) { glass.Drink(Convert.ToInt32(pop[1])); }
-                    if (line == "Print") { glass.PrintGlass(); }
-                    line = Console.ReadLine();
-                }
-            }
-            Rectangle rec = new Rectangle() { ReservedArea = 12, Length = 20, Width = 10 };
-            rec.PrintAreaResult(rec.GetArea());
+            Glass glass = new Glass() { LiquidLevel = 200 }; glass.RunGlass();
+            Utl.PrintColoredA(ConsoleColor.Red, ConsoleColor.Black, $"\nYou are Entering CSharp-Intermediate: Chapter 1.2: Accessors and Constructors.\n\n");
+            //  Rectangle rec = new Rectangle() { ReservedArea = 12, Length = 20, Width = 10 };
+            //  rec.PrintAreaResult(rec.GetArea());
+            Rectangle.PrintRectangle(32, 15, 9);
 
             Shield shield = new Shield(); shield.PrintShield();
             ExtendedShield shield1 = new ExtendedShield("BriceStar", 15); shield1.PrintShield();
 
             LitArea litArea = new LitArea(1, 1, 5, 6); litArea.DrawRec(litArea.TL, litArea.BR);
             LitArea lit = new LitArea(0, 0, 2, 4); lit.DrawRec(lit.TL, lit.BR);
+            Utl.PrintColoredA(ConsoleColor.Red, ConsoleColor.Black, $"\nYou are Exiting CSharp-Intermediate: Chapter 1.2: Accessors and Constructors.\n\n");
 
-            Car.CarLogic();
-            int x1 = 2, y1 = 1, x2 = 3, y2 = 4; Console.WriteLine(); ColorPrint colorPrint = new ColorPrint(); colorPrint.ForeGroundColor = ConsoleColor.Red; colorPrint.BackGroundColor = ConsoleColor.White;
-            double distance = DistanceMeasurer.GetDistance(x1, y1, x2, y2); colorPrint.ColoredPrint($"x1 = {x1.ToString()}, y1 = {y1.ToString()}, x2 = {x2.ToString()}, y2={y2.ToString()} = {distance.ToString()}\n");
+        }
+    }
+        #region Codeasy.net ==> Intermediate C# ==> Chapter 1.1  ==> Class and Object 
+        //  Codeasy.net ==> Intermediate C# ==> 1. Hello, Wonderland ==> Class and Object 
+        //  Hello, Wonderland 
+        //  I arrived in Wonderland yesterday. I'm still not entirely sure 
+        //  that my decision to stay in the future was wise... In any event, 
+        //  I'm comfortable with where I'm at now. I carry more responsibility 
+        //  and have mostly stopped lamenting my hardships. 
+        //  Infinity gave me a quick briefing about the situation here. Wonderland is 
+        //  the largest-known resistance base on Earth. It's surrounded by a shield 
+        //  that prevents machines from scanning the area. Instead of analyzing the 
+        //  surface for the base, the machines have resorted to brute-force tactics, 
+        //  namely digging, in hopes of hitting the jackpot. Because of this, 
+        //  the atmosphere here is tense: people are afraid that at any moment 
+        //  the machines may come up out of the ground and reveal Wonderland's location. 
+        //  The primary objective for everyone here is a project codenamed Rust, which
+        //  is a virus that provides full control over a machine to any chosen server. 
+        //  In our case, of course, that would mean a resistance server. We want to 
+        //  inject this virus in the handshake message that every device sends to one 
+        //  another when they establish communication. So far, so good - prototypes of 
+        //  virus already exist! But... they don't work. That's why I'm here, and why 
+        //  Infinity gathers the best programmers from other resistance bases. She needs 
+        //  this virus to work. As soon as possible. While humanity still has some fight left in it. 
+        //  There are a lot of small details that need to be sorted out in order for Rust to work; 
+        //  for example, if we can take control of a machine, how do we send commands to 
+        //  billions of machines at once? One server won't be able to control that amount of traffic, 
+        //  and if that server crashes, we immediately lose our advantage. The machines will quickly 
+        //  craft an antivirus. In addition, there are probably ten new machine prototypes produced 
+        //  every single week - how can Rust adapt to that kind of variety? I know, I know, 
+        //  not exactly positive thinking. But this is the best option we have for now, and we will; 
+        //  rather, we need; to solve all of it. 
+        //    The skill level of the programmers in Wonderland is astounding. I feel like a freshman again, 
+        //  and I will doubtless have studies every day as before. Let's get started! 
+        //  Welcome to the Class! 
+        //  The main instruction room was bigger and brighter than the one in Ritchie's resistance base. 
+        //  Ten students were here with me. The teacher was a woman, around 35-40 years old, with big glasses. 
+        //  "Hello everyone! My name is Sintia, and we are going to have a brief overview of classes today. 
+        //  Let's make a list of what you learned before you came to Wonderland," she said, picking up a marker. 
+        //  We named some topics in C#, and everyone's answers were fairly similar. 
+        //  Apparently, in all the resistance bases, people know the same subset of C#. 
+        //  "Ok, that's a good start," Sintia said. "But these are only basics. Your real education in C# 
+        //  starts today, now, in this room. Can anyone tell me where the concept of classes came from?" 
+        //  This time, no hands went up. "Ok then, here's the origin story. A long time ago in a language called C, 
+        //  there were no classes or namespaces; people were writing functions, and everything just worked. 
+        //  As software development grew, however, programs became more and more complicated. 
+        //  Eventually, name clashes started to occur when several functions with the same name 
+        //  were imported from different programming modules. This made it impossible to compile the code. 
+        //  Imagine a simple scenario where you have a game with a Log(string message) function to write 
+        //  something to a log file. And then a module gets imported that also has its own 
+        //  Log(string message) function. As you all know, you can't have two functions with the name Log, 
+        //  because they'll be indistinguishable from one another. That's why programmers began to create 
+        //  prefixes, like Internal_Log(...) and ExternalLibName_Log(...). The same was done with 
+        //  global data variables: int Internal_Timeout, int ExternalLibName_Timeout, etc. 
+        //  As a result, code became longer, less readable, and more difficult to write. 
+        //  That's why smart people decided to bring into C the concept of an 
+        //  object - an entity that stores data and the methods to work with that data all in one place. 
+        //  This entity will also determine a scope, which means methods and variables 
+        //  with the same name can exist in different entities." 
+        //  The paradigm of using objects is called OOP - object-oriented programming. 
+        //  Object-oriented programming (OOP) is a programming paradigm based on the concept of "objects," 
+        //  which may contain data fields and code, in the form of procedures, often known as methods. 
+        //  "Can I ask you a question?" I said.  "You already did," Sintia answered with a light smile on a face.
+        //  "Why did you start talking about classes but then switch to objects? Are they the same thing?" 
+        //  I wondered. "Good question, Teo! Nice catch!" she looked satisfied. "A class is a template for objects. 
+        //  A class defines object properties including a valid range of values and a default value. 
+        //  A class also describes object behavior. An object is an "instance" of a class. 
+        //  An object has a state in which all of its properties have values that you define." 
+        //  "Sorry, but I don't understand," said another student. "Can you show us an example?" 
+        //  "Fair enough. Look at this class definition:" 
+        //class Box
+        //{
+        //    int Length;
+        //    int Width;
+        //    int Height;
+        //    bool IsOpened;
 
-            int d = SumBetween.GetSumBetween(6, 10); int e = SumBetween.GetSumBetween(1, 5);
+        //    public void Open()
+        //    {
+        //        IsOpened = true;
+        //    }
 
-            TextFramePretifier.Prettify("Why frame is so important, sir1?");
-            TextFramePretifier.Prettify("Why frame is so important, sir2?");
-            TextFramePretifier.Prettify("You look great today, sir!");
-
-            WTextFramePretifier.Prettify(14, "Why frame is so important, sir1?");
-            WTextFramePretifier.Prettify(14, "You look great today, sir!");
-
-        }   //  static public void RunCOAA()
-    }       //  class ClassObjectsAndAccessors    
-            //  Wonderland has a garden where plants are grown under artificial sunlight. 
-            //  The sunlight lamp is capable of covering a rectangular area of any size. 
-            //  A computer program directs the lamp to the area that needs sun at any given moment.
-            //  Your task is to create a class LitArea that has two private fields of type Point: 
-            //  _topLeft and _bottomRight. 
-            //  Those fields store the coordinates of the top left and lower right points 
-            //  that limit the rectangle of light from the lamp.
-            //  Create a public constructor in the class LitArea that takes four integers: 
-            //  xTopLeft, yTopLeft, xBottomRight, and yBottomRight. 
-            //  Create two objects of type Point inside of the constructor, 
-            //  one for the top left corner of the area and one for the bottom right. 
-            //  Assign public fields X and Y of every point to corresponding coordinates coming in the arguments. 
-            //  Finally, store the newly created points in the fields _topLeft and _bottomLeft. 
-            //  Code!
-    class Point
+        //    public void Close()
+        //    {
+        //        IsOpened = false;
+        //    }
+        //}
+        //  "Why didn't you use a static keyword for the methods? All the methods 
+        //  we worked with before now were static," another student asked.
+        //  "Yeah, this can be confusing," Sintia answered. "Please, until you 
+        //  learn what static means, leave only the Main method as static; 
+        //  all other fields and methods should not have a static modifier." 
+        //  Sintia continued: "Can anyone tell me how much space in memory the Box class occupies now?" 
+        //  "An integer is 4 bytes, which means we need three multiplied 
+        //  by four and add..." one of the students began thinking out loud.
+        //  "Wrong. It takes 0 bytes. What you see is only a template of a box that could be created. 
+        //  But there are no boxes created in this code - what you see is a class. 
+        //  Remember, a class is only a template for a real instance. 
+        //  It shows you what an instance of that class will look like, 
+        //  but it does not create an instance. Think of a class name as a new type like int or string. 
+        //  After you've created the Box class, you can create variables 
+        //  of type Box and assign values to them," Sintia concluded.
+        //  "How can I create an instance of a box?" I asked.  "In a Main method, 
+        //  use the new operator, as you did for arrays."         //Box boxObject = new Box();
+        //  "Now, boxObject will take some space in memory, because it is an object, not just a class." 
+        //  "I think I understand now. An object is something real, that is allocated in memory, 
+        //  and we can control it during program runtime. A class is just a template for all objects 
+        //  that are going to be created," said one of the students. "Yes, exactly!" 
+        //  Sintia looked satisfied. She continued, "A class consists of fields (members) and methods. 
+        //  Fields (or members) are for storing the typed data, the same as local variables. 
+        //  Methods are functions that work with this data. You can access all fields 
+        //  from within methods of the same class; again, the same as you did with local variables. 
+        //  Here's a figure that might make it a bit more clear." 
+        //  "Any final questions before we delve into the practice of objects?" she asked. 
+        //  "What types can you use for fields?" asked someone in the back.
+        //  "Any type that you want. It can be a string, array, double, Box, or any other type. 
+        //  If you want a deeper dive into fields, you can read this article, 
+        //  which I'll post in the notes. Time for the first exercise!" 
+        //  Create a class User with two fields, int field Age and string field Name, 
+        //  and one method with name GetName() that takes no arguments and returns a field Name. Code! */
+        #endregion
+    class User          //  Create a class User             C#I 1. Hello Class/Obj (1)
+        {
+            public int Age;    //with two public fields: int Age 
+            public string Name; //and string Name. 
+            public void PrintUser()  //             * Then, output to the screen: "My name is {Name} and I'm {Age} years old." 
+            {
+                Util util = new Util(ConsoleColor.Cyan, ConsoleColor.White);
+                util.PrintInColor($"\nMy name is {Name}, and I'm {Age.ToString()} years old.\n");    //      }      * using object fields for Name and Age. 
+            }       //  public void PrintUser()
+        }           //  class User      //  Create a class User
+    class Car           //  Create a class Car              C#I 1. Hello Class/Obj (2)
     {
+        //  Create a class Car. Inside the class, 
+        //  create a public static int field CarsCount 
+        //  and increment it in the constructor.
+        //  In the Main method, create 5 objects of the type Car.
+        //  Then, output a string containing the number of cars created to the screen, 
+        //  "Number of created cars is {CarsCount}", using the value of the static field for it.   //  Code!
+        //  Class/Object: Create a class Car with two fields: a double field Weight and a string field Color.
+        //  Then, add two methods to class Car : PrintWeight(), which prints the value of the field Weight; 
+        //  and PrintColor(), which prints the value of the field Color to the console.
+        //  Both methods take no parameters.    //  Code!
+        public static int carsCount = 0;
+        private string _model;
+        private int _year;
+        private double _weight;
+        private string _color;
+        public Car(string model, int year, double weight, string color)
+        {
+            _model = model; _year = year; _weight = weight; _color = color;
+            carsCount++; PrintWeight(); PrintColor();
+        }
+        public void PrintWeight()
+        {
+            Util util = new Util(ConsoleColor.Red, ConsoleColor.Yellow);
+            util.PrintInColor($"Weight={_weight.ToString()}, ");
+        }
+        public void PrintColor()
+        {
+            Util util = new Util(ConsoleColor.Red, ConsoleColor.Yellow);
+            util.PrintInColor($"Color={_color}. ");
+        }
+        static public void CarLogic()
+        {
+            Car corolla = new Car("Corolla", 2004, 6001.36, "Candy Apple Red");
+            Car buick = new Car("Buick", 1997, 6001.36, "Blue");
+            Car sienna = new Car("Sienna", 1999, 6001.36, "Green");
+            Car car123 = new Car("Car4", 2014, 6001.36, "Pearl White");
+            Car prius = new Car("Prius", 2013, 6001.36, "Dead of Night Black");
+            Util util = new Util(ConsoleColor.Red, ConsoleColor.Yellow);
+            util.PrintInColor($"\n{corolla._model}({corolla._year}), {buick._model}({buick._year}), {sienna._model}({sienna._year}), {car123._model}({car123._year}), {prius._model}({prius._year}), so Car Count = {carsCount.ToString()}\n");
+        }
+    }
+
+    class Glass         //   Create a class Glass           C#I 1.1 Hello Class/Obj (3)
+    {
+            //   We are prototyping a robot that refills glasses during dinner. 
+            //   Every glass holds 200 milliliters.     
+            //   During dinner, people either drink water or juice, 
+            //   and as soon as there is less than 100 ml left in the glass, 
+            //   the robot refills it back to 200 ml. 
+            public int LiquidLevel;    //    with one public int field LiquidLevel 
+            private bool _enterInput;
+            public Glass(bool enterInput = false)
+            {
+                _enterInput = enterInput;
+            }
+            public void Drink(int milliliters)  //   and methods public Drink(int milliliters) 
+            {    //   that takes the amount of liquid that a person drank 
+                if (milliliters > LiquidLevel || milliliters > 199)
+                { milliliters = LiquidLevel - 1; }
+                LiquidLevel = LiquidLevel - milliliters;
+                if (LiquidLevel < 100) { Refill(); }
+            }
+            public void Refill()    //   and public Refill() 
+            { LiquidLevel = 200; }      //   that refills the glass to be 200 ml full.         }
+            public void PrintGlass()  //   print - you need to output to the screen how much liquid is in the glass 
+            {
+                ColorPrint colorPrint = new ColorPrint();
+                Console.WriteLine();            //  ConsoleColor origCs4grnd = Console.ForegroundColor;            //  ConsoleColor origCsbckgrnd = Console.BackgroundColor;
+                colorPrint.ForeGroundColor = ConsoleColor.Red;  //  Console.ForegroundColor = ConsoleColor.Red;
+                colorPrint.BackGroundColor = ConsoleColor.White;//  Console.BackgroundColor = ConsoleColor.White;
+                colorPrint.ColoredPrint($"This glass contains {LiquidLevel.ToString()} ml of liquid..\n");    //   in the format "This glass contains {0} ml of liquid..", 
+                if (LiquidLevel == 200) { colorPrint.ColoredPrint("|##|\n"); colorPrint.ColoredPrint("|##|\n"); colorPrint.ColoredPrint("|##|\n"); colorPrint.ColoredPrint("|##|\n"); }
+                else if (LiquidLevel > 149) { colorPrint.ColoredPrint("|  |\n"); colorPrint.ColoredPrint("|##|\n"); colorPrint.ColoredPrint("|##|\n"); colorPrint.ColoredPrint("|##|\n"); }
+                else { colorPrint.ColoredPrint("|  |\n"); colorPrint.ColoredPrint("|  |\n"); colorPrint.ColoredPrint("|##|\n"); colorPrint.ColoredPrint("|##|\n"); }                         //Console.ForegroundColor = origCs4grnd;            //Console.BackgroundColor = origCsbckgrnd;
+            }
+            public void RunGlass()
+            {
+                string line = "Drink 10";
+                if (!_enterInput)
+                {
+                    Drink(50); PrintGlass(); Drink(49); PrintGlass(); Drink(44); PrintGlass();
+                }
+                else
+                {
+                    while (line != "Stop")
+                    {
+                        //  string pep = "0"; int millilitters = 0;
+                        string[] pop = line.Split(' ');
+                        if (pop.Length > 1) { Drink(Convert.ToInt32(pop[1])); }
+                        if (line == "Print") { PrintGlass(); }
+                        line = Console.ReadLine();
+                    }
+                }
+
+            }
+            //   Both methods should not return any value. Initially set LiquidLevel to 200. 
+            //   
+            //   In the Main method create an object of class Glass 
+            //   and read commands from the screen until the user terminates the program (see next). 
+            //   Don't forget to refill the glass when needed! Commands are: 
+            //   drink followed by a number. 
+            //        It indicates that the person drank that amount of milliliters from the glass. 
+            //        You can use string. Split(' ') to separate the word and the number.
+
+            //   stop - program should quit.
+            //   Example 1: 
+            //   >drink 37 
+            //   >drink 12 
+            //   >print 
+            //   This glass contains 151ml of liquid. 
+            //   >stop 
+        }
+    class Rectangle     //   Create a class Rectangle       C#I 1.2 Accessor Constructor (1)
+    {
+
+        //  public Rectangle()        //  {        //  }
+        //  private void PrintReservedArea()
+        //  {            // Ok, can use private fields from within the class
+        //      Console.WriteLine($"      Secret Reserved Area is: {ReservedArea}");
+        //  }
+        //  public void PrintAreaResult(int Area)
+        //  {     // Ok, can use private fields from within the class
+        //      Console.WriteLine($"             Original Area (Length*Width) ({Length}*{Width})");
+        //      Console.WriteLine($"minus Secret Reserved Area is: {Area}");
+        //  }
+        public static void PrintRectangle(int reservedArea = 12, int length = 20, int width = 10)
+        {
+            Utl.PrintColoredA(ConsoleColor.DarkRed, ConsoleColor.White, $"      Secret Reserved Area is            : {reservedArea}\n"); ; // Ok, can call private methods from within the class
+            Utl.PrintColoredA(ConsoleColor.DarkRed, ConsoleColor.White, $"             Original Area (Length*Width) ({length}*{width}): {GetOrigArea(length, width).ToString()})\n");
+            Utl.PrintColoredA(ConsoleColor.DarkRed, ConsoleColor.White, $"minus Secret Reserved Area is    New-Area: {((GetOrigArea(length, width)) - reservedArea).ToString()}\n");
+        }
+        private static int GetOrigArea(int length, int width)
+        { return length * width; }
+    }
+    class Shield        //   Create a class Shield          C#I 1.2 Accessor Constructor (2)
+    {
+        //  Create a class Shield with two private fields: string _identifier and int _power. 
+        //  Add a parameterless public constructor to the class Shield 
+        //  that assigns 10 to _power and "Default" to _identifier.     Code!
+        private string _identifier;
+        private int _power;
+        public Shield()
+        {
+            _identifier = "Default";
+            _power = 10;
+        }
+        public void PrintShield()
+        {
+            ColorPrint colorPrint = new ColorPrint(); colorPrint.ForeGroundColor = ConsoleColor.Cyan; colorPrint.BackGroundColor = ConsoleColor.Yellow;
+            colorPrint.ColoredPrint($"ID:{_identifier} Power: {_power}\n");
+        }
+    }
+    class ExtendedShield//   Create a class ExtendedShield  C#I 1.2 Accessor Constructor (3)
+    {
+        //  Take your class Shield from the previous task and rename it to ExtendedShield. 
+        //  Add two parameters to the constructor: string identifier and int power.
+        //  Inside the constructor, assign the value of these parameters to the private fields _identifier and _power. 
+        private string _identifier;
+        private int _power;
+        public ExtendedShield(string identifier, int power)
+        {
+            _identifier = identifier;
+            _power = power;
+        }
+        public void PrintShield()
+        {
+            ColorPrint colorPrint = new ColorPrint(); colorPrint.ForeGroundColor = ConsoleColor.Red; colorPrint.BackGroundColor = ConsoleColor.Yellow;
+            colorPrint.ColoredPrint($"ID:{_identifier} Power: {_power}\n");
+        }
+    }
+    class Point         //   Create a class Point           C#I 1.2 Accessor Constructor (4.0)
+    {
+        //  Wonderland has a garden where plants are grown under artificial sunlight. 
+        //  The sunlight lamp is capable of covering a rectangular area of any size. 
+        //  A computer program directs the lamp to the area that needs sun at any given moment.
+        //  Your task is to create a class LitArea that has two private fields of type Point: 
+        //  _topLeft and _bottomRight. 
+        //  Those fields store the coordinates of the top left and lower right points 
+        //  that limit the rectangle of light from the lamp.
+        //  Create a public constructor in the class LitArea that takes four integers: 
+        //  xTopLeft, yTopLeft, xBottomRight, and yBottomRight. 
+        //  Create two objects of type Point inside of the constructor, 
+        //  one for the top left corner of the area and one for the bottom right. 
+        //  Assign public fields X and Y of every point to corresponding coordinates coming in the arguments. 
+        //  Finally, store the newly created points in the fields _topLeft and _bottomLeft. 
+        //  Code!
         public int X;
         public int Y;
         public Point(int XCoordinate, int YCoordinate)
         {
-             X = XCoordinate;
-             Y = YCoordinate;
+            X = XCoordinate;
+            Y = YCoordinate;
         }
     }   // class Point
-    class LitArea
+    class LitArea       //   Create a class LitArea         C#I 1.2 Accessor Constructor (4.1)
     {
         //  Create a public constructor in the class LitArea that takes four integers: 
         //  xTopLeft, yTopLeft, xBottomRight, and yBottomRight. 
@@ -1228,7 +1458,7 @@ namespace TestCodeasyNet
         private Point _topLeft, _bottomRight;
         public Point StartP, TL, BR, point;
         public LitArea(int xTopLeft, int yTopLeft, int xBottomRight, int yBottomRight)
-        {                      
+        {
             _topLeft = new Point(xTopLeft, yTopLeft);               //  Creating object in constructor
             _bottomRight = new Point(xBottomRight, yBottomRight);   //  Creating object in constructor
         }
@@ -1278,13 +1508,13 @@ namespace TestCodeasyNet
             ColorPrint colorPrint = new ColorPrint();
             colorPrint.ForeGroundColor = ConsoleColor.Red;
             colorPrint.BackGroundColor = ConsoleColor.White;
-            StartP = new Point ( 0, 0 );
-            Console.WriteLine();
+            StartP = new Point(0, 0);
+
             TL = _topLeft; BR = _bottomRight;
             colorPrint.ColoredPrint($"_topLeft = [{_topLeft.X}, {_topLeft.Y}] and ");
             colorPrint.ColoredPrint($"_bottomRight = [{_bottomRight.X}, {_bottomRight.Y}]\n");
             StringBuilder sb = new StringBuilder();
-            int iX = TL.X; int iY = TL.Y;int oX = BR.X;int oY = BR.Y;char oLetter = '.';
+            int iX = TL.X; int iY = TL.Y; int oX = BR.X; int oY = BR.Y; char oLetter = '.';
             //int[,] boolArray = new int(iX, iY);
             for (int y = 0; y < BR.Y + 1; y++)    //  Vertical(Y)
             {
@@ -1295,7 +1525,7 @@ namespace TestCodeasyNet
                     if (x >= iX && y >= iY)
                         oLetter = '#';
                     sb.Append(oLetter.ToString());
-                    if (x == oX )
+                    if (x == oX)
                     {
                         colorPrint.ColoredPrint(sb.ToString() + "\n");
                         sb.Clear();
@@ -1305,129 +1535,242 @@ namespace TestCodeasyNet
             colorPrint.ColoredPrint(sb.ToString());
         }
     }
-    //  Create a class Shield with two private fields: string _identifier and int _power. 
-    //  Add a parameterless public constructor to the class Shield 
-    //  that assigns 10 to _power and "Default" to _identifier.     Code!
-    class Shield
-    {
-        private string _identifier;
-        private int _power;
-        public Shield()
-        {
-            _identifier = "Default";
-            _power = 10;
-        }
-        public void PrintShield()
-        {
-            ColorPrint colorPrint = new ColorPrint(); colorPrint.ForeGroundColor = ConsoleColor.Cyan; colorPrint.BackGroundColor = ConsoleColor.Yellow;
-            colorPrint.ColoredPrint($"ID:{_identifier} Power: {_power}\n");
-        }
-    }
-    //  Take your class Shield from the previous task and rename it to ExtendedShield. 
-    //  Add two parameters to the constructor: string identifier and int power.
-    //  Inside the constructor, assign the value of these parameters to the private fields _identifier and _power. 
-    class ExtendedShield
-    {
-        private string _identifier;
-        private int _power;
-        public ExtendedShield(string identifier, int power)
-        {
-            _identifier = identifier;
-            _power = power;
-        }
-        public void PrintShield()
-        {
-            ColorPrint colorPrint = new ColorPrint(); colorPrint.ForeGroundColor = ConsoleColor.Red; colorPrint.BackGroundColor = ConsoleColor.Yellow;
-            colorPrint.ColoredPrint($"ID:{_identifier} Power: {_power}\n");
-        }
-    }
+    #region Naming Conventions
     //  Private fields start with an underscore and continue with lower camel case: _privateFieldName
     //  Public fields are written in upper camel case (sometimes referred to as Pascal case): PublicFieldName
     //  Public and private methods are written in upper camel case: PublicOrPrivateMethodName()
     //  Classes and namespaces are written in upper camel case: ClassName NamespaceName 
-    class Rectangle
-    {
-        public int ReservedArea;
-        public int Length;
-        public int Width;
-        public int GetArea()
-        {
-            PrintReservedArea(); // Ok, can call private methods from within the class
-            return (Length * Width) - ReservedArea;
-        }
-        //private 
-        public void PrintReservedArea()
-        {            // Ok, can use private fields from within the class
-            Console.WriteLine($"      Secret Reserved Area is: {ReservedArea}");
-        }
-        public void PrintAreaResult(int Area)
-        {     // Ok, can use private fields from within the class
-            Console.WriteLine($"             Original Area (Length*Width) ({Length}*{Width})");
-            Console.WriteLine($"minus Secret Reserved Area is: {Area}");
-        }
-    }
-    //   We are prototyping a robot that refills glasses during dinner. 
-    //   Every glass holds 200 milliliters.     
-    //   During dinner, people either drink water or juice, 
-    //   and as soon as there is less than 100 ml left in the glass, 
-    //   the robot refills it back to 200 ml. 
-    class Glass    //   Create a class Glass 
-    {
-        public int LiquidLevel;    //    with one public int field LiquidLevel 
-        public void Drink(int milliliters)  //   and methods public Drink(int milliliters) 
-        {    //   that takes the amount of liquid that a person drank 
-            if ( milliliters > LiquidLevel || milliliters > 199 )
-            { milliliters = LiquidLevel - 1; }
-            LiquidLevel = LiquidLevel - milliliters;
-            if (LiquidLevel < 100)              {                Refill();            }
-        }
-        public void Refill()    //   and public Refill() 
-        { LiquidLevel = 200; }      //   that refills the glass to be 200 ml full.         }
-        public void PrintGlass()  //   print - you need to output to the screen how much liquid is in the glass 
-        {
-            ColorPrint colorPrint = new ColorPrint();
-            Console.WriteLine();            //  ConsoleColor origCs4grnd = Console.ForegroundColor;            //  ConsoleColor origCsbckgrnd = Console.BackgroundColor;
-            colorPrint.ForeGroundColor = ConsoleColor.Red;  //  Console.ForegroundColor = ConsoleColor.Red;
-            colorPrint.BackGroundColor = ConsoleColor.White;//  Console.BackgroundColor = ConsoleColor.White;
-            colorPrint.ColoredPrint($"This glass contains {LiquidLevel.ToString()} ml of liquid..\n" );    //   in the format "This glass contains {0} ml of liquid..", 
-            if (LiquidLevel == 200) { colorPrint.ColoredPrint("|##|\n"); colorPrint.ColoredPrint("|##|\n"); colorPrint.ColoredPrint("|##|\n"); colorPrint.ColoredPrint("|##|\n"); }
-            else if (LiquidLevel > 149) { colorPrint.ColoredPrint("|  |\n"); colorPrint.ColoredPrint("|##|\n"); colorPrint.ColoredPrint("|##|\n"); colorPrint.ColoredPrint("|##|\n"); }
-            else { colorPrint.ColoredPrint("|  |\n"); colorPrint.ColoredPrint("|  |\n"); colorPrint.ColoredPrint("|##|\n"); colorPrint.ColoredPrint("|##|\n"); }                         //Console.ForegroundColor = origCs4grnd;            //Console.BackgroundColor = origCsbckgrnd;
-        }
-        //   Both methods should not return any value. Initially set LiquidLevel to 200. 
-        //   
-        //   In the Main method create an object of class Glass 
-        //   and read commands from the screen until the user terminates the program (see next). 
-        //   Don't forget to refill the glass when needed! Commands are: 
-        //   drink followed by a number. 
-        //        It indicates that the person drank that amount of milliliters from the glass. 
-        //        You can use string. Split(' ') to separate the word and the number.
-        
-        //   stop - program should quit.
-        //   Example 1: 
-        //   >drink 37 
-        //   >drink 12 
-        //   >print 
-        //   This glass contains 151ml of liquid. 
-        //   >stop 
-    }
-    class User    ///*Create a class User 
-    {
-        public int Age;    //with two public fields: int Age 
-        public string Name; //and string Name. 
-        public void PrintUser()  //             * Then, output to the screen: "My name is {Name} and I'm {Age} years old." 
-        {                    
-            Util util = new Util(ConsoleColor.Cyan, ConsoleColor.White);
-            util.PrintInColor($"\nMy name is {Name}, and I'm {Age.ToString()} years old.\n");    //      }      * using object fields for Name and Age. 
-        }
-    }   //  class User      ///*Create a class User
+    #endregion
 
-    class Program
+}    //  namespace Chap1ClassObjCarUserGlass
+namespace ClassObjectNAccessor
+{
+    class SumBetween     //   Create a class SumBetween       C#I 2.1 Static (1)
+    {
+        //  Create a class that has one public static method, GetSumBetween, 
+        //  that takes two integers, a and b, and returns as an integer the sum of all integers between a and b (including a and b). 
+        //  In the Main method, read two integers from the console, 
+        //  call GetSumBetween, and print the returned number to the console.
+        //  For example(don't output the green text):
+        //  >6
+        //  >10
+        //  40  // 6 + 7 + 8 + 9 + 10 = 40
+
+        public static int GetSumBetween(int a, int b)
+        {
+            ColorPrint colorPrint = new ColorPrint(); colorPrint.ForeGroundColor = ConsoleColor.Red; colorPrint.BackGroundColor = ConsoleColor.White;
+            int c = 0;
+            for (int i = a; i <= b; i++)
+            { c = c + i; }
+            colorPrint.ColoredPrint($"The numbers between {a} and {b} sum to {c}\n"); return c;
+        }
+    }
+    static class DistanceMeasurer  //DistanceMeasurer         C#I 2.1 Static (2)
+    {
+        //  Measuring distance is an essential task at Wonderland. 
+        //  Create a static class, DistanceMeasurer, that has one public method, 
+        //  GetDistance, with a return type of double, that takes 4 int parameters 
+        //  that represent 2D point coordinates: x1, y1, x2, y2. 
+        //  The GetDistance method should output the distance 
+        //  between the two given points (x and y) on a plane.
+        //  In the Main method, read 4 integers from the console, 
+        //  execute GetDistance, and output the result to the screen.
+        //  For example:
+        //  >2
+        //  >1
+        //  >3
+        //  >4
+        //  3.16227766016838                Code!
+
+        public static double GetDistance(int x1, int y1, int x2, int y2)
+        {
+            double firstq = Math.Pow(x1 - x2, 2.0);      //  = (x1 - x2)2
+            double second = Math.Pow(y1 - y2, 2.0);      //  = (y1 - y2)2
+            double thirdq = Math.Sqrt(firstq + second);
+            return thirdq;
+        }
+    }
+    //  Wonderland has a formal president. He is a bit eccentric, and likes it 
+    //  when all text that he reads is placed in a frame of stars: *. For example, 
+    //  instead of "Hello, sir," he expects to see:
+    //  **************
+    //  * Hello, sir *
+    //  **************
+    //  Create a static class TextFramePretifier. It should contain a 
+    //  private static int field, _textsPretified, that increments 
+    //  for every text that this class processes. Add a static constructor 
+    //  that initializes _textsPretified to zero. Also add a 
+    //  public static method Prettify that takes a string text and returns void. 
+    //  The method should first print a sentence "Processing text: {_textsPretified}" 
+    //  that indicates how many texts have been processed. Then, from the new line, 
+    //  it should print the given text into a frame of stars. The input text is guaranteed 
+    //  to take no more than one line. The user string should have one space before and after 
+    //  the frame, as shown in the below example.
+    //  In the Main method, read a string from the console and call your method with this input.
+    //  Repeat this until user inputs "exit". For example:    
+    //  >Why frame is so important, sir?
+    //  Processing text: 1
+    //  ***********************************
+    //  * Why frame is so important, sir? *
+    //  ***********************************
+    //  >You look great today, sir!
+    //      Processing text: 2
+    //  ******************************
+    //  * You look great today, sir! *
+    //  ******************************
+    //  >exit
+    static class TextFramePretifier  //TextFramePretifier     C#I 2.1 Static (3)
+    {
+        private static int _textsPretified;
+        static TextFramePretifier() { _textsPretified = 0; }
+        public static void Prettify(string text)
+        {
+            int astlen = text.Length + 4;
+            Util util = new Util(ConsoleColor.Red, ConsoleColor.White);
+            _textsPretified++;
+            util.PrintInColor($"Processing text: {_textsPretified.ToString()}\n");
+            string opo = util.TextRepeater("*", astlen);
+            util.PrintInColor(opo + "\n");
+            util.PrintInColor("* " + text + " *\n");
+            util.PrintInColor(opo + "\n");
+        }
+    }
+    //  The president was happy with your implementation of the TextFramePretifier... 
+    //  for one day. Then he decided that he wants to control the width of the frame. 
+    //  Take the code of the previous task and modify it to take an integer 
+    //  that represents the width of the frame and then print a message in the frame as you did in previous task, 
+    //  but using the given width this time. Write as many words as you can in each line; 
+    //  if there is an empty space, fill it with spaces. The number of words 
+    //  in a message will not exceed 100. All words are guaranteed 
+    //  to be shorter than (frameWidth - 4). Treat spaces as word separators 
+    //  and all other symbols, such as commas or question marks, as part of the word 
+    //  they're connected to. The text is guaranteed to have only single spaces.
+    //      For example:
+    //  >15
+    //  >You look great today, sir!
+    //  Processing text: 1
+    //  ***************
+    //  * You look*
+    //  * great       *
+    //  * today, sir! *
+    //  ***************
+    //  >A zebra does not change its spots.
+    //  Processing text: 2
+    //  ***************
+    //  * A zebra     *
+    //  * does not    *
+    //  * change its  *
+    //  * spots.      *
+    //  ***************
+    //  >exit
+    static class WTextFramePretifier //TextFramePretifier     C#I 2.1 Static (4)
+    {
+        private static int _textsPretified;
+        static WTextFramePretifier() { _textsPretified = 0; }
+        public static void Prettify(int widthOfFrame, string text)
+        {
+            Util util = new Util(ConsoleColor.Red, ConsoleColor.White);
+            StringBuilder sb = new StringBuilder("* ");
+            _textsPretified++;
+            util.PrintInColor($"Processing text: {_textsPretified.ToString()}\n");
+            string opo = util.TextRepeater("*", widthOfFrame);
+            util.PrintInColor(opo + "\n");    //util.PrintInColor("* " + text + " *\n");
+            string[] strArray = text.Split(' ');
+            foreach (var item in strArray)
+            {
+                if (sb.Length == 2)
+                {
+                    sb.Append(item);
+                }
+                else
+                {
+                    if ((item.Length + sb.Length + 3) > (widthOfFrame - 4))
+                    {
+                        PrettyPrintLine(widthOfFrame, util, sb);
+                        sb.Clear(); sb.Append("* " + item.ToString());
+                    }         //  Write frame use item in else sb.Append(" "+item 
+                    else
+                    {
+                        sb.Append(" " + item.ToString());
+                    }   //    if (item.Length + sb.Length + 3 > WidthOfTexts): else
+                }  //  if (sb.Length == 3)
+            }   // foreach (var item in strArray)     
+            PrettyPrintLine(widthOfFrame, util, sb);
+            util.PrintInColor(opo + "\n");
+        }
+        private static void PrettyPrintLine(int widthOfFrame, Util util, StringBuilder sb)
+        {           //  Dont put this in Util you would have to repass the colors!!!!
+            int currMinusTextWidth = 0;
+            if (widthOfFrame - (sb.Length + 2) > 0)
+                currMinusTextWidth = widthOfFrame - (sb.Length + 2);
+            util.PrintInColor(sb.ToString()
+                + util.TextRepeater(" ", currMinusTextWidth) + " *\n");
+        }  //  private static void PrettyPrintLine(int widthOfFrame, Util util, StringBuilder sb)
+    }      //  static class WTextFramePretifier
+    class ClassObjectsAndAccessors
+    {
+        public static bool enterInput = false;
+        public ClassObjectsAndAccessors(bool enterConsoleInput = false)
+        {
+            enterInput = enterConsoleInput;
+        }
+        static public void RunCOAA()
+        {
+            
+            Utl.PrintColoredA(ConsoleColor.Red, ConsoleColor.Yellow,"Hello World! Droid Killers: 23, 669, 133");
+            Box box = new Box(14554, 25794, 98758) { IsOpened = true };
+            if (box.IsOpened) { box.PrintBoxArea(box.Area); box.CloseBox(); }
+            else { box.OpenBox(); }
+            ColorPrint colorPrint = new ColorPrint(); colorPrint.ForeGroundColor = ConsoleColor.Red; colorPrint.BackGroundColor = ConsoleColor.White;
+            //Write a program that creates an int variable codePart with the value 333. Then create another 
+            //  int variable with name code and assign a value that is twice the codePart variable value. 
+            //  Your program should output: Self - destruction started. The code is 666
+            int codePart = 333;
+            colorPrint.ColoredPrint($"\nDistance=175+(75*3)={175 + (75 * 3)}.  Self - destruction started. The code is {codePart * 2}.\n");
+            // chapter 2.1 static 2.1.1.
+            int d = SumBetween.GetSumBetween(6, 10); int e = SumBetween.GetSumBetween(1, 5);
+            // chapter 2.1 static 2.1.2.
+            int x1 = 2, y1 = 1, x2 = 3, y2 = 4; Console.WriteLine(); 
+            double distance = DistanceMeasurer.GetDistance(x1, y1, x2, y2); colorPrint.ColoredPrint($"x1 = {x1.ToString()}, y1 = {y1.ToString()}, x2 = {x2.ToString()}, y2={y2.ToString()}; so distance = {distance.ToString()}\n");
+
+            // chapter 2.1 static 2.1.3.
+            TextFramePretifier.Prettify("Why frame is so important, sir1?");
+            TextFramePretifier.Prettify("Why frame is so important, sir2?");
+            TextFramePretifier.Prettify("You look great today, sir!");
+            // chapter 2.1 static 2.1.4.
+            WTextFramePretifier.Prettify(14, "Why frame is so important, sir1?");
+            WTextFramePretifier.Prettify(14, "You look great today, sir!");
+
+        }   //  static public void RunCOAA()
+    }       //  class ClassObjectsAndAccessors    
+ 
+
+    //  Create 4 int variables with different names. Assign them these values: 1000, 2000, 3000, 10000. Using string interpolation, insert those int variables into the strings to get such output:
+    //  In one year my salary is going to be 1000 USD, In two years my salary is going to be 2000 USD
+    //  In three years my salary is going to be 3000 USD, In four years my salary is going to be 10000 USD
+    //  int codePart = 333, salary = 1000;
+
+    //  Now for a more practical application.The biggest machine known to us is a huge cube, measuring 
+    //  317 meters in each direction, and it is called “Dominator.” To stop Dominator, we plan to paint 
+    //  it with a machine - destroying paint. Write a program that calculates how much paint we will need 
+    //  to totally paint all six sides of Dominator, if painting 1 square meter takes 20 grams of paint. 
+    //  You have studied geometry, haven't you? 
+    //  Output the result using string interpolation in the format: I need **grams of paint.
+
+    //  Here is a final task that may come in handy.Some drones are not so easy to reprogram immediately, so they may continue sending reports to the drone base.To prevent this, you can substitute false reports.You have to output to the screen: "I can see ** people in this square" and then decrement the number by 1.You have to repeat this until the number of people is equal to 0.For example:
+    //  I can see 2 people in this square
+    //  I can see 1 people in this square
+    //  I can see 0 people in this square
+    //  Try it yourself, but starting with 5 people at the beginning. Use int variables and strings interpolation.
+    class Program1
     {
         static void Main(string[] args)
         {
-            ClassObjectsAndAccessors.RunCOAA();
+            Chap1ClassObjCarUserGlass.RunNamespaceCSIChap1.RunCSIChap1();
+            ClassObjectsAndAccessors.RunCOAA();        //  RunCSIChap2
             NullAndThis.RunNAT();
+
+
         }   //  Main
-    }   //  Program
+    } 
 }
