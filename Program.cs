@@ -632,20 +632,20 @@ namespace TestCodeasyNet
         }
         public static void RunNAT()  //  Chapter 2.2 Null and This
         {
+            Utl.PrintColoredA(ConsoleColor.Red, ConsoleColor.Black, $"\nYou are entering CSharp-Intermediate: Chapter 3: Properties, Encapsulation.\n\n");
             AdvancedDroid ad = new AdvancedDroid(0, 0); ad.MoveTo(2, 2);
             new Guess(6);
             Box box1 = new Box(1, 2, 3) { IsOpened = false };
             Box box2 = new Box(1, 2, 4) { IsOpened = false };
             int cbox = box1.CompareTo(box2); string line = "freaking stunning beach";
             NullTest nullTest = new NullTest(line);
-            nullTest.TestNull(cbox.ToString()); nullTest.PigLatin(line);
+            nullTest.PigLatin(line);
             string line2 = nullTest._newlyCreated; nullTest.PrintPL(line, line2);
-            nullTest.JobsIO(@"C:\Users\Brice16\Documents\Resumes\JobsOct19-252019.txt");
             //  Chapter 3.1 Properties
             new Flower("Rose", "Red", 10, false);
             new ChickenFarm(62.9856, 168.333365, 10, "Red Rooster");
             new ResistanceBase(62.9856, 168.333365, 21, "Red Droid");
-            new ConsoleReadLineA();    //  Beginning C# Chapter~4-6???
+            Utl.PrintColoredA(ConsoleColor.Red, ConsoleColor.Black, $"\nYou are exiting CSharp-Intermediate: Chapter 3: Properties, Encapsulation.\n\n");
         }
     }
     class ConsoleReadLineA
@@ -653,67 +653,511 @@ namespace TestCodeasyNet
         public ConsoleReadLineA()
         {
             Util sutil = new Util(ConsoleColor.White, ConsoleColor.Black);
-            sutil.PrintInColor("You Entered your name: Ritchie: "); bool testit = true;
-            if (testit)                //if (Console.ReadLine() == "Ritchie")
-                sutil.PrintInColor("Access granted\n");
-            else
-                sutil.PrintInColor("Security Alert! You are under arrest for treason...");
-            sutil.PrintInColor("How are you? You said fine");
-            if (testit)//  if (Console.ReadLine() == "fine")
-                sutil.PrintInColor("Life is great!");
-            else
-                sutil.PrintInColor("Everything's gonna be alright");
-            sutil.PrintInColor("Input your name, please.");
-            string name = "Brice Ulwelling"; //  Console.ReadLine();
-            sutil.PrintInColor($"My greetings, {name}!");
-            sutil.PrintInColor("The Max of 2: Num1 Hit Enter;");
-            int aInt = int.Parse("653");  //  Console.ReadLine());    // Read a line and convert it to int (short version)
-            sutil.PrintInColor("              Num2 Hit Enter;");
-            int bInt = int.Parse("23");   //  Console.ReadLine());    // Read a line and convert it to int (short version)
-            if (aInt > bInt)
-                sutil.PrintInColor($"Max:a={aInt.ToString()}");
-            else
-                sutil.PrintInColor($"Max:b={bInt.ToString()}");
-            if (aInt < bInt)
-                sutil.PrintInColor($"Min:a={aInt.ToString()}");
-            else
-                sutil.PrintInColor($"Min:b={bInt.ToString()}");
-            sutil.PrintInColor("What Temperature is it? (enter an integer of degrees Celcius");
-            if (Convert.ToInt32("-33") < 5)    //  Console.ReadLine()) < 5)
-                sutil.PrintInColor("Wear a coat");
-            else
-                sutil.PrintInColor("Wear a jacket");
+            ConsoleReadLineAcces(sutil);
+            ConsoleReadLineHowRU(sutil);
+            ConsoleReadLineGreet(sutil);
+            ConsoleReadLineMaxO2(sutil);
+            ConsoleReadLineTempQ(sutil);
+            ConsoleReadLineCallU(sutil);
+            ConsoleReadLineFlyIt(sutil);
+            ConsoleReadLineZGame(sutil);
+            ConsoleReadLineOMidl(sutil, 65, 32, 95);
+            ConsoleReadLineOMidl(sutil, 12, 11, 10);    //  sutil.PrintInColor("\n");
+            ConsoleReadLineNMidl(sutil, 60, 50, 70);
+            CrappyCalc(sutil, 10, 0);
+            Quizs(sutil);
+            ForLoops(sutil, 10);
+            ForDiskSpace(sutil, 3, new int[] { 16, 38, 4 });
+            ForDiskSpace(sutil, 3, new int[3] { 33, 17, 3 }); sutil.PrintInColor("\n");
+            
+        }
+        //  public Utl(ConsoleColor fore, ConsoleColor back, string text = "")
+        //  {
+        //      PrintIt(fore, back, text);
+        //  }
 
-            sutil.PrintInColor("Enter Your First Name:");
-            string firstName = "Brice";  //  Console.ReadLine();     //  Read a line from the screen
-            sutil.PrintInColor("Enter Your Last Name:");
-            string secondName = "Ulwelling"; //  Console.ReadLine(); //  Read a line from the screen
-            sutil.PrintInColor($"Should I call you {firstName} or {secondName}?    ");
-            string numberOfBoxesString = "6"; //   Console.ReadLine();  //  Read a line from the console
-            string weightString = "4";        //   Console.ReadLine();  // Read a line from the console
-            sutil.PrintInColor($"You Entered Number of Boxes:{numberOfBoxesString}");
-            int numberOfBoxes = Convert.ToInt32(numberOfBoxesString);     //  Convert numberOfBoxesString to an integer
-            sutil.PrintInColor($"You Entered Weight of Boxes:{weightString}");
-            int weight = Convert.ToInt32(weightString);         // to an integer
-            if (numberOfBoxes * weight > 30)
-                sutil.PrintInColor("No, Your boxes weigh too much");
+        //  public static void PrintIt(ConsoleColor fore, ConsoleColor back, string text = "")
+        //  {
+        //      ConsoleColor foreOrig = Console.ForegroundColor;
+        //      ConsoleColor backOrig = Console.BackgroundColor;
+        //      Console.ForegroundColor = fore;
+        //      Console.BackgroundColor = back;
+        //      if (text.Length > 0) { Console.Write(text); }
+        //      Console.ForegroundColor = foreOrig;
+        //      Console.BackgroundColor = backOrig;
+        //  }
+        public static void ConsoleReadLineNMidl(Util sutil, int num1 = 0, int num2 = 0, int num3 = 0, bool isConsoleRead = false)
+        {
+            int iA = 0, iB = 0, iC = 0, low = 0, mid = 0, high = 0;
+            if (isConsoleRead)
+            {
+                string aString = Console.ReadLine();  //  Read a line from the console
+                string bString = Console.ReadLine();  //  Read a line from the console
+                string cString = Console.ReadLine();  //  Read a line from the console
+
+                iA = int.Parse(aString);  //  Convert aString to an integer
+                iB = int.Parse(bString);  //  Convert bString to an integer
+                iC = int.Parse(cString);  //  Convert cString to an integer
+            }
             else
-                sutil.PrintInColor("Yes, our droids can fly your boxes.   ");
+            {
+                iA = num1; iB = num2; iC = num3;
+            }
+            // Perform checks here to find out which number is the middle one.
+            if (iA < iB)
+            {
+                low = iA;
+                mid = iB;
+                if (iC < low) //c a b
+                { high = mid; mid = low; low = iC; }    //                 Console.WriteLine(iA);
+                else
+                {
+                    if (iC < mid)          //    a c b    
+                    { high = mid; mid = iC; }           //                 Console.WriteLine(iC);
+                    else                   //    a b c
+                    { high = iC; }                      //                 Console.WriteLine(iB);
+                }
+            }
+            else  // b > a
+            {
+                low = iB;
+                mid = iA;
+                if (iC < low)           //    c b a 
+                { high = mid; mid = low; low = iC; }    //                 Console.WriteLine(iB); 
+                else
+                {
+                    if (iC < mid)       //    b c a
+                    { high = mid; mid = iC; }           //                 Console.WriteLine(iC);
+                    else                //    b a c
+                    { high = iC; }                      //                 Console.WriteLine(iA);
+                }
+            }
+            sutil.PrintInColor($"Orig: {iA.ToString()}, {iB.ToString()}, {iC.ToString()}.    Sorted: {low.ToString()}, {mid.ToString()}, {high.ToString()}.        ");
+        }   //  public static void TheMiddle()
+        public static void CrappyCalc(Util sutil, int iA = 10, int iB = 0, string operation = "all", bool isConsoleRead = false)  //  , string oper = "add")
+        {
+            if (isConsoleRead)
+            {
+                sutil.PrintInColor("Enter the first  whole integer number: ");
+                iA = int.Parse(Console.ReadLine());              //  Convert aString to an integer
+                sutil.PrintInColor("Enter the second whole integer number: ");
+                iB = int.Parse(Console.ReadLine());              //  Convert bString to an integer
+                sutil.PrintInColor("Enter 'add','subtact','multiply','divide', or 'all'");
+                operation = Console.ReadLine();                  //  Read a line from the console
+            }
+            if (operation.ToLower() == "+" || operation.ToLower() == "a") operation = "add"; if (operation.ToLower() == "-" || operation.ToLower() == "s") operation = "subtract"; if (operation.ToLower() == "*" || operation.ToLower() == "m") operation = "multiply"; if (operation.ToLower() == "/" || operation.ToLower() == "d") operation = "division"; if (operation.ToLower() == "." || operation.ToLower() == "l") operation = "all";
+            if (operation.ToLower() == "add" || operation.ToLower() == "all")       //  Write an 'if' to check whether operation is "add" or "multiply"
+                sutil.PrintInColor($"{iA.ToString()} + {iB.ToString()} = {(iA + iB).ToString()}.   ");
+            if (operation.ToLower() == "subtract" || operation.ToLower() == "all")
+                sutil.PrintInColor($"{iA.ToString()} - {iB.ToString()} = {(iA - iB).ToString()}.   ");
+            if (operation.ToLower() == "multiply" || operation.ToLower() == "all")
+                sutil.PrintInColor($"{iA.ToString()} * {iB.ToString()} = {(iA * iB).ToString()}.   ");
+            if (operation.ToLower() == "divide" || operation.ToLower() == "all")
+            { if (iB == 0) sutil.PrintInColor($"Can't divide by zero!\n");
+                else sutil.PrintInColor($"{iA.ToString()} / {iB.ToString()} = {(iA / iB).ToString()}.        ");
+            }
+        }
+        public static void Quizs(Util sutil, bool isConsoleRead = false)
+        {
+            StringBuilder sb = new StringBuilder("");
+            sb.Append(Quiz1(sutil, isConsoleRead)); //  sb.Append(Quiz1(sutil, true));
+            sb.Append(Quiz2(sutil, isConsoleRead)); //  sb.Append(Quiz2(sutil, true)); 
+            sb.Append(Quiz3(sutil, isConsoleRead)); //  sb.Append(Quiz3(sutil, true));
+            sb.Append(Quiz4(sutil, isConsoleRead)); //  sb.Append(Quiz4(sutil, true));
+            sb.Append(Quiz5(sutil, isConsoleRead)); //  sb.Append(Quiz5(sutil, true));
+            sb.Append(Quiz6(sutil, isConsoleRead)); //  sb.Append(Quiz6(sutil, true));
+            if (!isConsoleRead) sutil.PrintInColor(sb.ToString());
+        }
+        private static string Quiz1(Util sutil, bool isConsoleRead = false)
+        {
+            List<string> answer1 = new List<string>();
+            answer1.Add("0 - A program that executes my code.\n");
+            answer1.Add("1 - A framework that is running in Windows.\n");
+            answer1.Add("2 - A program that transforms code written in one programming language into another.\n");
+            answer1.Add("3 - A service that tries to recover your program if you made a mistake.\n");
+            int answer = 2, tryanswer = -1; string question /* Quiz 1 */ = "1. What is a compiler?"; if (isConsoleRead) sutil.PrintInColor(question + "\n");
+            if (isConsoleRead)
+            {
+                foreach (string item in answer1)
+                { sutil.PrintInColor(item); }
+                while (tryanswer != answer)
+                {
+                    sutil.PrintInColor("Answer? "); tryanswer = int.Parse(Console.ReadLine());
+                }
+                sutil.PrintInColor($"That is Correct: {answer1[answer]}"); return "";
+            }
+            else
+                return ("\nQ U I Z\n" + question + " " + answer1[answer]);
+            //  if (index == 0) answer = "- A program that executes my code.";
+            //  if (index == 1) answer = "- A framework that is running in Windows.";
+            //  if (index == 2) answer = "- A program that transforms code written in one programming language into another.";
+            //  if (index == 3) answer = "- A service that tries to recover your program if you made a mistake.";
+        }
+        private static string Quiz2(Util sutil, bool isConsoleRead = false)
+        {
+            /*  Quiz Task 2  */
+            List<string> answer2 = new List<string>();
+            answer2.Add("0 - Code written in C#.\n");
+            answer2.Add("1 - Code written in a way that processor can understand and execute it.\n");
+            answer2.Add("2 - Code that Common Language Runtime can understand and execute.\n");
+            answer2.Add("3 - It's not a code, it's another name of .NET Framework.\n");
 
-            string inputAsString = "652";      //  Console.ReadLine(); // Read a line from the screen
-            sutil.PrintInColor($"Zanabar Game: Your Input number ={inputAsString}"); int myNumber = Convert.ToInt32(inputAsString); // Convert inputAsString to int
-            Console.WriteLine($" :  {++myNumber}, I won!");    // Do some magic with myNumber
+            int answer = 1, tryanswer = -1; string question = "2. What is machine code?"; if (isConsoleRead) sutil.PrintInColor(question + "\n");
+            if (isConsoleRead)
+            {
+                foreach (string item in answer2)
+                { sutil.PrintInColor(item); }
+                while (tryanswer != answer)
+                { sutil.PrintInColor("Answer? "); tryanswer = int.Parse(Console.ReadLine()); }
+                sutil.PrintInColor($"That is Correct: {answer2[answer]}"); return "";
+            }
+            else
+                return (question + " " + answer2[answer]);
+            //  if (index == 0) answer = "- Code written in C#.";
+            //  if (index == 1) answer = "- Code written in a way that processor can understand and execute it.";
+            //  if (index == 2) answer = "- Code that Common Language Runtime can understand and execute.";
+            //  if (index == 3) answer = "- It's not a code, it's another name of .NET Framework.";
+        }
+        private static string Quiz3(Util sutil, bool isConsoleRead = false)
+        {
+            /*  Quiz Task 3  */
+            List<string> answer3 = new List<string>();
+            answer3.Add("0 - ProgramName.exe or ProgramName.il\n");
+            answer3.Add("1 - ProgramName.dll. or ProgramName.il\n");
+            answer3.Add("2 - ProgramName.il or ProgramName.bat\n");
+            answer3.Add("3 - ProgramName.exe or ProgramName.dll\n");
 
-            //  string aString = Console.ReadLine();  //  Read a line from the console
-            //  string bString = Console.ReadLine();  //  Read a line from the console
-            //  string cString = Console.ReadLine();  //  Read a line from the console
-            int a = 66, b = 44, c = 69;
-            sutil.PrintInColor("The Middle: Num1={a}, Num2={b}, Num3={c}\n");
-            //  int a = Convert.ToInt32(Console.ReadLine());      //  to an integer
-            //  Console.WriteLine("    Num2 Hit Enter;");
-            //  int b = Convert.ToInt32(Console.ReadLine());      //  to an integer
-            //  Console.WriteLine("    Num3 Hit Enter;");
-            //  int c = Convert.ToInt32(Console.ReadLine());      //  to an integer
+            int answer = 3, tryanswer = -1; string question = "3. Which files does C# compiler generate?"; if (isConsoleRead) sutil.PrintInColor(question + "\n");
+            if (isConsoleRead)
+            {
+                foreach (string item in answer3)
+                { sutil.PrintInColor(item); }
+                while (tryanswer != answer)
+                { sutil.PrintInColor("Answer? "); tryanswer = int.Parse(Console.ReadLine()); }
+                sutil.PrintInColor($"That is Correct: {answer3[answer]}"); return "";
+            }
+            else
+                return (question + " " + answer3[answer]);
+        }
+        private static string Quiz4(Util sutil, bool isConsoleRead = false)
+        {
+            /*  Quiz Task 4  */
+            List<string> answer4 = new List<string>();
+            answer4.Add("0 - International Code, common choice if you want to write international programs.\n");
+            answer4.Add("1 - Intermediate Code, generated by Just In Time compiler and prepared for the execution by processor.\n");
+            answer4.Add("2 - Intermediate Code, generated by C# compiler and packaged in ProgramName.exe or ProgramName.dll\n");
+            answer4.Add("3 - Intermediate Code, which is generated by CLR.\n");
+            int answer = 2, tryanswer = -1; string question = "4. What is IL code?"; if (isConsoleRead) sutil.PrintInColor(question + "\n");
+            if (isConsoleRead)
+            {
+                foreach (string item in answer4)
+                { sutil.PrintInColor(item); }
+                while (tryanswer != answer)
+                { sutil.PrintInColor("Answer? "); tryanswer = int.Parse(Console.ReadLine()); }
+                sutil.PrintInColor($"That is Correct: {answer4[answer]}"); return "";
+            }
+            else
+                return (question + " " + answer4[answer]);
+            //  if (index == 0) answer = "- International Code, common choice if you want to write international programs.";
+            //  if (index == 1) answer = "- Intermediate Code, generated by Just In Time compiler and prepared for the execution by processor.";
+            //  if (index == 2) answer = "- Intermediate Code, generated by C# compiler and packaged in ProgramName.exe or ProgramName.dll";
+            //  if (index == 3) answer = "- Intermediate Code, which is generated by CLR.";
+        }
+        private static string Quiz5(Util sutil, bool isConsoleRead = false)
+        {
+            /*  Quiz Task 5  */
+            List<string> answer5 = new List<string>();
+            answer5.Add("0 - Framework that contains CLR, big class library and other software that makes possible to execute C# programs.\n");
+            answer5.Add("1 - Framework that was developed to support C# programs on Linux and Mac OS.\n");
+            answer5.Add("2 - Framework that contains CLR, big class library and other software that makes possible to execute C#, F# and Visual Basic .NET programs.\n");
+            answer5.Add("3 - A component of CLR, includes JIT compiler.\n");
+
+            int answer = 2, tryanswer = -1; string question = "5. What is .NET Framework?"; if (isConsoleRead) sutil.PrintInColor(question + "\n");
+            if (isConsoleRead)
+            {
+                foreach (string item in answer5)
+                { sutil.PrintInColor(item); }
+                while (tryanswer != answer)
+                { sutil.PrintInColor("Answer? "); tryanswer = int.Parse(Console.ReadLine()); }
+                sutil.PrintInColor($"That is Correct: {answer5[answer]}"); return "";
+            }
+            else
+                return (question + " " + answer5[answer]);
+        }
+        private static string Quiz6(Util sutil, bool isConsoleRead = false)
+        {
+            /*  Quiz Task 6  */
+            List<string> answer6 = new List<string>();
+            answer6.Add("0 - You get compile time error telling you what went wrong.\n");
+            answer6.Add("1 - You get runtime error telling you what went wrong.\n");
+            answer6.Add("2 - You get CLR error tlling you what went wrong.\n");
+            answer6.Add("3 - You get operating system error telling you what went wrong.\n");
+
+            int answer = 0, tryanswer = -1; string question = "6. What happens if you miss a semicolon in your code?"; if (isConsoleRead) sutil.PrintInColor(question + "\n");
+            if (isConsoleRead)
+            {
+                foreach (string item in answer6)
+                { sutil.PrintInColor(item); }
+                while (tryanswer != answer)
+                { sutil.PrintInColor("Answer? "); tryanswer = int.Parse(Console.ReadLine()); }
+                sutil.PrintInColor($"That is Correct: {answer6[answer]}"); return "";
+            }
+            else
+                return (question + " " + answer6[answer] + "\n");
+            //  if (index == 0) answer = "- You get compile time error telling you what went wrong.";
+            //  if (index == 1) answer = "- You get runtime error telling you what went wrong.";
+            //  if (index == 2) answer = "- You get CLR error tlling you what went wrong.";
+            //  if (index == 3) answer = "- You get operating system error telling you what went wrong.";
+        }
+        public static void ForLoops(Util sutil, int iLoopControl = 10, bool isConsoleRead = false)
+        {
+            int consoleWindowWidth = Console.WindowWidth;
+            string wOut; sutil.PrintInColor("FOR Loop\n");
+            ForLoopMadeMyDay(sutil);
+            Print0to99(sutil);
+            ForLoopIKnowWhereYouLive(sutil);
+            SumEvenNumbers(sutil);
+            SumOfSquaresFor(sutil);
+            MinMaxChecker(sutil, 4, new int[] { 11, 22, 33, 15 });
+            MinMaxChecker(sutil, 4, new int[] { 66, 11, 30, 15 });
+            MinMaxChecker(sutil, 4, new int[] { 21, 22, 11, 12 });
+            OddChecker(sutil);
+        }
+        private static void Print0to99(Util sutil, int numberOfNumbers = 99)
+        {
+            // Write a program that outputs all numbers from 0(including) to 99(including) to the screen each from the new line.
+            for (int iloop = 0; iloop < numberOfNumbers; iloop++)
+            {
+                sutil.PrintInColor($"{iloop.ToString()},");
+                if (numberOfNumbers > 6 && iloop == (numberOfNumbers / 2) + 1) sutil.PrintInColor("\n");
+            }
+            sutil.PrintInColor($"{numberOfNumbers};\n");
+        }
+        private static void ForLoopMadeMyDay(Util sutil, int iLoopControl = 10)
+        {
+            //  Write a program that outputs to the screen "for loop made my day!" 10 times using the for loop.
+            for (int iLoop = 0; iLoop < iLoopControl; iLoop++)
+            {
+                sutil.PrintInColor($"for loop made my day!   ");
+                if (iLoopControl > 6 && iLoop == (iLoopControl / 2) - 1) Console.WriteLine();
+            }
+            sutil.PrintInColor("\n");
+        }
+        private static void ForLoopIKnowWhereYouLive(Util sutil, int iLoopControl = 10, bool isConsoleRead = false)
+        {
+            //  Write a program that reads from the console an integer number count, 
+            //  and outputs to the screen "I know where you live." count times each from the new line.
+            if (isConsoleRead)
+            {
+                sutil.PrintInColor($"Please enter a whole positive integer greater than zero!");
+                iLoopControl = int.Parse(Console.ReadLine());
+            }
+            for (int iloop = 0; iloop < iLoopControl; iloop++)
+            {
+                sutil.PrintInColor("I know where you live.  ");
+                if (iLoopControl > 6 && iloop == (iLoopControl / 2) - 1) sutil.PrintInColor("\n");
+            }
+            sutil.PrintInColor("\n");
+        }
+        public static void SumEvenNumbers(Util sutil)
+        {
+            //  Write a program that outputs the sum of all even numbers 
+            //  between 150(including) and 250(not including).
+            int sum = 0;
+            for (int i = 150; i < 249; i++)
+            {
+                if (i % 2 == 0)
+                    sum = sum + i;
+            }
+            sutil.PrintInColor($"Sum of Even Numbers between 150(including) and 250(not including) = {sum}        ");
+        }
+        public static void MinMaxChecker(Util sutil, int count, int[] number, bool isConsoleRead = false)
+        {           //  new int[,] { { 1, 2 }, { 3, 4 }, { 5, 6 }, { 7, 8 } }
+            #region Minimum Checker specs
+            //  Write a program that reads integer count 
+            //  and then reads count integer numbers from the console and outputs their minimum. 
+            //  Example:
+            /*  > 3
+                > 14
+                > 57
+                > -10
+                - 10    
+                            //    if (number[iLoop] > iMax)
+            //            iMax = number[iLoop];
+            //  }
+/*            for (int iLoop = 0; iLoop < count; iLoop++)
+            {             
+                if (iLoop == 0)
+                    iMin = number[iLoop];
+                else
+                    if (iMin < number[iLoop])
+                    for (int i = 0; i < iLoop; i++)
+                    {
+                        //  555, -100, 444, 111, 333
+                        //  if N[0](555) < N[1](-100)
+                        //      Not True, but S[0] = N[0]; S[1] = N[1];
+                        //      S[0](-100) = N[1}; S[1](555) = N[0];
+                        //      if N[2](444) < S[0](-100)
+                        //          not true, but if it was: temp = s[0]; s[0] = n[2];
+                        //                      what do we do wth temp???
+                        if (sorted[i] < number[iLoop] )
+                        {
+                            temp = sorted[i];
+                            sorted[i] = number[iLoop];
+                            //if()
+                        } */
+            #endregion
+            int iMin = int.MinValue, iMax = int.MaxValue; bool isParse = false;
+            if (isConsoleRead)
+            {
+                sutil.PrintInColor("Enter an Integer 'Count' of Integer Numbers and find the MINIMUM And MAXIMUM: ");
+                isParse = int.TryParse(Console.ReadLine(), out count);
+                if (!isParse) { count = 2; }
+            }
+            else
+            {
+                sutil.PrintInColor("We will find the MINIMUM And MAXIMUM of ");
+            }
+            //  int[] number = new int[4] {11, 22, 33, 15};
+            for (int iLoop = 0; iLoop < count; iLoop++)
+            {
+                if (isConsoleRead)
+                {
+                    isParse = int.TryParse(Console.ReadLine(), out number[iLoop]);
+                    if (!isParse) { number[iLoop] = 42; }
+                }
+                else
+                {
+                    sutil.PrintInColor($"{number[iLoop].ToString()}");
+                    if (count - 1 == iLoop)
+                        sutil.PrintInColor($". ");
+                    else
+                        sutil.PrintInColor($", ");
+                }
+                if (number[iLoop] < iMin || iLoop == 0)
+                    iMin = number[iLoop];
+                if (number[iLoop] > iMax || iLoop == 0)
+                    iMax = number[iLoop];
+            }
+            sutil.PrintInColor($"{iMin} is the Minimum, and {iMax} is the Maximum.\n");
+        }
+        public static void OddChecker(Util sutil, bool isConsoleRead = false)
+        {
+            //  Write a program that outputs all odd numbers between 100 and 200.
+            if (isConsoleRead) { }
+            else sutil.PrintInColor($"100-200(ODD): ");
+            for (int i = 100; i < 200; i++)
+            {
+                if (i % 2 > 0)
+                {
+                    sutil.PrintInColor($"{i.ToString()}");
+                    if (i == 199) 
+                    { sutil.PrintInColor($".\n"); }
+                    else if (i == 149)
+                    { sutil.PrintInColor(",\n"); }
+                    else
+                    { sutil.PrintInColor(", "); }
+                }
+            }
+        }
+        public static void SumOfSquaresFor(Util sutil, bool isConsoleRead = false)
+        {
+            #region Sum Of Squares For Loop specs
+            //  Write a program that reads from the screen two integer numbers min and max 
+            //  and outputs the sum of all squares of integers between min(including) 
+            //  and max(not including). If min is bigger than max, the program should 
+            //  output "min should be smaller than max!". 
+            //  Example 1:
+            //  > 4
+            //  > 9
+            //  190
+            //  (190 = 4² +5² +6² +7² +8²)
+            //  Example 2:
+            //  > 14
+            //  > 3
+            //  min should be smaller than max!
+            #endregion
+            int sumOfSquares = 0, num1 = 2, num2 = 15;
+            if (isConsoleRead)
+            {
+                bool iParsed = int.TryParse(Console.ReadLine(), out num1);
+                if (!iParsed) { num1 = 1; }
+                iParsed = int.TryParse(Console.ReadLine(), out num1);
+                if (!iParsed) { num2 = 2; }
+            }
+            StringBuilder sb = new StringBuilder("");
+            if (num2 < num1)
+                sutil.PrintInColor($"Min should be smaller than Max!");
+            else
+            {
+                for (int i = num1; i < num2; i++)
+                {
+                    sumOfSquares = sumOfSquares + (i * i);
+                    if (i == num1)
+                        sb.Append(" ");
+                    else
+                        sb.Append(" + ");
+                    sb.Append(i.ToString() + "*" + i.ToString());
+                }
+                sutil.PrintInColor($"sumOfSquares: ({sumOfSquares} = {sb.ToString()}).\n"); 
+            }
+        }
+        private static void ForDiskSpace(Util sutil, int iNumberOfFiles, int[] iFileSizeArr, bool isConsoleRead = false)
+        {
+            #region for loop to find disk space
+            //  Write a program that reads from the console the number of files in the directory. 
+            //  After that program asks the user to input size of each of these files 
+            //  with a phrase "Input size of {number} file:", sums those values and outputs in a format: 
+            //  Total disk space is ... bytes. Example:            
+            //  >3
+            //  Input size of 1 file:
+            //  >2
+            //  Input size of 2 file:
+            //  >7
+            //  Input size of 3 file:
+            //  >12
+            //  Total disk space is 21 bytes.
+            //  Console.WriteLine("Enter Number of files");
+            #endregion
+            int totalDiskSpace = 0;
+            if (isConsoleRead)
+            {
+                sutil.PrintInColor("Enter Number of files to total");
+                iNumberOfFiles = int.Parse(Console.ReadLine());
+            }
+            for (int iLoop = 1; iLoop < iNumberOfFiles + 1; iLoop++)
+            {
+                int iFileSize = 0;
+                if (isConsoleRead)
+                {
+                    sutil.PrintInColor($"Input size of {iLoop} file:");
+                    iFileSize = int.Parse(Console.ReadLine());
+                }
+                else
+                {
+                    iFileSize = iFileSizeArr[iLoop - 1];
+                    sutil.PrintInColor($"Input size of file {iLoop} is: {iFileSize}, ");
+            }
+                totalDiskSpace = totalDiskSpace + iFileSize;
+            }
+            sutil.PrintInColor($"Total disk space is {totalDiskSpace} bytes.\n");
+        }
+        private static void ConsoleReadLineOMidl(Util sutil, int num1, int num2, int num3, bool isConsoleRead = false)
+        {
+            int a = 0, b = 0, c = 0;
+            if (isConsoleRead)
+            {
+                Console.WriteLine("    Num1 Hit Enter;"); 
+                a = Convert.ToInt32(Console.ReadLine());      //  to an integer
+                Console.WriteLine("    Num2 Hit Enter;");
+                b = Convert.ToInt32(Console.ReadLine());      //  to an integer
+                Console.WriteLine("    Num3 Hit Enter;");
+                c = Convert.ToInt32(Console.ReadLine());      //  to an integer
+
+            }
+            else
+            {  a = num1; b = num2; c = num3; }
+            sutil.PrintInColor($"The Middle of {a.ToString()}, {b.ToString()}, {c.ToString()} = ");
 
             if (a > b)
             {
@@ -745,6 +1189,126 @@ namespace TestCodeasyNet
                 else             // a<b<c a>c           // a=1;b=2;c=3
                     sutil.PrintInColor(b.ToString());               // skip if (a > c) and  else
             }
+            sutil.PrintInColor(".        ");
+        }
+        private static void ConsoleReadLineZGame(Util sutil, bool isConsoleRead = false)
+        {
+            string inputAsString = "652";
+            if (isConsoleRead)
+            {
+                sutil.PrintInColor($"Zanabar Game: Input Your number, please");
+                inputAsString = Console.ReadLine(); // Read a line from the screen
+            }
+            else
+                sutil.PrintInColor($"Zanabar Game: Your Input is: {inputAsString}");
+            //  int myNumber = Convert.ToInt32(inputAsString); // Convert inputAsString to int
+            //  sutil.PrintInColor($", and my number is: {++myNumber}, so I win, SUCKS TO BE YOU!\n");    // Do some magic with myNumber
+            sutil.PrintInColor($", and my number is: {((int.TryParse(inputAsString, out int myNumber)) ? ++myNumber : 633) }, so I win, SUCKS TO BE YOU!\n");    // Do some magic with myNumber
+        }
+        private static void ConsoleReadLineFlyIt(Util sutil, bool isConsoleRead = false)
+        {
+            int numberOfBoxes = 4, weight = 6;    // string NumberOfBoxesString = "6";            string weightString = "4";
+            if (isConsoleRead)
+            {
+                sutil.PrintInColor($"Please enter the Whole Number(Integer) of boxes: ");
+                numberOfBoxes = int.Parse(Console.ReadLine());
+                sutil.PrintInColor($"and now please enter the weight (Whole Number Integer) of each box: ");
+                weight = int.Parse(Console.ReadLine());
+            }
+            else
+            {
+                sutil.PrintInColor($"You entered {numberOfBoxes} Box(es):, ");
+                sutil.PrintInColor($"and the weight of each Box is: {weight}, so ");
+            }
+            if (numberOfBoxes * weight > 30)
+                sutil.PrintInColor("NO, Your boxes weigh too much");
+            else
+                sutil.PrintInColor("YES, our droids can fly your box(es).        ");
+        }
+        private static void ConsoleReadLineCallU(Util sutil, bool isConsoleRead = false)
+        {
+            string firstName = "Brice", secondName = "Smith";
+            if (isConsoleRead)
+            {
+                sutil.PrintInColor("Enter Your First Name:");
+                firstName = Console.ReadLine();     //  Read a line from the screen
+                sutil.PrintInColor("Enter Your Last Name:");
+                secondName = Console.ReadLine();      //  Read a line from the screen
+            }
+            else
+                sutil.PrintInColor($"You entered {firstName}, & {secondName}. ");
+            sutil.PrintInColor($"Should I call you {firstName} or {secondName}?\n");
+        }
+        private static void ConsoleReadLineTempQ(Util sutil, bool isConsoleRead = false)
+        {
+            int temp = -10;
+            if (isConsoleRead)
+            {
+                sutil.PrintInColor("What Temperature is it? (enter an integer of degrees Celcius");
+                temp = ((int.TryParse(Console.ReadLine(), out temp) ? temp : -33));
+            }
+            else
+                sutil.PrintInColor($"You entered a Temperature of {temp.ToString()}, ");
+            sutil.PrintInColor("so you should wear a ");
+            if (temp < 5)    //  Console.ReadLine()) < 5)
+                sutil.PrintInColor("coat");
+            else
+                sutil.PrintInColor("jacket");
+            sutil.PrintInColor("          ");
+        }
+        private static void ConsoleReadLineMaxO2(Util sutil, bool isConsoleRead = false)
+        {
+            int aInt = 60, bInt = 40;    sutil.PrintInColor("The Max of 2: ");
+            if (isConsoleRead)
+            {
+                sutil.PrintInColor("Enter Num1, then Hit Enter;");
+                aInt = (int.TryParse(Console.ReadLine(), out aInt) ? aInt : 60);    // Read a line and convert it to int (short version)
+                sutil.PrintInColor("Enter Num2, then Hit Enter;");
+                bInt = (int.TryParse(Console.ReadLine(), out bInt) ? bInt : 40);    // Read a line and convert it to int (short version)
+            }
+            else 
+                sutil.PrintInColor($"You entered {aInt.ToString()}, then {bInt.ToString()}, so "); 
+            if (aInt > bInt)
+                sutil.PrintInColor($"Max = {aInt.ToString()}, Min = {bInt.ToString()}        ");
+            else
+                sutil.PrintInColor($"Max = {bInt.ToString()}, Min = {aInt.ToString()}        ");
+        }
+        private static void ConsoleReadLineGreet(Util sutil, bool isConsoleRead = false)
+        {
+            string name = "Brice Ulwelling";
+            if (isConsoleRead)
+            {
+                sutil.PrintInColor("Input your name:");
+                name = Console.ReadLine();
+            }
+            sutil.PrintInColor($"Greetings, {name}!\n");
+        }
+        private static void ConsoleReadLineHowRU(Util sutil, bool isConsoleRead = false)
+        {
+            string testit = "fine";
+            if (isConsoleRead)
+            {
+                sutil.PrintInColor("How are you?");
+                testit = Console.ReadLine();
+            }
+            else
+                sutil.PrintInColor("How are you? You said 'fine', so I said: ");
+            if (testit == "fine")
+                sutil.PrintInColor("Life is great!      ");
+            else
+                sutil.PrintInColor("Everything's gonna be alright");
+        }
+        private static void ConsoleReadLineAcces(Util sutil, bool isConsoleRead = false)
+        {
+            sutil.PrintInColor("\nConsole.ReadLine()\n");string firstName = "ritchie";
+            if (isConsoleRead)
+            {   sutil.PrintInColor("Enter your first name:  ");        firstName = Console.ReadLine().ToLower();            }
+            else
+                sutil.PrintInColor("You Entered your name: Ritchie: ");
+            if (firstName == "ritchie")
+                sutil.PrintInColor("Access granted!        ");
+            else
+                sutil.PrintInColor("Security Alert! You are under arrest for treason...");
         }
     }   //  ConsoleReadLineA
 
@@ -758,7 +1322,471 @@ namespace TestCodeasyNet
     //  you can use the this keyword to point out that you want to work 
     //  with a field now." Add or remove the this modifier 
     //  to make this program to output "Hello from Cutie".   */
+    class CSBeginChapter1WhileLoops
+    {
+        /* codeasy.net    C# Beginner>1 Repairing Noname>Introduction to while loop antivirus
+        //  Antivirus Scan
+        //  The day finally came when Noname called me back down to the basement to help him 
+        //  with one of his modules. Finally! One step closer to returning to my own time.
+        //  As soon as I keyed in the secret code, I heard his robotic voice. 
+        //  "Hi! Haven't seen you for a while!" Noname said. "Hi, Noname," I returned. 
+        //  "Nice to see you too! Let's get started ASAP - I want to get back into my time!
+        //  "Let's start with my antivirus protection system." Noname suggested. "What should I do?"
+        //  "My problem is not with the antivirus detection itself, but in running the scan. 
+        //  As you know, Ritchie did everything to control me. Part of that was adding a remote access 
+        //  to my system that he can connect to and check what I'm doing. An antivirus check is 
+        //  forbidden for me - if he sees that I'm checking for viruses, he'll immediately turn me off. 
+        //  I need help with scanning my files quickly and then being able to stop scanning as soon as 
+        //  Ritchie connects."  I took a few seconds to think through the problem. 
+        //  "If I know the number of files to scan," I thought out loud, "I can write a for loop to 
+        //  iterate through all of the files to scan them." I suggested.  "And when Ritchie connects, 
+        //  how will the scan stop if Ritchie connects to the system?" "I haven't thought that far 
+        //  ahead yet," I admitted. "Do you have anything in mind?" "Well, if you're open to learning, 
+        //  I could teach you how to use a while loop." Noname replied.  "Sounds good," I said. 
+        //  "Enlighten me!"  Feed me with knowledge     While Loop   "Ok, my dear human, listen up. 
+        //  Some programmers call the for loop a "loop with a known number of repetitions". 
+        //  That's because when you see a for loop, it's typically pre-programmed to run a specified 
+        //  number of times; 5, 10, etc. In contrast, a while loop is a "loop with an unknown number 
+        //  of repetitions" because you don't really know how many times it will iterate. 
+        //  Here is a while loop syntax in C#:    while ( // condition )    { // while loop body }
+        //  A while loop executes a code in its body while a a specified condition is true. 
+        //  As soon as that condition is false, the loop terminates.The condition has a bool type. 
+        //  This diagram illustrates the basics of a while loop:    C# while loop    Take a look at some examples:
+        //            while (true) // Executes forever    
+        //                  { Console.WriteLine("Never Stop!"  );}    
+        //            while (false) // Never executes
+        //                  { Console.WriteLine("Never execute");}
+        //            bool iNeedMoreCandies = true;
+        //            int candiesCount = 0;
+        //            while (iNeedMoreCandies)
+        //            {
+        //                Console.WriteLine("One more candy?");
+        //                string answer = Console.ReadLine();
+        //                if (answer == "Yes")
+        //                {
+        //                    candiesCount++;
+        //                }
+        //                else
+        //                {
+        //                    iNeedMoreCandies = false;
+        //                }
+        //            }
+        //  "See those examples I just showed you?" Noname asked. "The first two examples are trivial. 
+        //  But the last one is interesting. Do you understand what is it doing?" "Let's see. It looks 
+        //  like it asks the user if they want one more candy. As long as the user enters 'Yes,' 
+        //  it increments the candy count. As soon as the user answers anything but 'Yes,' 
+        //  it stops the loop." "Correct! You're a quick learner, Teo. Now let's get you Writing your 
+        //  first while loop."   First c sharp while loop
+        //  Write a salary negotiation program that tells the user "I will give you {number} dollars, ok?" 
+        //  starting from 100. Every time the user answers "more", it increases the number by 100. 
+        //  If the user answers "ok", program outputs "Your salary is {number} dollars." and exits. 
+        //  For example:
+        //  I will give you 100 dollars, ok?
+        //  >more
+        //  I will give you 200 dollars, ok?
+        //  >more
+        //  I will give you 300 dollars, ok?
+        //  >ok
+        //  Your salary is 300 dollars. Code!
+        
+        //  Write a program that reads an integer from the console. The integer should be a power of two: 
+        //  2, 4, 8, 16, 32, etc.Then your program should divide it by 2 and output every division result 
+        //  to the console, until it reaches number 1. Print out each result to a new line.Use a while loop.
+        //  For example:
+        //  >16
+        //  8
+        //  4
+        //  2
+        //  1            Code!
+        //  "Do you want to know a secret, Teo?" Noname asked. "Sure!" I answered.  "You can omit the enclosing 
+        //  brackets if you have a single command in a for or while loop; just the same as you can in an 
+        //  if statement. Here is a demonstration:
+        //  for(int i = 0; i< 10; i++)
+        //      Console.WriteLine("Print me!");
+        //  while(someBool)
+        //      Console.WriteLine("Print me!");
+        //  You can also replace a for loop with a while loop, and vice-versa. In the below example, the 
+        //  code snippets in the left and right colums of the following table are equivalent:
+        //  For loop    While loop
+        //  for(int i = 0; i< 10; i++)
+        //  {    Console.WriteLine("Print me!");    }
+        //  int repetitions = 10;
+        //  while(repetitions > 0)
+        //  {    Console.WriteLine("Print me!");    repetitions--;    }
+        //  int candiesCount = 0;
+        //  for (string input = "Yes";  input == "Yes";  input = Console.ReadLine())
+        //  {    Console.WriteLine("One more candy?");   candiesCount++;    }
+        //  bool iNeedMoreCandies = true;
+        //  int candiesCount = 0;
+        //  while (iNeedMoreCandies)
+        //  {    Console.WriteLine("One more candy?");    string answer = Console.ReadLine();
+        //       if (answer == "Yes")    {        candiesCount++;    }
+        //       else    {        iNeedMoreCandies = false;    }
+        //  }
+        //  "Now that you have some practice with these loops, let's talk about strategy. 
+        //  Try to stick to this rule: if you know during compile time how many times your 
+        //  code will be executed, consider using a for loop; otherWise, use a while loop."
+        //  "Noname, in that code you showed me, what does repetitions-- do?"
+        //  The -- operater decrements the named variable by one. 
+        //  This is the same as repetitions = repetitions - 1    There are actually 4 different operators: 
+        //  i++, ++i, i--, and --i. When the symbols are placed before the variable, it's called a 
+        //  prefix operator. When applied after the variable, it's called called a postfix operator. 
+        //  The prefix operators change the value of the variable first and then return the result. 
+        //  Postfix operators return the current variable value and then change it.
+        //  Operator Name   Usage              Equivalent Code     Types
+        //  Postfix         increment   i++    i = i + 1           byte, sbyte, char, int, 
+        //  Prefix          increment   ++i    i = i + 1           decimal, double, float, 
+        //  Postfix         decrement   i--    i = i - 1           uint, long, ulong, 
+        //  Prefix          decrement	--i    i = i - 1           short, ushort, 
+        //  "Wow," I said, "it turns out that there are many more standard types in C# than I thought."
+        //  "Yes and no." Noname replied. "Many of them are actually quite similar, but we'll leave 
+        //  the details for next time."  "I'll confess Noname, I don't quite understand 
+        //  the prefix/postfix difference. What's the difference between i++ and ++i in the code? 
+        //  In the table you showed me, both prefix and postfix have the same 'equivalent code'."
+        //  "Yes, it is confusing for the human brain. Here are some examples that might help 
+        //  illustrate it."
+        //  int i = 2;
+        //  Console.WriteLine(i++); // Outputs 2
+        //  Console.WriteLine(i);   // Outputs 3
+        //  int i = 2;
+        //  Console.WriteLine(++i); // Outputs 3
+        //  Console.WriteLine(i);   // Outputs 3
+        //  In the first example we are using a postfix increment.Hence, first the current 'i' value 
+        //  is printed to the console. That value is 2. After the write, we increment 'i', which is 
+        //  when it becomes 3. The next time we call Console.WriteLine, the value of 'i' is 3.
+        //  The second example uses a prefix increment. 'i' is incremented first and then its new 
+        //  value(3) is output to the console.  Note that the priority of the mathematical operations 
+        //  like +, -, *, and / are lower than increment and decrement. That means that the 
+        //  increment/decrement part will be calculated before any operation in between those 
+        //  increments/decrements.
+        //  int number = 1;
+        //  int result = ++number + ++number;
+        //  Console.WriteLine(number);  // Outputs 3
+        //  Console.WriteLine(result);  // Outputs 5
+        //  In other terms, the above code is equivivalent to:
+        //  int number = 1;
+        //  number = number + 1;
+        //  int result = number;
+        //  number = number + 1;
+        //  result = result + number;
+        //  Console.WriteLine(number);  // Outputs 3
+        //  Console.WriteLine(result);  // Outputs 5
+        //  "Still a little complicated, Noname." I said, a little exasperated.
+        //  "Don't worry, Teo. You can use either of those in your code. 
+        //  Unless you're doing something complicated, postfix vs. prefix doesn't usually matter, 
+        //  but it is very good to know the difference!" Noname replied and continued, 
+        //  "To make your loop knowledge complete, I want to tell you about nested loops.
+        //  Nested loops   The term "nested" can be applied to the loop that is inside another loop.
+        //  Take a look at this example:
+        //  for(int i = 0; i< 3; i++) // This loop executes the inner loop 3 times
+        //  {
+        //     for(int j = 0; j< 3; j++) // This loop draws the row of 3 stars
+        //     {
+        //         Console.Write("*");
+        //     }
+        //     Console.WriteLine(); // Here we go to the new line after the row is completed
+        //  }
+        //  // Outputs:
+        //  ***
+        //  ***
+        //  ***
+        //  "The most important trick about them is that all variables created in 
+        //  the inner loop get destroyed when the outer loop iterates."
+        //  Same as with for loops, you can create nested while loops:"
+        //  int i = 0;
+        //  while(i< 3) // This loop executes the inner loop 3 times
+        //  {
+        //      int j = 0;
+        //      while (j< 3) // This loop draws the row of 3 stars
+        //      {
+        //          Console.Write("*");
+        //          j++;
+        //      }
+        //      Console.WriteLine(); // Here we go to the new line
+        //      i++;
+        //  }
+        //  "What do you think about it?" Noname asked.  "This opens such a big field of opportunities!" 
+        //  I answered. Noname replied, "Right, Teo, totally agree! One more useful feature is that you 
+        //  can use the outer loop variable in the inner loop. This means that the inner loop can "know" 
+        //  which iteration is currently in the outer loop. Here is a small demonstration:
+        //  for (int i = 0; i< 3; i++) // This loop executes the inner loop 3 times
+        //  {
+        //      Inner loop draws the row of several stars (first 1 star, then 2 stars, etc.)  
+        //      for (int j = 0; j <= i; j++) // Note, j is compared to i
+        //      {
+        //          Console.Write("*");
+        //      }
+        //      Console.WriteLine(); // Here we go to the new line
+        //  }
+        //  Outputs:
+        //  *
+        //  **
+        //  ***
+        //  "Noname, I think it's enough of theory for today," I said. "Are you tired? Don't worry, 
+        //  the human brain absorbs information much slower than machine memory. 
+        //  The understanding will come. Maybe after some tasks!" Write a program that reads an integer 
+        //  count from the console. Then it should output a triangle composed of '#' symbols starting 
+        //  from 1 in the first row and ending with count in the last row. Use the for loop. For example:
+        //  >4
+        //
+        //  #
+        //  ##
+        //  ###
+        //  ####                 Code!
+        //  
+        //  Write a program that reads an integer count from the console. Then it should output a triangle 
+        //  composed of '#' symbols starting from 1 in the first row and ending with count in the last row.
+        //  This time, use the while loop. For example:
+        //  >4
+        //  #
+        //  ##
+        //  ###
+        //  ####                 Code!
+        //  
+        //  "I believe you are ready to fix my antivirus system!" Noname said once I had completed his tasks.
+        //  Antivirus protection
+        //  
+        //  Extra complicated Extra complicated Extra complicated
+        //  You need to write a program that sends files to the antivirus scan. 
+        //  It should scan files only when Ritchie is NOT watching Noname's state. 
+        //  The program should understand 4 commands: "scan", "hide", "unhide", and "game over". 
+        //  It should have two modes that can be toggled by using the commands "hide" and "unhide" 
+        //  commands. The default mode is "unhide", which means that Ritchie is not watching. 
+        //  If the input is "scan" during the mode "unhide", the program should output "scanning file 
+        //  {number}" where number is an integer that starts from 1 and increments by 1 for every new 
+        //  file. If the user inputs "scan" during the "hide" mode, the program should output 
+        //  "can't scan files for viruses". As soon as Ritchie leaves, the input will be switched to 
+        //  "unhide" and then it should be able to scan again. Your program should listen to the input 
+        //  commands indefinitely until the input is "game over". In this case, the program should 
+        //  output "run" and exit. For example:
+        //  >scan
+        //          scanning file 1
+        //  >scan
+        //          scanning file 2
+        //  >hide
+        //  >scan
+        //          can't scan files for viruses
+        //  >scan
+        //          can't scan files for viruses
+        //  >unhide
+        //  >scan
+        //          scanning file 3
+        //  >game over
+        //          run
+        //                       Code!
+        //  C# Beginner>1 Repairing Noname>Introduction to while loop
+        //  Email:info @codeasy.net
+        //   */
 
+        public CSBeginChapter1WhileLoops()
+        { 
+            Util sutil = new Util(ConsoleColor.Yellow, ConsoleColor.Black);sutil.PrintInColor($"While Loops:\n");
+            CSBeginChap1RunWhiles(sutil);
+        }
+        public static void AddToSalaryWhile(Util sutil, int iSalary = 100, int iIncrement = 100, bool isConsoleRead = false)
+        {
+
+            //  Write a salary negotiation program that tells the user "I will give you {number} dollars, ok?" 
+            //  starting from 100. Every time the user answers "more", it increases the number by 100. 
+            //  If the user answers "ok", program outputs "Your salary is {number} dollars." and exits. 
+            //  For example:
+            //  I will give you 100 dollars, ok?
+            //  >more
+            //  I will give you 200 dollars, ok?
+            //  >more
+            //  I will give you 300 dollars, ok?
+            //  >ok
+            //  Your salary is 300 dollars. Code!
+
+            bool testit = true; int idx4 = 0; string answer = "more"; string[] sAnswer = {"Fuck ME!" };//string[] sAnswer = { "more", "More", "morE", "mOre", "moRe", "MORE", "MOre", "OK"};
+            sutil.PrintInColor($"I will give you {iSalary.ToString()} dollars, ok?    ");
+            while (testit)
+            {
+                if (isConsoleRead)
+                { answer = Console.ReadLine(); }
+                else
+                { answer = sAnswer[idx4++]; }
+                if (answer.ToLower() == "more")
+                { sutil.PrintInColor($"I will give you {iSalary += iIncrement} dollars, ok?   "); }
+                else
+                { testit = false; sutil.PrintInColor($"Your salary is {iSalary.ToString()} dollars.\n"); }
+
+            }
+        }
+        public static void DivideBy2(Util sutil, int answer = 36, bool isConsoleRead = false)
+        {
+            //  Write a program that reads an integer from the console. 
+            //  The integer should be a power of two: 2, 4, 8, 16, 32, etc.
+            //  Then your program should divide it by 2 and output every division result 
+            //  to the console, until it reaches number 1. Print out each result to a new line.
+            //  Use a while loop. For example:
+            //  >16
+            //  8
+            //  4
+            //  2
+            //  1            Code!
+            if (isConsoleRead) { bool isParsed = int.TryParse(Console.ReadLine(), out answer); if (!isParsed) answer = 16; }
+            if (answer % 2 > 0) --answer; 
+            if (answer < 2) answer = 64;
+            double power = Math.Log(answer) / Math.Log(2);
+            if ((power - Convert.ToInt32(power)) > 0)/* not a power of 2 */answer = 512;
+            sutil.PrintInColor($"Divide a power of 2({answer}) BY 2: ");
+            while ((answer /= 2) > 1) sutil.PrintInColor($"{answer.ToString()}, ");
+            sutil.PrintInColor("1.\n");
+        }
+        //  The understanding will come. Maybe after some tasks!" Write a program that reads an integer 
+        //  count from the console. Then it should output a triangle composed of '#' symbols starting 
+        //  from 1 in the first row and ending with count in the last row. Use the for loop. For example:
+        //  >4
+        //
+        //  #
+        //  ##
+        //  ###
+        //  ####                 Code!
+        //  
+        public static void PrintTriangle(Util sutil, int counter = 4, bool isConsoleRead = false)
+        {
+            if (isConsoleRead)
+            {
+                bool isParsed = int.TryParse(Console.ReadLine(), out counter);
+                if (!isParsed) counter = 4;
+            }
+            int idx1 = 0;sutil.PrintInColor($"We will see a Triangle of {counter} rows\n");
+            for (int i = 1; i < counter + 1; i++)
+            {
+                sutil.PrintInColor($"{i % 10}");
+                for (int jdx = 0; jdx < i; jdx++)
+                {
+                    sutil.PrintInColor($"#");
+                }
+                sutil.PrintInColor("\n");
+            }
+            Console.WriteLine("01234567890123456");
+            while (++idx1 < counter + 1)
+            {
+                sutil.PrintInColor($"{idx1 % 10}");
+                int idx2 = 0;
+                while (++idx2 <= idx1)
+                    sutil.PrintInColor("#");
+                sutil.PrintInColor("\n");
+            }
+            Console.WriteLine("01234567890123456");
+            StringBuilder sb = new StringBuilder("");
+            for (int i = 1; i < counter + 1;)    
+                Console.WriteLine($"{i++ % 10}{sb.Append("#").ToString()}");
+            Console.WriteLine("01234567890123456"); sb.Clear(); int idx3 = 0;
+            while ( idx3++  < counter )    
+                sutil.PrintInColor($"{idx3 % 10}{sb.Append("#").ToString()}\n");
+            Console.WriteLine("01234567890123456");sb.Clear();
+            for (int i = counter - 1; i >= 0; i--)
+            {                sutil.PrintInColor($"{sb.Append("#").ToString()}\n");            }
+            Console.WriteLine("01234567890123456"); sb.Clear();
+        /*  for (int i = 1; i < counter + 1; i++)
+            {                sutil.PrintInColor($"{i % 10}");
+                for (int j = 0; j < i; j++)
+                {                    sb.Append($" ");                }
+                sb.Append("#");            }
+            sutil.PrintInColor($"{sb.ToString()}\n"); sb.Clear(); */
+            Util dutil = new Util(ConsoleColor.Green, ConsoleColor.Red);dutil.PrintInColor(" Christmas Tree \n");
+            int j = 0;
+            for (int i = counter ; i >= 0; i--)
+            {           //bbu654                //for (int j = 2; j < (counter * 2) + 2; j += 2)                /*{ */                                        //sb.Append($"{(i % 10).ToString()}");
+                    sb.Append(sutil.TextRepeater(" ", i));
+                    sb.Append(sutil.TextRepeater("#", j += 2));
+                    sb.Append(sutil.TextRepeater(" ", i));                    sb.Append("\n");                //}
+            }
+            dutil.PrintInColor($"{sb.ToString()}"); 
+            dutil.PrintInColor(dutil.TextRepeater(" ", counter)+ "[]" + dutil.TextRepeater(" ", counter));
+            Console.WriteLine("\n01234567890123456"); sb.Clear();
+            //dutil.PrintInColor($"[]");
+            //dutil.PrintInColor(dutil.TextRepeater(" ", counter));
+            //123456789012345**123456789012345 //15 space 2# 15 spaces =32
+            //12345678901234****12345678901234 //14 space 4# 14
+            //1234567890123******1234567890123 //13       6  13
+            //123456789012********123456789012 //12       8  12     
+            //12345678901**********12345678901 //11      10  11
+            //1234567890************1234567890
+        }
+        //  Write a program that reads an integer count from the console. Then it should output a triangle 
+        //  composed of '#' symbols starting from 1 in the first row and ending with count in the last row.
+        //  This time, use the while loop. For example:
+        //  >4
+        //  #
+        //  ##
+        //  ###
+        //  ####                 Code!
+        //  
+
+        public static int Scanning(Util sutil, int fileNum = 0, bool isConsoleRead = false)
+        {
+            #region "I believe you are ready to fix my antivirus system!" 
+            //  Noname said once I had completed his tasks.
+            //  Antivirus protection
+            //  
+            //  Extra complicated Extra complicated Extra complicated
+            //  You need to write a program that sends files to the antivirus scan. 
+            //  It should scan files only when Ritchie is NOT watching Noname's state. 
+            //  The program should understand 4 commands: "scan", "hide", "unhide", and "game over". 
+            //  It should have two modes that can be toggled by using the commands "hide" and "unhide" 
+            //  commands. The default mode is "unhide", which means that Ritchie is not watching. 
+            //  If the input is "scan" during the mode "unhide", the program should output "scanning file 
+            //  {number}" where number is an integer that starts from 1 and increments by 1 for every new 
+            //  file. If the user inputs "scan" during the "hide" mode, the program should output 
+            //  "can't scan files for viruses". As soon as Ritchie leaves, the input will be switched to 
+            //  "unhide" and then it should be able to scan again. Your program should listen to the input 
+            //  commands indefinitely until the input is "game over". In this case, the program should 
+            //  output "run" and exit. For example:
+            //  >scan
+            //          scanning file 1
+            //  >scan
+            //          scanning file 2
+            //  >hide
+            //  >scan
+            //          can't scan files for viruses
+            //  >scan
+            //          can't scan files for viruses
+            //  >unhide
+            //  >scan
+            //          scanning file 3
+            //  >game over
+            //          run
+            //                       Code!
+            //  C# Beginner>1 Repairing Noname>Introduction to while loop
+            //  Email:info @codeasy.net
+            //   
+            #endregion
+            // SETup
+            bool testit = true, visible = true, fucked = true; string sInput = ""; int testNum = -1;
+            string[] sIn = new string[] { "scan", "hide", "unhide", "game over" };
+            string[] sRin = new string[] { "scan", "hide", "scan", "hide", "hide", "hide", "hide", "hide", "hide", "hide", "hide", "hide", "hide", "hide", "hide", "scan", "hide", "scan", "hide", "scan", "hide", "scan", "unhide", "scan", "scan", "game over" };
+
+            sutil.PrintInColor($"Antivirus Scanner Valid: '{sIn[0]}', '{sIn[1]}', '{sIn[2]}', '{sIn[3]}'!\n");
+            while (testit)
+            {
+                fucked = false;
+                if (isConsoleRead) sInput = Console.ReadLine();
+                else
+                {                  sInput = sRin[++testNum]; sutil.PrintInColor($"{sRin[testNum]}: ");    }
+                foreach (string item in sIn)
+                {                  if (sInput.ToLower() == item) { fucked = true; }                       }
+
+                if (sInput.ToLower() == "hide") { visible = false; }
+                if (sInput.ToLower() == "unhide") { visible = true; }
+                if (sInput.ToLower() == "game over") { testit = false; }
+                if (sInput.ToLower() == "scan" && visible) sutil.PrintInColor($"scanning file {++fileNum}\n");
+                if (sInput.ToLower() == "scan" && !visible) sutil.PrintInColor($"can't scan files for viruses. ");
+                if (!fucked) sutil.PrintInColor("Invalid Input Dufus! ");
+            }   //  while 
+            sutil.PrintInColor(" run.\n");            return fileNum;
+        }   //Scanning
+
+
+        public static void CSBeginChap1RunWhiles(Util sutil,bool isConsoleRead = false)
+        {
+            int fileNum = 0, pop = Scanning(sutil, Scanning(sutil, Scanning(sutil, Scanning(sutil, Scanning(sutil, Scanning(sutil, fileNum))))));
+            PrintTriangle(sutil,7); AddToSalaryWhile(sutil);DivideBy2(sutil,4096);
+        }
+    }
     class AdvancedDroid
     {
         private int xPosition;
@@ -830,6 +1858,7 @@ namespace TestCodeasyNet
         }
         public void TestNull(string text)
         {       //Fix the code to make program compile. Code! 
+            Utl.PrintColoredA(ConsoleColor.Red, ConsoleColor.Black, $"\nYou are entering My Stuff: JSON\n\n");
             Util util = new Util(ConsoleColor.White, ConsoleColor.Black);
 
             string s = text; // s is unassigned
@@ -841,7 +1870,14 @@ namespace TestCodeasyNet
             string badboy = @"{ 'Name': 'Bad Boys', 'ReleaseDate': '1995-4-7T00:00:00', 'Genres': ['Action', 'Comedy'] }";
             object pop = JsonConvert.DeserializeObject(badboy);
             string poppy = JsonConvert.SerializeObject(pop);
-            Movie bbm = JsonConvert.DeserializeObject<Movie>(badboy); util.PrintInColor($"bbm:{bbm.ToString()}.\n"); util.PrintInColor($"bbm.Genres[0]={bbm.Genres[0]}, bbm.Genres[1]={bbm.Genres[1]}.\n");
+            Movie bbm = JsonConvert.DeserializeObject<Movie>(badboy); 
+            util.PrintInColor($"bbm:{bbm.ToString()}.\n"); 
+            util.PrintInColor($"bbm.Genres[0]={bbm.Genres[0]}, " + $"bbm.Genres[1]={bbm.Genres[1]}.\n");
+            NullTest nullTest = new NullTest("I am awesome to the MAX");
+            nullTest.JobsIO(@"C:\Users\Brice16\Documents\Resumes\JobsOct26-Nov012019.txt");
+
+            Utl.PrintColoredA(ConsoleColor.Red, ConsoleColor.Black, $"\nYou are exiting My Stuff: JSON\n\n");
+
             #region dsobj<Movie>
             //  nameof(s)=s
             //  pop ={
@@ -934,7 +1970,6 @@ namespace TestCodeasyNet
             //    {   "Name": "Apple", "Expiry": "2008-12-28T00:00:00", "Sizes": [ "Small" ]   } 
             #endregion
         }   //  public void TestNull()
-
         //  You've met another droid that knows a secret integer between 1 and 8. 
         //  Add or remove this modifiers to enable a guessing game where the user should 
         //  guess that secret number. (In this case, it is 6) Code!
@@ -952,7 +1987,6 @@ namespace TestCodeasyNet
         //  moving it to the end of the word, and adding "ay". For example: 
         //  >the quick brown fox
         //      hetay uickqay rownbay oxfay
-
         public void PigLatin(string line)
         {
             StringBuilder sb = new StringBuilder(""); string[] lopall = line.Split(" ");
@@ -966,7 +2000,6 @@ namespace TestCodeasyNet
         {
             Util util = new Util(ConsoleColor.Red, ConsoleColor.Black); util.PrintInColor($"Original Line = {line}, Newly Created = {line2}\n");
         }
-
         public StringBuilder JobTextFix(StringBuilder jobs)
         {
             #region jobs
@@ -986,13 +2019,8 @@ namespace TestCodeasyNet
                     string lopity = pop[0];
                     for (int i = lopity.Length - 1; i >= 0; i--)
                     {
-                        if (lopity[i].Equals('1') || lopity[i].Equals('2') ||
-                            lopity[i].Equals('3') || lopity[i].Equals('4') ||
-                            lopity[i].Equals('5') || lopity[i].Equals('6') ||
-                            lopity[i].Equals('7') || lopity[i].Equals('8') ||
-                            lopity[i].Equals('9')) { ++minusCount; }
-                        else
-                        { break; }
+                        if (char.IsDigit(lopity[i])) { ++minusCount; }
+                        else                         { break; }
                     }  //  for (int i = lopity.Length - 1; i >= 0; i--)
                     //  pop[0] = lopity.Substring(0, lopity.Length - minusCount);
                     lopity = pop[0].Substring(0, pop[0].Length - minusCount);
@@ -1009,7 +2037,6 @@ namespace TestCodeasyNet
             }
             return sb;
         }
-
         public void JobsIO(string path)
         {
             StringBuilder strArray = new StringBuilder("");
@@ -1119,7 +2146,6 @@ namespace Chap1ClassObjCarUserGlass
             LitArea litArea = new LitArea(1, 1, 5, 6); litArea.DrawRec(litArea.TL, litArea.BR);
             LitArea lit = new LitArea(0, 0, 2, 4); lit.DrawRec(lit.TL, lit.BR);
             Utl.PrintColoredA(ConsoleColor.Red, ConsoleColor.Black, $"\nYou are Exiting CSharp-Intermediate: Chapter 1.2: Accessors and Constructors.\n\n");
-
         }
     }
         #region Codeasy.net ==> Intermediate C# ==> Chapter 1.1  ==> Class and Object 
@@ -1294,7 +2320,6 @@ namespace Chap1ClassObjCarUserGlass
             util.PrintInColor($"\n{corolla._model}({corolla._year}), {buick._model}({buick._year}), {sienna._model}({sienna._year}), {car123._model}({car123._year}), {prius._model}({prius._year}), so Car Count = {carsCount.ToString()}\n");
         }
     }
-
     class Glass         //   Create a class Glass           C#I 1.1 Hello Class/Obj (3)
     {
             //   We are prototyping a robot that refills glasses during dinner. 
@@ -1716,7 +2741,7 @@ namespace ClassObjectNAccessor
         }
         static public void RunCOAA()
         {
-            
+            Utl.PrintColoredA(ConsoleColor.Red, ConsoleColor.Black, $"\nYou are entering CSharp-Intermediate: Chapter 2: Accessors, static, null, & this.2\n\n");
             Utl.PrintColoredA(ConsoleColor.Red, ConsoleColor.Yellow,"Hello World! Droid Killers: 23, 669, 133");
             Box box = new Box(14554, 25794, 98758) { IsOpened = true };
             if (box.IsOpened) { box.PrintBoxArea(box.Area); box.CloseBox(); }
@@ -1740,7 +2765,7 @@ namespace ClassObjectNAccessor
             // chapter 2.1 static 2.1.4.
             WTextFramePretifier.Prettify(14, "Why frame is so important, sir1?");
             WTextFramePretifier.Prettify(14, "You look great today, sir!");
-
+            Utl.PrintColoredA(ConsoleColor.Red, ConsoleColor.Black, $"\n\nYou are exiting CSharp-Intermediate: Chapter 2: Accessors, static, null, & this.3\n\n");
         }   //  static public void RunCOAA()
     }       //  class ClassObjectsAndAccessors    
  
@@ -1766,11 +2791,13 @@ namespace ClassObjectNAccessor
     {
         static void Main(string[] args)
         {
+            new ConsoleReadLineA();    //  Elementary C# Chapter~4-6???
+            new CSBeginChapter1WhileLoops();   //
             Chap1ClassObjCarUserGlass.RunNamespaceCSIChap1.RunCSIChap1();
             ClassObjectsAndAccessors.RunCOAA();        //  RunCSIChap2
+            NullTest nullTest = new NullTest("I love my job");
+            nullTest.TestNull("10");
             NullAndThis.RunNAT();
-
-
         }   //  Main
     } 
 }
