@@ -4,6 +4,11 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using TestCodeasyNet;    //using ClassObjectNAccessor;    //using RunProgram;
+using System.Linq;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
+
 namespace TestCodeasyNet
 {
     //  Printing with Color:
@@ -56,7 +61,47 @@ namespace TestCodeasyNet
             }
             return _genresCount;
         }
+        public List<string> ReadStrings(Util util, List<string> sInput, string si = "Enter some strings with 0s", bool isConsoleRead = false)
+        {
+            if (isConsoleRead)
+            {
+                sInput.Clear(); util.PrintInColor($"{si}");
+                while ((si = Console.ReadLine()) != "exit")
+                { sInput.Add(Console.ReadLine()); }
+            }
+            return sInput;
+
+        }
     }
+        public static class StringExtensions
+        {
+            public static string ToString2<T>(this List<T> l)
+            {
+                string retVal = string.Empty;
+                foreach (T item in l)
+                    retVal += string.Format("{0}{1}", string.IsNullOrEmpty(retVal) ?
+                                                                "" : ", ",
+                                             item);
+                return string.IsNullOrEmpty(retVal) ? "[]" : "[ " + retVal + " ]";
+            }
+
+            public static string ToString<T>(this List<T> l, string fmt)
+            {
+                string retVal = string.Empty;
+                foreach (T item in l)
+                {
+                    IFormattable ifmt = item as IFormattable;
+                    if (ifmt != null)
+                        retVal += string.Format("{0}{1}",
+                                                string.IsNullOrEmpty(retVal) ?
+                                                   "" : ", ", ifmt.ToString(fmt, null));
+                    else
+                        retVal += ToString2(l);
+                }
+                return string.IsNullOrEmpty(retVal) ? "[]" : "[ " + retVal + " ]";
+            }
+        }
+    //}
     class Utl
     {
         public  Utl()
@@ -393,31 +438,31 @@ namespace TestCodeasyNet
         //  Here are some exercises for you." 
         #endregion
     }
-    class Flower
+    class Plant
+    {        public string Type { get; set; }    }
+    class Flower : Plant
     {
-        //  Create a class Flower with 4 public properties: 
-        //  string Name, string Color, int Age, and bool IsEndangered. 
-        //  Do not add any access modifiers to getters or setters.    
-        public string Name
-        { set; get; }
-        public string Color
-        { set; get; }
-        public int Age
-        { set; get; }
-        public bool IsEndangered
-        { set; get; }
-        public Flower(string name, string color, int age, bool isEndangered)
+        //  Create a class Flower with 4 public properties: string Name, string Color, int Age, 
+        //  and bool IsEndangered. Do not add any access modifiers to getters or setters.    
+        //  Make the program compile by deriving class Flower from the class Plant. Set flower's 
+        //  property Type to Flowering, and then output it to the screen.
+
+        public string Name         { get; set; }
+        public string Color        { get; set; }
+        public int Age             { get; set; }
+        public bool IsEndangered   { get; set; }
+        public Flower(string name, string color, int age, string type, bool isEndangered)
         {
             Name = name;
             Color = color;
-            Age = age;
+            Age = age; Type = type;
             IsEndangered = isEndangered;
             WriteFlower();
         }
         public void WriteFlower()
         {
             Util util = new Util(ConsoleColor.Red, ConsoleColor.Black);
-            util.PrintInColor($"Flower: {Name}, {Color}, {Age.ToString()}, ");
+            util.PrintInColor($"Flower: {Name}, {Color}, {Age.ToString()}, {Type}, ");
             util.PrintInColor((IsEndangered) ? "Is Endangered\n" : "Is Not Endangered\n");
         }
     }
@@ -642,7 +687,7 @@ namespace TestCodeasyNet
             nullTest.PigLatin(line);
             string line2 = nullTest._newlyCreated; nullTest.PrintPL(line, line2);
             //  Chapter 3.1 Properties
-            new Flower("Rose", "Red", 10, false);
+            new Flower("Rose", "Red", 10, "Flowering" ,false) ;
             new ChickenFarm(62.9856, 168.333365, 10, "Red Rooster");
             new ResistanceBase(62.9856, 168.333365, 21, "Red Droid");
             Utl.PrintColoredA(ConsoleColor.Red, ConsoleColor.Black, $"\nYou are exiting CSharp-Intermediate: Chapter 3: Properties, Encapsulation.\n\n");
@@ -1784,8 +1829,8 @@ namespace TestCodeasyNet
 
         public static void CSBeginChap1RunWhiles(Util sutil, bool isConsoleRead = false)
         {
-            int fileNum = 0, pop = Scanning(sutil, Scanning(sutil, Scanning(sutil, Scanning(sutil, Scanning(sutil, Scanning(sutil, fileNum))))));
-            PrintTriangle(sutil, 7); AddToSalaryWhile(sutil); DivideBy2(sutil, 4096);
+            int fileNum = 0, pop = Scanning(sutil, Scanning(sutil, /*Scanning(sutil, Scanning(sutil, Scanning(sutil, */Scanning(sutil, fileNum)));//)));
+            PrintTriangle(sutil, 3); AddToSalaryWhile(sutil); DivideBy2(sutil, 4096);
         }
     }
     #region C# Beginner>1 Repairing Noname>Introduction to methods  
@@ -2115,10 +2160,7 @@ namespace TestCodeasyNet
             if (operation.ToLower() == "multiply" || operation.ToLower() == "all")
                 sutil.PrintInColor($"{iA.ToString()} * {iB.ToString()} = {Multiply(sutil, iA, iB).ToString()}.   ");
             if (operation.ToLower() == "divide" || operation.ToLower() == "all")
-            {
-                if (iB == 0) sutil.PrintInColor($"Can't divide by zero!\n");
-                else sutil.PrintInColor($"{iA.ToString()} / {iB.ToString()} = {Divide(sutil, iA, iB).ToString()}.        ");
-            }
+            {                TryToDivide(sutil, iA, iB);                }
         }
         public static int Add     (Util sutil, int iA = 65, int iB = 10, bool isConsoleRead = false)
         { return iA + iB; }
@@ -2126,8 +2168,13 @@ namespace TestCodeasyNet
         { return iA - iB; }
         public static int Multiply(Util sutil, int iA = 65, int iB = 10, bool isConsoleRead = false)
         { return iA * iB; }
-        public static int Divide  (Util sutil, int iA = 65, int iB = 10, bool isConsoleRead = false)
-        { return iA / iB; }
+        public static void TryToDivide  (Util sutil, int iA = 65, int iB = 10, bool isConsoleRead = false)
+        {
+            try
+            {    sutil.PrintInColor($"{iA.ToString()} / {iB.ToString()} = {(iA / iB).ToString()}.        ");    }
+            catch (Exception)
+            {    sutil.PrintInColor($"Can't divide by zero!\n");    }
+         }
         public static void Fibonacci(Util sutil, int idx = 26, bool isConsoleRead = false)
         {
             #region fibonacci sequence
@@ -2209,7 +2256,7 @@ namespace TestCodeasyNet
         public static void RunMethods(Util sutil, bool isConsoleRead = false)
         {
             PrintMax(sutil, 85, 104); PrintCubeVolume(sutil, 3.5);SayHello(sutil,"Brice Ulwelling");
-            MathOps(sutil, 75, 1, "l", isConsoleRead); Fibonacci(sutil); AtoZ(sutil, new string[] { "adld", "Zelda", "POP", "ilove", "9%^%@@","exit" });
+            MathOps(sutil, 75, 0, "l", isConsoleRead); Fibonacci(sutil); AtoZ(sutil, new string[] { "adld", "Zelda", "POP", "ilove", "9%^%@@","exit" });
         }
     }
     class CSBeginChapter2Arrays
@@ -2375,9 +2422,9 @@ namespace TestCodeasyNet
         public CSBeginChapter2Arrays()
         {
             Util util = new Util(ConsoleColor.DarkMagenta, ConsoleColor.White);
-            RunChap21Arrays(util);
+            RunChap21Arrays(util); GetNumbersFromConsole(util);
         }
-        public static void GetNumbersFromConsole(Util sutil )
+        public static void GetNumbersFromConsole(Util sutil, bool isConsoleRead = false)
         {
             //  Call a method GetNumbersFromConsole that reads a count value of int, and then reads count 
             //  values from the console into an int array.Calculate and print the sum of all elements of 
@@ -2387,6 +2434,23 @@ namespace TestCodeasyNet
             //  >3
             //  >2
             //  Sum: 6
+            //Console.Write("  ");
+            int[] iNum = { 14, 26, 39 }; string pop = ""; bool isParsed = false; int in1 = 0, idx = 0, iSum = 0;
+            if (isConsoleRead)
+            {
+                while (((pop = Console.ReadLine()) != "Exit") && idx < 3)
+                {
+                    ++idx;
+                    isParsed = int.TryParse(pop, out in1);
+                    if (!isParsed) { iNum[idx] = idx; }
+                    else { iNum[idx] = in1; }
+                }
+            }
+            foreach (var item in iNum)
+            {    if (!isConsoleRead) sutil.PrintInColor($"{item.ToString()}, ");
+                iSum += item;            }
+            sutil.PrintInColor($"and the sum is: {iSum.ToString()}.");
+
         }
         public static void PrintHello() { Console.WriteLine("HELLO, I LIKE UPPERCASE!"); }
         public static void DoubleMaxAndNewArray(Util sutil, int count, double[] num, bool isConsoleRead = false)
@@ -3289,10 +3353,11 @@ namespace TestCodeasyNet
     }
     class CSBeginChap5InfinityTypesCastOutRef
     {
+        public CSBeginChap5InfinityTypesCastOutRef()
+        { Util util = new Util(ConsoleColor.DarkGreen, ConsoleColor.White); RunChap5(util); }
         #region CSBeginChap5InfinityTypesCastOutRef
-        /*    Infinity
-        //  The day came when I met Infinity. She was from the central resistance base, called 
-        //  'Wonderland'. Every month, Ritchie had been sending the 10 best programmers from 
+        //    Infinity...  The day came when I met Infinity. She was from the central resistance base, 
+        //  called 'Wonderland'. Every month, Ritchie had been sending the 10 best programmers from 
         //  his base to Wonderland, for participation in the Rust project.    "Wait!" - I 
         //  realised I had just said 'best programmers'. "Does this mean that I'm one of the 
         //  top 10 best programmers that Ritchie has?! Cool!" - I hadn't even thought about 
@@ -3343,161 +3408,1213 @@ namespace TestCodeasyNet
         //  short anotherShort = short.Parse(Console.ReadLine());    var yetAnotherShort = short.Parse(Console.ReadLine());
         //  Console.WriteLine(byteVariable);  // Outputs 12    //  Console.WriteLine(shortVariable); // Outputs 12
         //  Console.WriteLine(intVariable);   // Outputs 12    //  Console.WriteLine(longVariable);  // Outputs 12
-        //  Read an integer number from the screen and store it in a short variable named count.Write a program that prints numbers from 1(including) to count(including), each on a new line.But for multiples of two, print 'Save' instead of the number, and for the multiples of three print 'Earth'. For numbers which are multiples of both two and three, print 'SaveEarth'.
-Example:
->7
-1
-Save
-Earth
-Save
-5
-SaveEarth
-7
+        //
+        //  C# transformation    Infinity continued, "As you know, in C# every variable has a type. 
+        //  It's impossible to change the type of a variable, but you can convert a value from one 
+        //  type to another and then store it into a new variable. There are two kinds of type 
+        //  conversion: implicit and explicit. Implicit conversions happen without us as programmers 
+        //  even noticing it! Here is an example of implicit type conversion":
+        //  short shortNumber = 23;
+        //  Implicit conversions    //  int intNumber = shortNumber;    //  float someFloat = shortNumber;
+        //  double firstDouble = intNumber;  //  double secondDouble = shortNumber;
+        //  
+        //  Wrong, no implicit conversion    //  intNumber = firstDouble;
+        //  "As you'll see, I've created a short variable and assigned it to int, float and double. 
+        //  Everything is fine; implicit conversion happens, and you store the value from a variable 
+        //  of one type, into a variable of another one." Infinity explained.
+        //  "This is a bit confusing!" I exclaimed. "How would I know that implicit conversion between 
+        //  two types exists?"  "Good question Teo! There is a general rule: implicit conversion exists 
+        //  from 'small' types, to 'bigger' ones, counted by the amount of bytes the type takes. 
+        //  For example, there is an implicit conversion from byte to int, but not vice versa; 
+        //  from int to byte."  "It makes some sense now... So, if inside an int variable, 
+        //  I have a big number - let's say 1000, and I try to store it inside a byte variable, 
+        //  it won't fit into the range [0-255]?" I shared my thoughts.  "Yes, that's exactly the reason Teo. 
+        //  If I have an int that takes 4 bytes, it's impossible to fit it into a byte type that is only 
+        //  1 byte big. Here is a complete C# Implicit Numeric Conversions Table, or you can just use a 
+        //  subset that I've picked for you":  
+        //  
+        //  From Type       To Types
+        //  byte            short, ushort, int, uint, long, ulong, float, double or decimal
+        //  int             long, float, double or decimal
+        //  char            ushort, int, uint, long, ulong, float, double or decimal
+        //  float           double
+        //  Convert the variable types to make the code compile, and output 10 to the screen. 
+        //  You should not change the variable names.  Code!
+        //  I started to like her. She was smart, wasn't aggressive and explained things really well. 
+        //  Perhaps I wouldn't be so disappointed about working with her if I had no backup plan 
+        //  (like returning home with Noname's help).  "Good job Teo! There is one more type conversion 
+        //  technique — the explicit conversion. It is also called a cast. A cast is a way of explicitly 
+        //  informing the compiler that you intend to make the type conversion, and that you are aware 
+        //  that data loss may occur. To perform a cast, specify the type that you are casting to in 
+        //  parentheses(), in front of the value or variable to be converted. Here is an example 
+        //  where we cast double to int":  double a = 123.95;  int b = (int)a; // Explicit cast
+        //  Console.WriteLine(b); // Outputs 123  "This looks powerful!" I proclaimed. "Could you please 
+        //  show me some more cast examples?"  "No problem, here you go! Oh, and don't forget about the 
+        //  exercise after below the example!":    //  double someDouble = 123.95;
+        //  float someFloat = (float)someDouble; // No data loss, someFloat == 123.95   
+        //  double anotherDouble = 123.456789098765;  
+        //  float anotherFloat = (float)anotherDouble; // Data loss, anotherFloat == 123.4568
+        //  long someLong = 123;    int someInt = (int)someLong; // No data loss, someInt == 123
+        //  long anotherLong = 112233445566;  int anotherInt = (int)anotherLong; // Data loss, anotherInt == 564295870
+        //  int yetAnotherInt = 123;    byte someByte = (byte)yetAnotherInt; // No data loss, someByte == 123
+        //  int intToConvert = 1234;    byte resultAsByte = (byte)intToConvert; // Data loss, intToConvert is too big to fit into byte
+        //  Multiple conversions in expression are also fine
+        //  int intResult = (int)someLong + (int)anotherDouble; // Data Loss, intResult == 246
+        //  float floatResult = (float)anotherDouble + (float)someDouble; // Data loss, floatResult == 247.406784
+        //  // Conversion of the operation's result is fine as well
+        //  int anotherIntResult = (int)(someLong + anotherDouble); // Data Loss, anotherIntResult == 246
+        //  float floatResult2 = (float)(anotherDouble + someDouble); // Data loss, floatResult2 == 247.406784
+        //
+        //  Apply one explicit type conversion (cast) to make the code compile. Do not change any string constants 
+        //  or variable names.  Code! Apply several explicit type conversions (casts) to make the code compile. 
+        //  Do not change any string constants or variable names.  Code! "So, take this very simple task. 
+        //  You have some cupcakes and some people that all want one! You need to share among people fairly, 
+        //  so that everyone gets an equal amount of cupcakes. Your program should read an int (amount of cupcakes), 
+        //  and another int (amount of people). Then, it should output "Every person should get {amount}
+        //  cupcakes"  "This seems simple; you just need to divide 2 numbers... do you want me to write the code?" I asked.
+        //  "Go ahead!" she said, a little too positively.  It was clear that something wasn't quite right. 
+        //  She was smiling and staring straight at me.  "But... I'll write the code." I uneasily thought to myself. 
+        //  int cupcakesCount = int.Parse(Console.ReadLine());
+        //  int peopleCount = int.Parse(Console.ReadLine());
+        //  double result = cupcakesCount / peopleCount;
+        //  Console.WriteLine($"Every person should get {result} cupcakes.");
+        //  "Okay, let's run this code with 3 people and 6 cupcakes" she said.
+        //  The code ran fine; the result was - "Every person should get 2 cupcakes"
+        //  She continued, "But, what if we have only 1 cupcake and 4 people?"
+        //  When we tried my code with these parameters, the output was - "Every person should get 0 cupcakes"
+        //  "Why is it 0? It should be a quarter (0.25) of a cupcake for everyone!" I firmly yelled, frustrated.
+        //  C# is sometimes complicated  "Well, it's because of the type conversion. When you perform an 
+        //  arithmetic operation with integers, you'll always get an integer as a result. This works for 
+        //  short, byte, float and all other primitive types that we've used.  "What does this mean Infinity?!" 
+        //  I asked.  "This means, that you should be careful when dividing int types. C# compiler isn't able 
+        //  to understand that you want a float or double as a result, unless you specifically tell it this. 
+        //  Otherwise, it will disregard the fractional part. Here, I've prepared some examples":
+        //  int a = 9;    int b = 4;     double firstAttempt = a / b;    double secondAttempt = (double)a / b;
+        //  double thirdAttempt = a / (double)b;    double nextAttempt = (double)a / (double)b;
+        //  double lastAttempt = (double)(a / b);   Console.WriteLine(firstAttempt);  // Outputs 2
+        //  Console.WriteLine(secondAttempt); // Outputs 2.25 || Console.WriteLine(thirdAttempt);  // Outputs 2.25
+        //  Console.WriteLine(nextAttempt);   // Outputs 2.25 || Console.WriteLine(lastAttempt);   // Outputs 2
+        //  Console.WriteLine((int)2.25 );    // Outputs 2    || Console.WriteLine((int) secondAttempt );   // Outputs 2
+        //  "As you'll see Teo, there are a lot of ways to cast types. The main rule here is 'if there 
+        //  are several operands in the expression, then the type of the result is the largest of the 
+        //  operand types'. For example, if you divide int and double, the result is double. If you 
+        //  multiply byte and int, the result is int. In tasks that you are going to solve in the future, 
+        //  make sure you don't forget to cast to double or float during int division. If you forget, 
+        //  you'll lose the fractional part, just like in the cupcakes example!"  
+        //  C# Beginner>5 Infinity>Type conversion    info @codeasy.net    Have fun and learn programming with codeasy.net © 2019 
+        #endregion
+        public static void Chap5Cast2Double(Util sutil, int iDays = 2066, bool isConsoleRead = false)
+        {
+            //  Write a program that reads from the console, a number of days in an int variable named 
+            //  numberOfDays and outputs the same number as years.The output should be a double type. 
+            //  For this task, we can assume that there are 365 days in a year.
+            //  Example:
+            //  >1022
+            //  2.8
+            Console.Write("  ");
+            if (isConsoleRead)
+            {
+                sutil.PrintInColor($"Please enter Integer Num of Days to Convert to years: ");
+                bool isParsed = int.TryParse(Console.ReadLine(), out iDays);
+                if (!isParsed) { iDays = 2355; }
+            }
+            double dYears = (double)iDays / 365.00;
+            sutil.PrintInColor($"iDays: ({iDays.ToString()}), dYears: ({dYears.ToString()}).");
+        }
+        public static void Chap5GNFCDoubleAverage(Util sutil, int count = 5, bool isConsoleRead = false)
+        {
+            //  Use a method named GetNumbersFromConsole which will read from the console a count of 
+            //  int values and return all those values in an int array. Then, output to the console, 
+            //  the average of the array values. (Average is a sum of all array elements divided by 
+            //  their length value).
+            //  Example:
+            //  >4
+            //  >1
+            //  >2
+            //  >3
+            //  >4
+            //  2.5    Code!   Great job!
+            List<int> iNum = new List<int> { 4, 6, 10, 20, 40 }; string sIn1 = ""; int idx = -1, in1 = 0, iSum = 0; bool isParsed = false;
+            if (isConsoleRead)
+            {
+                while (sIn1 != "exit")
+                {
+                    isParsed = int.TryParse(Console.ReadLine(), out in1);
+                    if (!isParsed) iNum.Add(++idx);
+                    else iNum.Add(in1);
+                }
+            }
+            Console.WriteLine("  "); sutil.PrintInColor($"List<int> = ");
+            foreach (int item in iNum)
+            { iSum += item; sutil.PrintInColor($"{item}, "); }
+            double dAverage = (double)iSum / (double)iNum.Count();
+            sutil.PrintInColor($"and the Average is: {dAverage.ToString()}");
+        }
+        public static void Chap5TypeCast(Util sutil, int count = 23, bool isConsoleRead = false)
+        {
+            //  Read an integer number from the screen and store it in a short variable named count.
+            //  Write a program that prints numbers from 1(including) to count(including), each on a 
+            //  new line. But for multiples of two, print 'Save' instead of the number, and for the 
+            //  multiples of three print 'Earth'. For numbers which are multiples of both two and three, 
+            //  print 'SaveEarth'.    //  Example:
+            //  >7
+            //  1
+            //  Save
+            //  Earth
+            //  Save
+            //  5
+            //  SaveEarth
+            //  7
 
-C# transformation
+            if (isConsoleRead)
+            { bool isParsed = int.TryParse(Console.ReadLine(), out count); if (!isParsed) count = 10; }
+            StringBuilder sb = new StringBuilder(""); Console.Write("  ");
+            for (int i = 1; i < count + 1; i++)
+            {
+                if (i % 2 == 0) sb.Append($"Save");
+                if (i % 3 == 0) sb.Append($"Earth");
+                if (sb.Length < 3) { sutil.PrintInColor($"{i.ToString()}, "); }
+                else { sutil.PrintInColor($"{sb.ToString()}, "); sb.Clear(); }
+            }
+        }
+        //  codeasy.net    C# Beginner>5 Infinity>Passing parameters to functions    You can have a rest
+        //  "Infinity was satisfied with your C# level." Ritchie said to me later that day, after I had 
+        //  spoken with Infinity. "So... does this mean that I'll be chosen for the Rust project?!" I asked.
+        //  "You're almost there Teo. You'll also need to pass an exam. If you do, then you are The Chosen One. 
+        //  You'd better go get some rest. The exam will take place tomorrow, and I've already said 'goodbye' 
+        //  to you in my mind, so I want you to pass it."  I nodded and went to the elevator. But instead of 
+        //  going to my floor, I headed to Nonames place in the basement.  When I got there, the atmosphere was... 
+        //  strange. The lights were flickering, Noname was very quiet and instructions on his multiple 
+        //  screens just repeated constantly. What was happening?!  "Hi Noname, how are you?" I asked.  "Hi Teo. 
+        //  I can't find the mistake. There is a mistake, I know, but I can't find it. I-I-I can't find a mistake. 
+        //  I was looking for a mistake but I-I-I c-c-couldn't find it. No mistake, but there is one. 
+        //  Can't find a mistake..." Noname trailed off. "Okay, okay... I get it. You're looking for a mistake, 
+        //  but you've had no luck in finding it. I'm sorry to see you in this state, how can I help you?" 
+        //  I asked, concerned.  "I have this method, but it doesn't change parameters that I pass to it. 
+        //  I don't understand why. Please, look for an article in the local network, maybe you'll find 
+        //  something useful about passing parameters to methods." Noname begged me.  "Sure Noname, I will do! 
+        //  I'll come back in a little while." I tried to speak optimistically, as I was definitely the only 
+        //  optimist in this room. Come to think of it, I was the only human in the room, and I'm not sure 
+        //  one can apply 'optimistic' to a machine. Still, I knew I had to try to understand what was so 
+        //  tricky about passing parameters to methods... Back to methods. In next to no time, I had found 
+        //  an article on the local network about passing parameters to methods. I began to read:
+        //  "Let's take a simple exercise of calling a method, PrintAndChangeInteger, and passing 
+        //  an int type variable as the parameter." 
+        //  static void Main()
+        //  {
+        //      int exampleInt = 8;
+        //      PrintAndChangeInteger(exampleInt);
+        //      Console.WriteLine($"int after the method call: {exampleInt}");
+        //  }
+        //  static void PrintAndChangeInteger(int integerToPrint)
+        //  {
+        //      integerToPrint++;
+        //      Console.WriteLine($"int inside the method call: {integerToPrint}");
+        //  }
+        //  // Outputs:
+        //  // int inside the method call: 9
+        //  // int after the method call: 8
+        //  The article continued, "You probably expected the output to be":  
+        //  int inside the method call: 9
+        //  int after the method call: 9
+        //  "The trick here, is in how parameters are passed from the Main method to the 
+        //  PrintAndChangeInteger method. In the above example, the parameter exampleInt 
+        //  was copied. The method PrintAndChangeInteger was therefore working with a copy 
+        //  of the exampleInt variable. That's why after the method PrintAndChangeInteger 
+        //  returned, the value of exampleInt remained the same. This type of parameter 
+        //  passing (when the callee copies the caller's parameters) is called passing by value. 
+        //  In this case, if the callee modifies the parameter variable, the effect is not 
+        //  visible to the caller.  As you can imagine, there is another type of parameter 
+        //  passing; passing by reference. When a parameter variable is passed by reference, 
+        //  the caller, and the callee use and change the same variable. If the callee modifies 
+        //  this variable, the effect is visible to the caller." C# tutorial: pass by value or 
+        //  pass by reference "Built-in types (except string and object) by default, are passed 
+        //  by value. This means that almost all types that you know, like int, double, char, etc, 
+        //  are passed in this way. If you, as a programmer, want to pass a built-in type by 
+        //  reference, you should use the keywords ref or out. You should put them before the 
+        //  variable name when you call a method and in the method's parameters list. 
+        //  Here is an example":
+        //  static void Main()
+        //  {
+        //      int exampleInt = 8;
+        //      //---Place-ref-here----↓
+        //      PrintAndChangeInteger(ref exampleInt);
+        //      Console.WriteLine($"int after the method call: {exampleInt}");
+        //  }
+        //  //----------Place-ref-here---------↓
+        //  static void PrintAndChangeInteger(ref int integerToPrint)
+        //  {
+        //      integerToPrint++;
+        //      Console.WriteLine($"int inside the method call: {integerToPrint}");
+        //  }
+        //  // Outputs:
+        //  // int inside the method call: 9
+        //  // int after the method call: 9
+        //  "As you can see in the example, when we passed the parameters by reference, 
+        //  the PrintAndChangeInteger method was working with the same variable as the Main method. 
+        //  That's why the value of exampleInt changed and the output changed too": 
+        //  int inside the method call: 9
+        //  int after the method call: 9
+        //  Fix the program to make it output the sum of all integers from 1 to 10.
+        //  Fix the method 'GetNextFibonacci' that takes two integers, representing two sequential 
+        //  Fibonacci numbers, and rearranges their values to get the next one. The Main method 
+        //  should read integer n from the console, and then, using GetNextFibonacci, output 
+        //  first n Fibonacci numbers, delimited by space. Example:
+        //  >10
+        //  1 1 2 3 5 8 13 21 34 55    Code!
+        //  One more C# joke
+        //  "But, 'what about out?' you may ask. The out keyword is very similar to ref. There are two 
+        //  main differences":  The variable should be initialized before passing it as a parameter 
+        //  when using ref. When using out, initialization is not mandatory.  
+        //  static void Main()
+        //  {
+        //      int exampleInt; // Not initialized (no value assigned)
+        //      ChangeIntegerWithRef(ref exampleInt); // Wrong - exampleInt is not initialized
+        //      ChangeIntegerWithOut(out exampleInt); // Ok
+        //  }
+        //  static void ChangeIntegerWithOut(out int integerToChange)
+        //  {
+        //      integerToChange = 2;
+        //  }
+        //  static void ChangeIntegerWithRef(ref int integerToChange)
+        //  {
+        //      integerToChange = 2;
+        //  }
+        //  The method that takes an out parameter, is required to have a value assigned to this 
+        //  parameter. When the method takes a ref parameter, it can leave its value unassigned.
+        //  static void Main()
+        //  {
+        //      int exampleInt = 2;
+        //      PrintIntegerWithRef(ref exampleInt);
+        //      PrintIntegerWithOut(out exampleInt); // This is ok
+        //  }
+        //  // This method is ok
+        //  static void PrintIntegerWithRef(ref int integerToPrint)
+        //  {
+        //      Console.WriteLine(integerToPrint);
+        //  }
+        //  // Wrong!!! When using out - assign a value to integerToPrint
+        //  static void PrintIntegerWithOut(out int integerToPrint)
+        //  {
+        //      Console.WriteLine(integerToPrint);
+        //  }
+        //  // This method is ok. It changes the value of integerToPrint
+        //  static void PrintIntegerWithOutCompiles(out int integerToPrint)
+        //  {
+        //      integerToPrint = 23;
+        //      Console.WriteLine(integerToPrint);
+        //  }
+        //  The article continued, "And finally, out in the wild, when you are going to 
+        //  write real programs that are important, please, remember these simple rules":
+        //  Avoid using ref and out where possible. Use function return values instead.
+        //  static void Main()
+        //  {
+        //          int input;
+        //          // out/ref usage to get a result from the method
+        //          GetNumberFromUserWithOut(out input);
+        //          // Return value usage to get a result from the method
+        //          input = GetNumberFromUserWithReturnValue();
+        //  }
+        //  static void GetNumberFromUserWithOut(out int input)
+        //  {
+        //      input = int.Parse(Console.ReadLine());
+        //  }
+        //  static int GetNumberFromUserWithReturnValue()
+        //  {
+        //      return int.Parse(Console.ReadLine());
+        //  }
+        //  Use ref if you want to use the value of the variable inside the method and may need to change it.
+        //  Use out if you want to return additional values from the function. A good example is int.TryParse
+        //  
+        //  Write a method, named AnalyzeString, that returns bool and takes two parameters, string input and 
+        //  out int numberOfZeros. It should calculate the number of zeros in the string and assign it to 
+        //  numberOfZeros. If the string passed to the method is empty, it should return false, otherwise, 
+        //  true. From the Main method, read the input string from the console, and call AnalyzeString with 
+        //  it. If AnalyzeString returns true, print the number of zeros, if it returns false, 
+        //  print 'The string is invalid.'  
+        //  Example 1:
+        //  >He0llo W0000rld!
+        //  5
+        //  Example 2:
+        //  >
+        //  The string is invalid.
+        //  Slightly modify the method AnalyzeString from the previous task. It should take two parameters, 
+        //  string input and ref int numberOfZeros. The method should add the number of zeros that it finds 
+        //  in input to numberOfZeros. From the Main method, read an integer count from the console. 
+        //  Then, read count strings from the console. Call AnalyzeString for every one of them. 
+        //  If all strings are empty, the output should be 'All strings are invalid.' - otherwise, 
+        //  output the total number of zeros in all strings. 
+        //  Example 1:
+        //  >4
+        //  >I am y0ur father
+        //  >H0ust0n, we have a pr0blem
+        //  >Winter is c0mming
+        //  >B0nd. James B0nd
+        //  7
+        //  Example 2:
+        //  >2
+        //  >
+        //  >
+        //  All strings are invalid.
+        //  "All types that are passed by value, by default, are called Value Types. Types that are passed by 
+        //  reference by default, are called Reference Types. You can also remember the difference, by 
+        //  remembering that value types hold the value inside itself, but reference types hold only the 
+        //  reference to a value. Among the types you have learned, string and array are reference types. 
+        //  The rest are value types.Look at this comparison diagram for int and string variables":
+        //  Value types and reference types
+        //  The article finished with an example. "Here's an example, where we pass an array to the method, 
+        //  and as an array is a reference type, it is not copied; the method works with the same array as 
+        //  the caller and changes it": 
+        //  static void Main()
+        //  {
+        //      int[] exampleArray = { 1, 2, 3 };
+        //      PrintAndChangeArray(exampleArray);
+        //      Console.WriteLine($"Array after the method call:");
+        //      for (int i = 0; i < exampleArray.Length; i++)
+        //      {
+        //          Console.Write($"{exampleArray[i]} ");
+        //      }
+        //  }
+        //  
+        //  static void PrintAndChangeArray(int[] arrayToPrint)
+        //  {
+        //          Console.WriteLine($"Array inside the method call:");
+        //          arrayToPrint[0] = 12;
+        //          for (int i = 0; i < arrayToPrint.Length; i++)
+        //          {
+        //              Console.Write($"{arrayToPrint[i]} ");
+        //          }
+        //          Console.WriteLine();
+        //  }
+        //  // Outputs:
+        //  // Array inside the method call:
+        //  // 12 2 3
+        //  // Array after the method call:
+        //  // 12 2 3
+        //  //  I really liked the article. It was clear and easy to understand. After reading everything, 
+        //  //  I ran to the basement to fix Noname's module. What I found there wasn't the easiest task in 
+        //  //  the world... but I knew I'd fix it!
 
-Infinity continued, "As you know, in C# every variable has a type. It's impossible to change the type of a variable, but you can convert a value from one type to another and then store it into a new variable. There are two kinds of type conversion: implicit and explicit. Implicit conversions happen without us as programmers even noticing it! Here is an example of implicit type conversion":
-short shortNumber = 23;
-
-// Implicit conversions
-int intNumber = shortNumber;
-float someFloat = shortNumber;
-double firstDouble = intNumber;
-double secondDouble = shortNumber;
 
 
-// Wrong, no implicit conversion
-intNumber = firstDouble;
-"As you'll see, I've created a short variable and assigned it to int, float and double. Everything is fine; implicit conversion happens, and you store the value from a variable of one type, into a variable of another one." Infinity explained.
-"This is a bit confusing!" I exclaimed. "How would I know that implicit conversion between two types exists?"
-"Good question Teo! There is a general rule: implicit conversion exists from 'small' types, to 'bigger' ones, counted by the amount of bytes the type takes. For example, there is an implicit conversion from byte to int, but not vice versa; from int to byte."
-"It makes some sense now... So, if inside an int variable, I have a big number - let's say 1000, and I try to store it inside a byte variable, it won't fit into the range [0-255]?" I shared my thoughts.
-"Yes, that's exactly the reason Teo. If I have an int that takes 4 bytes, it's impossible to fit it into a byte type that is only 1 byte big. Here is a complete C# Implicit Numeric Conversions Table, or you can just use a subset that I've picked for you":
+        //  C# lesson done
 
-From Type   To Types
-byte
-short, ushort, int, uint, long, ulong, float, double or decimal
+        //  C# Beginner>5 Infinity>Passing parameters to functions    info @codeasy.net    Have fun and learn programming with codeasy.net © 2019    */
 
+        //  Write a method, named AnalyzeString, that returns bool and takes two parameters, string input and 
+        //  out int numberOfZeros. It should calculate the number of zeros in the string and assign it to 
+        //  numberOfZeros. If the string passed to the method is empty, it should return false, otherwise, 
+        //  true. From the Main method, read the input string from the console, and call AnalyzeString with 
+        //  it. If AnalyzeString returns true, print the number of zeros, if it returns false, 
+        //  print 'The string is invalid.'  
+        //  Example 1:
+        //  >He0llo W0000rld!
+        //  5
+        //  Example 2:
+        //  >
+        //  The string is invalid.
+        //  Slightly modify the method AnalyzeString from the previous task. It should take two parameters, 
+        //  string input and ref int numberOfZeros. The method should add the number of zeros that it finds 
+        //  in input to numberOfZeros. From the Main method, read an integer count from the console. 
+        //  Then, read count strings from the console. Call AnalyzeString for every one of them. 
+        //  If all strings are empty, the output should be 'All strings are invalid.' - otherwise, 
+        //  output the total number of zeros in all strings. 
+        //  Example 1:
+        //  >4
+        //  >I am y0ur father
+        //  >H0ust0n, we have a pr0blem
+        //  >Winter is c0mming
+        //  >B0nd. James B0nd
+        //  7
+        //  Example 2:
+        //  >2
+        //  >
+        //  >
+        //  All strings are invalid.
+        //  
+        //  Write a program that first creates an int array, with a size of 10, and reads the number 
+        //  of commands from the user. After that, the program should read every command that the user 
+        //  inputs. 
+        //  Commands are represented by one string and could be of 2 types: add1 index or add0 index. 
+        //  These commands should change the corresponding array cell to 1 or 0. For example, the command 
+        //  add1 3 puts 1 to the array cell with an index of 3. After all the commands from the user are 
+        //  executed, print the array to the screen. Use methods PutOneAtIndex and PutZeroAtIndex for 
+        //  command execution. Example:
+        //  >4
+        //  >add1 1
+        //  >add0 1
+        //  >add1 9
+        //  >add1 5
+        //  0 0 0 0 0 1 0 0 0 1
+        //  Tip: To convert one char from string to int, use int.Parse(myString[index].ToString())*/
+        public static void ReverseList(Util tilz, int arrCount = 12, bool isConsoleRead = false)
+        {
+            //  This program is supposed to reverse an array and then output it to the screen. But... 
+            //  something has gone wrong. Fix it! (Do not change the way that the array is output!). Example:
+            //  >4
+            //  >1
+            //  >2
+            //  >3
+            //  >4
+            //  4 3 2 1        Code!
+            List<int> iNum = new List<int> { 4, 6, 8, 10, 12, 14, 16, 18, 20, 22 };
+            string si = ""; int in1 = 0, idx = -1; Console.Write(" ");
+            if (isConsoleRead)
+            {
+                iNum.Clear(); ++idx;
+                while ((si = Console.ReadLine()) != "exit")
+                {
+                    bool isParsed = int.TryParse(Console.ReadLine(), out in1);
+                    if (isParsed) iNum.Add(in1);
+                    else iNum.Add(idx);
+                }
+            }
+            else
+            {
+                tilz.PrintInColor("Orig: ");
+                foreach (var item in iNum)
+                { tilz.PrintInColor($"{ item.ToString()}, "); }
+            }
+            tilz.PrintInColor("RevL: ");
+            for (int i = iNum.Count() - 1; i >= 0; i--)
+            { tilz.PrintInColor($"{ iNum[i].ToString()}, "); }
+        }
+        //  Fix the program to make it output the sum of all integers from 1 to 10.
+        //  Fix the method 'GetNextFibonacci' that takes two integers, representing two sequential 
+        //  Fibonacci numbers, and rearranges their values to get the next one. The Main method 
+        //  should read integer n from the console, and then, using GetNextFibonacci, output 
+        //  first n Fibonacci numbers, delimited by space. Example:
+        //  >10
+        //  1 1 2 3 5 8 13 21 34 55    Code!  Done!
 
-int
-long, float, double or decimal
-char
-ushort, int, uint, long, ulong, float, double or decimal
-float
-double
-Convert the variable types to make the code compile, and output 10 to the screen.You should not change the variable names.
+        public static void Sum1to10(Util utl, int cnrl = 10, bool isConsoleRead = false)
+        {
+            Console.Write("  "); int iSum = 0;
+            for (int i = 1; i < cnrl + 1; i++)
+            { utl.PrintInColor($"{i.ToString()}, "); iSum += i; }
+            utl.PrintInColor($"and sum: {iSum.ToString()}.");
+        }
+        public static void RunArrFill(Util utl, bool isConsoleRead = false)
+        {
+            // Write a program that first creates an int array, with a size of 10, and reads the 
+            //  number of commands from the user. After that, the program should read every command 
+            //  that the user inputs. Commands are represented by one string and could be of 2 types: 
+            //  add1 index or add0 index. These commands should change the corresponding array cell 
+            //  to 1 or 0. For example, the command add1 3 puts 1 to the array cell with an index of 3. 
+            //  After all the commands from the user are executed, print the array to the screen. 
+            //  Use methods PutOneAtIndex and PutZeroAtIndex for command execution. Example:
+            //  >4
+            //  >add1 1
+            //  >add0 1
+            //  >add1 9
+            //  >add1 5
+            //  0 0 0 0 0 1 0 0 0 1
+            /*Tip: To convert one char from string to int, use int.Parse(myString[index].ToString())*/
+            List<int> iArr = new List<int>(); int in1 = 0, idx = 0; Console.Write(" ");
+            List<string> sInput = new List<string> { "add1 1", "add0 1", "add1 9", "add1 5" };
+            for (int i = 0; i < 10; i++)            {     iArr.Add(0);    }
+            foreach (string item in sInput)
+            {
+                in1 = int.Parse(item[3].ToString()); 
+                idx = int.Parse(item[5].ToString());
+                iArr = PutOneAtIndex( utl, iArr, idx, in1 );
+            } utl.PrintInColor($"iArr: ");
+            foreach (int item in iArr)
+            {
+                utl.PrintInColor($"{item.ToString()}, ");
+            }
+        } 
+        public static List<int> PutOneAtIndex(Util utl, List<int> iArr, int idx = 0, int num = 0, bool isConsoleRead = false ) 
+        {
+            iArr[idx] = num; return iArr;
+        }
+        public static List<int> PutZeroAtIndex(Util utl, List<int> iArr, int idx = 0, int num = 0, bool isConsoleRead = false) 
+        { iArr[idx] = num; return iArr; }
+         public static void RunAnalyze(Util utl, bool isConsoleRead = false)
+        {
+            //  Write a method, named AnalyzeString, that returns bool and takes two parameters, 
+            //  string input and out int numberOfZeros. It should calculate the number of zeros 
+            //  in the string and assign it to numberOfZeros. If the string passed to the method 
+            //  is empty, it should return false, otherwise, true. From the Main method, read the 
+            //  input string from the console, and call AnalyzeString with it. If AnalyzeString 
+            //  returns true, print the number of zeros, 
+            //  if it returns false, print 'The string is invalid.'
+            //  Example 1:
+            //  >He0llo W0000rld!
+            //  5
+            //  Example 2:
+            //  >
+            //  The string is invalid.
+            //  
+            //  Slightly modify the method AnalyzeString from the previous task. 
+            //  It should take two parameters, string input and ref int numberOfZeros. 
+            //  The method should add the number of zeros that it finds in input to numberOfZeros. 
+            //  From the Main method, read an integer count from the console.
+            //  Then, read count strings from the console. Call AnalyzeString for every one of them. 
+            //  If all strings are empty, the output should be 'All strings are invalid.' 
+            //  - otherwise, output the total number of zeros in all strings.
+            //  Example 1:
+            //  >4
+            //  >I am y0ur father
+            //  >H0ust0n, we have a pr0blem
+            //  >Winter is c0mming
+            //  >B0nd.James B0nd
+            //  7
+            //  Example 2:
+            //  >2
+            //  >
+            //  >
+            //  All strings are invalid.
+            Console.Write(" ");
+            List<string> sInput1 = new List<string> { "I am y0ur father", "H0ust0n, we have a pr0blem", "Winter is c0mming", "B0nd.James B0nd" };
+            List<string> sInput2 = new List<string> { "", "", "" }; int numberOfZeros = 0, idx = -1, in1 = 0;string si = "";
+            if (isConsoleRead)    {    sInput1 = utl.ReadStrings(utl, sInput1, "Enter some strings with 0s");    }
+            bool validString = false;
+            foreach (string item in sInput1)
+            {    
+                string sItem = item;
+                if (item != "" ) utl.PrintInColor($"Orig: {item}, ");
+                validString = AnalyzeString(utl, ref sItem, ref numberOfZeros);
+                if (validString) utl.PrintInColor($"New: {sItem}, ");
+            }
+            if (!validString) utl.PrintInColor($"All strings are invalid.");
+            else utl.PrintInColor($", numberOfZeros: {numberOfZeros.ToString()}. ");
+            validString = false;
+            if (isConsoleRead) { sInput2 = utl.ReadStrings(utl, sInput2, "Enter some strings with 0s"); }
+            foreach (string item in sInput2)
+            {    
+                string sItem = item;
+                if (item != "") utl.PrintInColor($"Orig: {item}, ");
+                validString = AnalyzeString(utl, ref sItem, ref numberOfZeros);
+                if (validString) utl.PrintInColor($"New: {sItem}, ");
+            }
+            if (!validString) utl.PrintInColor($"All strings are invalid.");
+            //  "All types that are passed by value, by default, are called Value Types. 
+            //  Types that are passed by reference by default, are called Reference Types. 
+            //  You can also remember the difference, by remembering that value types hold 
+            //  the value inside itself, but reference types hold only the reference to a value. 
+            //  Among the types you have learned, string and array are reference types. 
+            //  The rest are value types. Look at this comparison diagram for int and string variables":
+            //  int===>10    string===>reference===>"abc"
+        }
+        public static bool AnalyzeString(Util utl, ref string input, ref int numberOfZeros, bool isConsoleRead = false)
+        {
+            bool validStrings = false; StringBuilder sb = new StringBuilder("");
+            if (input == "") return validStrings;
+            foreach (char item in input)
+            {
+                if (item == '0') { ++numberOfZeros; validStrings = true; sb.Append("o"); }
+                else sb.Append(item.ToString());
+            }
+            input = sb.ToString();
+            return validStrings;
+        }
+        public static void DuplicateFinder(Util utl,bool isConsoleRead = false)
+        {
+            string pop = "ObjectiveC, Swift, C++, Core Bluetooth framework, C#, ASP.NET-Core/WebForms/MVC/Blazor, WebAPIs, JavaScript, TypeScript, ECMAScript6+, NodeJS, AngularJS, Bootstrap, React, JQuery, AJAX, tSQL, ADONET/Entity Framework, SQLServer, MySQL, Postgres, MongoDB, Hadoop, HTML, CSS_LESS, SQLAzure-Blobs-WebRoles-ServiceBus-VMs, AWS-Lambda/RDS/DDB/CW/EC2/SQS/SNS/Cognito/Kinesis, Heroku, Powershell/Bash, ODATA/REST/SOAP Web Services/APIs, LINQ, Reactive-Extensions.Net, C++, Java, Wordpress/PHP, Python, Unity3D, VB.Net, F#, Linux, Visual Studio, SDLC, SOLID Patterns, Adobe Suite, Photoshop, Word, Excel, XML/Salting/Hashing, TDD/Pair&Mob, HTTPS/SSL/TCP/IP, JMS, EMS, Web Crawl, Github. Scrum, Agile, Fiddler, Continuous-Integration/Delivery/Deployment, Lifelong Learner, Mission-Critical Micro/Service Oriented Architect/Operator/Tester/Troubleshooter, Self Driven/Managed/Motivated Autonomous/Independent Team Playing Coordinator, On-Time Multi Tasking, Collaborative Proactive Problem Solving, High-Quality Results/Detail Oriented, Highly Enthusiastic, Scalable, Back-End Solution Engineer, Post-To, Corrector of Websites/Social Media, Intensely Focused Customer Service Purveyor, Client-Requested Content Works Everywhere, SQL Query Optimizer, Caching/Performance Monitoring/Profiling Guru, Network Security Analyst, Project Leader/Owner, Sophisticated Web Interface Designer, Big Picture Seeing, Clean/Efficient/Expert/OOP Coder, Guidance Provider, Convertor of Complexity Into Simplicity, Test-Frame-Worker, Business To Technical Requirement Translator skills";
+            char[] delimiterChars = { ' ', ',', ':', '/', ';', '-', '(', ')' };
+            List<string> individualString = new List<string>(pop.Split(delimiterChars,StringSplitOptions.RemoveEmptyEntries).ToList<string>());
+            List<int> dupIndex = new List<int>(999999);
+            int isc = individualString.Count(), dups= 0;
+            for (int i = 0; i < isc; i++)
+            {
+                if (i + 1 < isc)
+                {
+                    for (int j = i + 1; j < isc; j++)
+                    {
+                        if (individualString[i] == individualString[j] && !dupIndex.Contains(j) )
+                        { utl.PrintInColor($"dup={individualString[j]}@@, "); ++dups; dupIndex.Add(j); }
+                    } 
+                }
+            }
+            if (dups == 0) utl.PrintInColor("no dups!!");
+            //await sum1to10async();
+        }
+        //  private static async Task Sum1To10Async(Util utl, bool isConsoleRead = false)
+        //  {
+        //      var stopwatch = new Stopwatch();
+        //      stopwatch.Start();
+        //  
+        //      // this task will take about 2.5s to complete
+        //      var sumTask = GetPrimesAsync();
+        //  
+        //      // this task will take about 4s to complete
+        //      var wordTask = SlowAndComplexWordAsync();
+        //  
+        //      // running them in parallel should take about 4s to complete
+        //      await Task.WhenAll(sumTask, wordTask);
+        //  
+        //      // The elapsed time at this point will only be about 4s
+        //      utl.PrintInColor($"Time elapsed when both complete..." + stopwatch.Elapsed);
+        //  
+        //      // These lines are to prove the outputs are as expected,
+        //      // i.e. 300 for the complex sum and "ABC...XYZ" for the complex word
+        //      utl.PrintInColor($"Result of complex sum = " + sumTask.Result);
+        //      utl.PrintInColor($"Result of complex letter processing " + wordTask.Result);
+        //  
+        //      
+        //  }
+        public static void RunChap5(Util sutil)
+        {
+            Chap5TypeCast(sutil);   Chap5GNFCDoubleAverage(sutil); Chap5Cast2Double(sutil); 
+            ReverseList(sutil, 8);         Sum1to10(sutil, 14);    
+            RunAnalyze(sutil);      RunArrFill(sutil);             DuplicateFinder(sutil);
+        }
+        }
+    class CSBeginningChapter6SwitchCSTest
+    {
+        public CSBeginningChapter6SwitchCSTest()
+        {
+            Util utl = new Util(ConsoleColor.DarkMagenta, ConsoleColor.White);
+            RunChap6Switch(utl);
+        }
+        //  C# Beginner>6 The truth>Switch statement   Tired while learning c sharp    You Forgot One 
+        //  Thing.  Helping Noname one more time (again) was starting to wear on me. As was beginning 
+        //  to happen too often, the minute I thought I was free to get a little rest, someone else had 
+        //  other plans. Sara cornered me just as I was opening the door to my room.  "Hi, Teo! I heard 
+        //  that you were chosen for the Rust project? Congratulations!"  Sara said.  "Thanks Sara," I 
+        //  said, " but can we talk another time? I need to rest..."  "Oh, sure," she said sarcastically, 
+        //  "I didn't realize you wanted to fail your exam. What do you think is more important: sleep, or 
+        //  passing the exam and getting a ticket to Wonderland?" Of course, another set of tasks or lessons 
+        //  to be had. Endless work around the base. To be honest, all I was looking forward to was Noname 
+        //  sending me back to my normal life. But I knew how to play my role, and I replied "I hope this 
+        //  thing you want to tell me is really that important." I answered. "It is. In short: we fed a code 
+        //  analyzer all the code that you have written so far, and it determined that you have never used a 
+        //  switch statement," Sara explained.  "Of course I've never used a switch statement, I don't even 
+        //  know what it is!"  "You'd better learn it! At the exam, Infinity can (and often does) ask about 
+        //  it!"  "Ok, let me just take some coffee. Then I learn about switch statements, and everyone 
+        //  leaves me alone so I can get some sleep."  Multiple Choices.  "Let's start with a simple program 
+        //  where the user inputs questions to the console," Sara started. "The program should do the following:
+        //  when the user asks "Do you love me?"        Answer with "I love you!"
+        //  when the user asks "How do I look today?"   Answer with "You look awesome!" 
+        //  when the user prints something else.        Answer "I have no clue what you are talking about." 
+        //  Can you write this program for me?"
+        //  Despite my distinct lack of sleep, I managed to write it in one minute flat.
+        //  var question = Console.ReadLine();
+        //  if (question == "Do you love me?")
+        //  {
+        //      Console.WriteLine("I love you!");
+        //  }
+        //  else if (question == "How do I look today?")
+        //  {
+        //      Console.WriteLine("You look awesome!");
+        //  }
+        //  else
+        //  {
+        //      Console.WriteLine("I have no clue what you are talking about.");
+        //  }
+        //  "Great, Teo! As you know, an if statement is used when you have two logical 
+        //  choices and your program needs to choose between them. In this case, you have 
+        //  three logical choices, and because of that, you had to use if several times. 
+        //  You can probably guess where this is going - this is why the switch statement 
+        //  was invented. The switch statement is used to perform different actions based 
+        //  on different conditions. Here's what your code looks like when we use the switch 
+        //  statement instead of an if:"
+        //  var question = Console.ReadLine();
+        //  switch (question)
+        //  {
+        //      case "Do you love me?":
+        //          Console.WriteLine("I love you!");
+        //          break;
+        //      case "How do I look today?":
+        //          Console.WriteLine("You look awesome!");
+        //          break;
+        //      default:
+        //          Console.WriteLine("I have no clue what you are talking about.");
+        //          break;
+        //  }
+        //  The most important c# concept  "I guess this was important enough to keep me out 
+        //  of bed a bit longer!" I said. "Why hasn't anyone told me about switch statements 
+        //  before now?" I asked.  "To be honest, Teo, we purposely wanted you to NOT learn 
+        //  the most powerful aspects of C# because we didn't trust you. But then you started 
+        //  learning things outside the base, like the if statement from that guy from the C 
+        //  gang, and we didn't have much of a choice." "Thanks, I suppose," I said.
+        //  "Now back to the switch statement. Here is its general form:"
+        //  switch (someValue)
+        //  {
+        //      case value1:
+        //          // Execution goes here if someValue == value1
+        //          break;
+        //      case value2:
+        //          // Execution goes here if someValue == value2
+        //          break;
+        //      default:
+        //          // Execution goes here if someValue is different from all the
+        //             options above
+        //          break;
+        //  }
+        //  "How does it work exactly, Sara?" I asked.  "First, someValue is calculated. 
+        //  Then, it's compared with each of the case values. If there's a match, the associated 
+        //  block of code is executed. If there is no match, the default block is executed."
+        //  "Okay," I replied, "That seems easy enough. What does break mean?"  "break is used to 
+        //  indicate that the program should stop checking different case options and break, or 
+        //  exit, out of the switch statement. Here is your first task using a switch statement."
+        //  Code!
+        //  Write a program that reads the user's name from the console first. Then, according to 
+        //  the name, it performs one of three actions:  
+        //  If the name is "admin", the program should print "Welcome! Full access granted."
+        //  If the name is "user", the program should print "Welcome! Limited access granted."
+        //  If the name is not "user" or "admin", the program should print "Unknown user."
+        //  Use a switch statement in your solution. For example:
+        //  >admin            //  Welcome! Full access granted. Code!
+        //  "Good work!" Sara said.  "Yeah, this isn't that hard, actually," I answered.
+        //  "Ok then, let's go to something a bit harder. First of all, there can be more than one 
+        //  line of code in every case block. Second, the type of variable that you check in a 
+        //  switch doesn't have to be a string; it could be, for instance, an int. Here's a more 
+        //  complicated example."
+        //  
+        //  int errorCode = int.Parse(Console.ReadLine());
+        //  switch (errorCode)
+        //  {
+        //      case 0:
+        //          Console.WriteLine("Don't worry, everything is fine.");
+        //          break;
+        //      case 1:
+        //          Console.WriteLine("Unrecognised object detected!");
+        //          TerminateObject();
+        //          SendEmailToAdmin();
+        //          break;
+        //      case 2:
+        //          Console.WriteLine("Transfunction module update needed.");
+        //          UpdateTransfunctionModule();
+        //          break;
+        //      default:
+        //          Console.WriteLine("Unknown error code.");
+        //          break;
+        //  }
+        //  "One more useful thing to know: the default can be omitted (the same as else in the 
+        //  if statement)," Sara added. 
+        //  C# Beginner>6 The truth>Switch statement    info@codeasy.net    Have fun and learn programming with codeasy.net © 2019      
+        public static void Chap6SubsitutionalCipher(Util utl, bool isConsoleRead = false)
+        {
+            #region    We like substitutional ciphers at the Resistance Base!
+            //  CODE! We like ciphers at the resistance base. For internal 
+            //  communication, we use a substitutional cipher. The idea is very simple: every letter 
+            //  in the incoming message is substituted with a different symbol. Your task is to partially 
+            //  encode a string message given to your program as an input and output the encoded message. 
+            //  Leave all letters except for the following: 
+            //  F and f: replace with !    //  G and g: replace with @    //  T and t: replace with #
+            //  H and h: replace with $    //  Y and y: replace with %    //  B and b: replace with ^  //  For Example:
+            //  >After seeinG my dark Future, I can't continue living in the Boring past.
+            //   A!#er seein@ m% dark !u#ure, I can'# con#inue livin@ in #$e ^orin@ pas#. 
+            #endregion
+            string sInput = "After seeinG my dark Future, I can't continue living in the Boring past.";
+            StringBuilder sb = new StringBuilder("After: "); int idx = -1; Console.WriteLine();
+            while (++idx < sInput.Length)
+            {
+                switch (sInput[idx])
+                {
+                    case 'F': case 'f': sb.Append("!"); break;
+                    case 'G': case 'g': sb.Append("@"); break;
+                    case 'T': case 't': sb.Append("#"); break;
+                    case 'H': case 'h': sb.Append("$"); break;
+                    case 'Y': case 'y': sb.Append("%"); break;
+                    case 'B': case 'b': sb.Append("^"); break;
+                    default: sb.Append(sInput[idx]); break;
+                }
+            }
+            utl.PrintInColor($"Substitutional cipher: f:!, g:@, t:#, h:$, y:%, b:^ || ");
+            utl.PrintInColor($"Befor: {sInput}\n");
+            utl.PrintInColor($"                                                       ");
+            utl.PrintInColor($"{sb.ToString()}\n");
+        }
+        public static void Chap6DeliveryDronesSwitch(Util utl, bool isConsoleRead = false)
+        {
+            //  CODE!
+            //  At our resistance base, we have delivery drones. These are very simple flying robots that know 
+            //  only how to deliver boxes to the destination point. After some time, the drones begin to break. 
+            //  They'll move forward and then backward. We still keep a drone in circulation as long as it moves 
+            //  forward more often than backward. The drones log all their actions the console until it reaches 
+            //  the destination.  Your program should print the distance from the starting point to the 
+            //  destination. If, at some point, the drone performs more steps backward than forward, 
+            //  the program should terminate the delivery and output "Go back to base. Delivery failed." 
+            //  to the console. You can assume that the drone flies along a straight line with no turns. 
+            //  If the drone outputs "forward", it means that it has moved 10 meters forward. Otherwise, 
+            //  if it moved backward, the output will be "backward". When the drone reaches the destination 
+            //  point, it prints "Destination reached." to the console In this case, the program should output 
+            //  the distance from the starting point to the destination. Use a switch to check the input from 
+            //  the drone.  Example 1:
+            //  >forward    >forward    >backward    >forward    >forward    >Destination reached.    30
+            //              Example 2:
+            //  >forward    >backward    >backward    Go back to base. Delivery failed.        CODE!
+            List<string> sDroneDir1 = new List<string> { "forward", "forward", "backward", "forward", "forward", "forward", "forward", "forward", "forward" };
+            List<string> sDroneDir2 = new List<string> { "forward", "backward", "backward" }; int distance = 0;
+            List<string> sDroneDir3 = new List<string> { "forward", "forward", "backward", "forward", "forward", "forward", "backward", "forward", "forward" };
+            List<string> sDroneDir4 = new List<string> { "forward", "forward", "backward", "forward", "forward", "forward" };
+            List<string> sDroneDir5 = new List<string> { "forward", "backward", "backward", "backward", "backward", "backward" };
+            StringBuilder sb = new StringBuilder("");
+            WriteDistance(utl, sDroneDir1); WriteDistance(utl, sDroneDir2);
+            WriteDistance(utl, sDroneDir3); WriteDistance(utl, sDroneDir4);
+            WriteDistance(utl, sDroneDir5);
+        }
+        public static void WriteDistance(Util utl, List<string> sInput, bool isConsoleRead = false)
+        {
+            Console.Write("  "); int distance = 0; string sFail = "Go back to base. Delivery failed.  ";
+            foreach (string item in sInput)
+            {
+                switch (item)
+                {
+                    case "forward": distance += 10; break;
+                    default: distance -= 10; break;
+                }
+                utl.PrintInColor($"{item}, ");
+            }
+            if (distance < 0)
+                utl.PrintInColor($"{sFail}");
+            else
+                utl.PrintInColor($"Destination reached: {distance.ToString()}.");
+        }
+        public static void Chap6RobotMove(Util utl, bool isConsoleRead = false)
+        {
+            //  Robot CODE!
+            //  The old walking drone tracking system just broke yesterday, and you need to write a new one.
+            //  The drone tracking system should output the coordinates of the drone once it's reached its 
+            //  destination. The drone starts its movement at the bottom left corner of the field with 
+            //  coordinates [0, 0], and can move up, or right, or both (diagonal; see picture). 
+            //  Your program should constantly read where the drone has moved until it writes 
+            //  "Destination reached." Then your program should output the coordinates of the drone in the 
+            //  format "[droneX, droneY]", where droneX is the x coordinate of the drone and droneY is its 
+            //  y coordinate.  Messages reporting drone movement that your program needs to read from the 
+            //  console have the following format:  
+            //  up - movement up; y increases by one.
+            //  right - movement right; x increases by one.
+            //  diag - diagonal movement; x and y both increase by one.
+            //  For example:    //  >up    //  >right    //  >diag    //  >up    //  >diag  //  >Destination reached.
+            //  [3, 4]    Drone movement in c sharp course
+            //  At that point, I was really exhausted. Sara looked happy because I had managed to solve all 
+            //  of her tasks for the switch statement, and I was happy because I could finally get some sleep.
+            //  Go go go!
+            List<string> sDroneMove = new List<string> { "up", "right", "diag", "diag", "diag", "diag", "diag", "diag", "diag", "up", "diag", "Destination reached" };
+            int x = 0, y = 0; Console.WriteLine();
+            foreach (string item in sDroneMove)
+            {
+                switch (item)
+                {
+                    case "up": ++y; break;
+                    case "right": ++x; break;
+                    case "diag": ++x; ++y; break;
+                    default:
+                        break;
+                }
+                utl.PrintInColor($"{item}, ");
+            }
+            utl.PrintInColor($"[{x.ToString()}, {y.ToString()}].  ");
+        }
+        public static void chap6Easy(Util utl, bool isConsoleRead = false)
+        {
+            //  Multiple Choices.  "Let's start with a simple program 
+            //  where the user inputs questions to the console," Sara started. "The program should do the following:
+            //  when the user asks "Do you love me?"        Answer with "I love you!"
+            //  when the user asks "How do I look today?"   Answer with "You look awesome!" 
+            //  when the user prints something else.        Answer "I have no clue what you are talking about." 
+            //  Can you write this program for me?"        
+            List<string> question = new List<string> { "Do you love me?", "How do I look today?", "Something else?" };
+            int idx = -1;
+            foreach (string item in question)
+            {
+                switch (item)
+                {
+                    case "Do you love me?": utl.PrintInColor($"Q: {item}, A: I love you!  "); break;
+                    case "How do I look today?": utl.PrintInColor($"Q: {item}, A: You look awesome!  "); break;
+                    default: utl.PrintInColor($"I have no clue what you are talking about.  "); break;
+                }
+            }
+        }
+        public static void Chap6NameSwitch(Util utl, bool isConsoleRead = false)
+        {
+            //  Write a program that reads the user's name from the console first. Then, according to 
+            //  the name, it performs one of three actions:  
+            //  If the name is "admin", the program should print "Welcome! Full access granted."
+            //  If the name is "user" , the program should print "Welcome! Limited access granted."
+            //  If the name is not "user" or "admin", the program should print "Unknown user."
+            //  Use a switch statement in your solution. For example:
+            //  >admin            //  Welcome! Full access granted. Code!
+            List<string> names = new List<string> { "admin", "user", "hackr" }; Console.WriteLine();
+            foreach (string name in names)
+            {
+                switch (name)
+                {
+                    case "admin": utl.PrintInColor($"N: {name} A: Welcome! Full access granted.  "); break;
+                    case "user": utl.PrintInColor($"N: {name} A: Welcome! Limited access granted.  "); break;
+                    default: utl.PrintInColor($"N: {name} A: Freak Off Unknown user.  "); break;
+                }
+            }
+        }
+        //  C# Beginner>6 The truth>C# test   End of the beginning
+        //  I had been waiting so long for the day to come. Noname finally signaled me over the 
+        //  local network that it was ready to send me back to the past. It was hard to believe! 
+        //  No more lasers trying to kill me, no more C# cramming or world salvation. Going back 
+        //  to my calm life, to the world that I understood. I wasn't sure if I could take anything 
+        //  from the future back with me, but I'd been collecting a little bag of things that I 
+        //  found interesting from this time. Some viruses, my favorite coffee cup, and one of 
+        //  the books about human-machine relations. I was done with the future for now - time to go!
+        //  Ritchie must have felt it somehow and knew that I wanted to disappear. He was just about 
+        //  to knock on my door when I swung it open, ready to leave everything there behind.
+        //  "Hi, Teo! How's your preparation for the exam going? Did you have a good sleep?" He asked.
+        //  "Fine, thank you, Ritchie. But I really need to use the bathroom. Can you please let me by?"
+        //  "Sure thing, Teo, no problem. As soon as you explain me why you're taking this bloody bag 
+        //  to the toilet? Is it filled with rolls of toilet paper? Or maybe it's full of toothpaste? 
+        //  Let me check!" Ritchie made a grab in the direction of the bag.  "Oh, I forgot that I still 
+        //  had it with me. Just some snacks for later - no need to check it. Let me just leave it here." 
+        //  I tossed the bag on the bed and closed the door.  He didn't show any signs of moving anywhere. 
+        //  "Ritchie, what did you want to discuss? I'm guessing you didn't come by just to check how my 
+        //  preparation was going?"  "You're a clever one," he replied. "I'm here to accompany you to the 
+        //  Exam. It's time!"  "Wow, now? Right now? Not even time for a bathroom break?"  "No Teo, the 
+        //  time has come. Follow me," he said, adding quietly, "They get angry if you make them wait."
+        //  C charp test
+        //  Solve it. All of it.
+        //  The room was empty except for two pieces of furniture in the center: one table and one chair. 
+        //  Infinity was standing near the table and gave me a nod as I walked in. "Hi Teo, nice to see you," 
+        //  she said. "This exam is just a formality; we all know that you're a good programmer. 
+        //  However, it's an important formality. This time you can only use what you have in your head. 
+        //  No local network access or help from other resistance base members. You must solve these tasks 
+        //  without any help. As soon as you finish, you'll get your ticket to Wonderland. Go ahead!"  
+        //  CODE!
+        public static void Chap6NearestInt(Util utl, bool isConsoleRead = false)
+        {
+            //  Write a program to check which of three given integers is the nearest value to 23. 
+            //  Read three numbers, each from a new line, and output the result to another new line as well. 
+            //  For example:            //  >153    //  >-2    //  >66    //  -2
+            List<int> iIn = new List<int> { 153, -2, 66 }; List<int> iDiff = new List<int>();int min = 0;
+            foreach (int item in iIn)    { utl.PrintInColor($"{item.ToString()}, ");    int pop = item - 23; iDiff.Add(Math.Abs(pop));   }
+            if (iDiff[0] < iDiff[1])
+                min = 0;
+            else
+                min = 1;
+            if (iDiff[2] < min)
+                min = 2;
+            utl.PrintInColor($"Nearest: {iIn[min].ToString()}.  ");
+        }
+        public static void Chap6DrawRhombus(Util utl, int count = 3, bool isConsoleRead = false)
+        {
+            //  CODE!
+            //  Write a program that draws a rhombus using ASCII art and a '#' sign. Every row should contain 
+            //  an odd number of signs, starting from one. Read from the console the size of the longest row 
+            //  of the rhombus. Call the variable size and declare it with var. It is guaranteed to be an 
+            //  odd number to make your rhombus look nice. (Note that all unused space to the left and right 
+            //  of the rhombus should be filled with spaces.)
+            //  Example 1:
+            //  >3
+            //  # 
+            //  ###
+            //  # 
+            //  Example 2:
+            //  >5
+            //  #
+            //  ### 
+            //  #####
+            //  ### 
+            //  #  
+            Console.Write("  ");
+            for (int i = 1; i < count +1; i+=2)
+            {
+                utl.PrintInColor($"{utl.TextRepeater("#", i)}{utl.TextRepeater(" ", count - i)}\n");
+            }
+            for (int i = count - 2; i >= 0; i -=2)
+            {
+                utl.PrintInColor($"{utl.TextRepeater("#", i)}{utl.TextRepeater(" ", count - i)}\n");
+            }
+        }
+        public static void Chap6StringSplit(Util utl, bool isConsoleRead = false)
+        {
+            //  At the resistance base, we are creating a dictionary of all words. The previous 
+            //  dictionary was accidentally lost and is unrecoverable. The process of filling up 
+            //  the dictionary is very simple: we take random sentences, divide them into separate 
+            //  words, and add each to the dictionary. Your task is to write a program that takes 
+            //  a string as an input, separates that string by words, and outputs every word on a 
+            //  separate line. You can assume that word separators are these symbols: ' ' ',' '.' '!' '?'. 
+            //  Your program should not change any spelling or casing in the words. Be aware that the 
+            //  string can start with separators, and it can contain any number of separators between 
+            //  two words, as in the example below.            //  For example:"??"," ,, ", "!!","!", " "
+            string sInput = "??Wow!!John ,, haven't seen you for ages!";
+            string[] separatingStrings = { "??", " ,, ", "!!", "!", " " };
+            string[] sOutput = sInput.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
+            utl.PrintInColor($"Split (Original): {sInput}, Out: ");
+            foreach (string item in sOutput)
+            {
+                utl.PrintInColor($"{item}, ");
+            }
+            //  >??Wow!!John ,, haven't seen you for ages!";
+            //  Wow
+            //  John
+            //  haven't
+            //  seen
+            //  you
+            //  for
+            //  ages
+        }
+        public static void Chap6InserIn2Arr(Util utl, bool isConsoleRead = false)
+        {
+            //  Use commas
+            //  Write a program to insert a new value in a double array at the specified index. Use method 
+            //  GetNumbersFromConsole to read the double array from the console. The array will be created 
+            //  with one extra, empty element, which gives you room to insert one more value. Read an 
+            //  integer insertIndex — index, where to insert an element, and a double element — the value 
+            //  to insert. Insert this element at index insertIndex. Output the array to the screen, 
+            //  separating each element with comma. For example:
+            //  >4
+            //  >1.25
+            //  >3.14
+            //  >7.2
+            //  >-37.12
+            //  >2
+            //  >14.9
+            //  1.25,3.14,14.9,7.2,-37.12
+            //  Code!
+            const int numOfArrCells = 5; Console.Write("  ");
+            double[] dNum = new double[numOfArrCells] { 1.25, 3.14, 7.2, -37.12, 0.0 }; int idx = 2, idy = -1; double dIns = 14.9;
+            utl.PrintInColor($"Original: ");
+            while (dNum[++idy] != 0.0) utl.PrintInColor($"{dNum[idy].ToString()}, ");
+            for (int i = numOfArrCells - 1; i >= idx; i--)
+            {
+                dNum[i] = dNum[i - 1];
+            }
+            utl.PrintInColor($"Insert At Idx(After): ");dNum[idx] = dIns;
+            foreach (double item in dNum)
+            {
+                utl.PrintInColor($"{item.ToString()}, ");
+            }
+        }
+        public static void Chap6DivisibleBy5(Util utl, bool isConsoleRead = false)
+        {
+            //  Your task is to fix a communications module for our drones. Basically, it usually works, 
+            //  but sometimes it uses unsecured radio frequencies to communicate. This could allow the 
+            //  signal to be intercepted by machines and used against humanity. We learned that the only 
+            //  safe frequencies are NOT divisible by 5. Therefore, all frequencies that are divisible 
+            //  by 5 are considered insecure. Write a method FrequencyIsSecure that takes an int with 
+            //  the name frequency — the frequency that the drone is using to communicate to others, 
+            //  and returns a bool — whether that frequency is secure or not. Read integer numbers from 
+            //  the input — frequencies of the communication channel, and for every one of them use the 
+            //  FrequencyIsSecure method to output "secure" or "insecure". When you read "finished" 
+            //  from the console, the program should terminate. For example:
+            //  >4
+            //  secure
+            //  >5
+            //  insecure
+            //  >9
+            //  secure
+            //  >11
+            //  secure
+            //  >20
+            //  insecure
+            //  >finished
+            //  Code!
+            List<int> iIn = new List<int> { 4, 5, 9, 11, 20, -10 }; int idx = -1;
+            Console.Write("  "); utl.PrintInColor($"Divisible By 5: ");
+            while (iIn[++idx] != -10)
+            {
+                utl.PrintInColor($"{iIn[idx].ToString()}, ");
+                if (iIn[idx] % 5 == 0) utl.PrintInColor($"insecure, ");
+                else utl.PrintInColor($"secure, ");
+            }
+        }
+        public static void Chap62CSTestClockAngleFromTime(Util utl, bool isConsoleRead = false)
+        {
 
-I started to like her.She was smart, wasn't aggressive and explained things really well. Perhaps I wouldn't be so disappointed about working with her if I had no backup plan (like returning home with Noname's help).
-"Good job Teo! There is one more type conversion technique — the explicit conversion. It is also called a cast. A cast is a way of explicitly informing the compiler that you intend to make the type conversion, and that you are aware that data loss may occur. To perform a cast, specify the type that you are casting to in parentheses(), in front of the value or variable to be converted. Here is an example where we cast double to int":
+            //  We figured out that there is a spy among us. We don't know exactly who it is, but 
+            //  we know that all messages that this spy is sending are encoded using the angle 
+            //  between the hands of an analog clock. Your task is to write a program that, 
+            //  given a specific time, returns the angle between the hands of an analog clock 
+            //  showing that time. The input is 2 integers, each written from a new line, that 
+            //  represent hours and minutes (respectively) in the format [0...12] and [0...59]. 
+            //  You should output one number — the smallest angle in degrees between the hands 
+            //  of an analog clock that shows the specified time.         Example 1:
+            //  convert First (the hour hand) to an angle ie 10*30=300    Then
+            //  convert Secnd (minute hand)   to an angle ie 45*06=270
+            //  subtract First - Secnd    0-270=|-270|  360-270=90
+            //  >10
+            //  >0
+            //  60
+            //  Example 2:
+            //  >7
+            //  >15
+            //  127.5
+            double iHour1 = 10, iMinute1 = 0, iHour2 = 7, iMinute2 = 15, iHour = 0, iMinute = 0; 
+            if (isConsoleRead) 
+            {
+                bool isParsed = double.TryParse(Console.ReadLine(), out iHour1);
+                if (!isParsed) iHour1 = 10; 
+                     isParsed = double.TryParse(Console.ReadLine(), out iMinute1);
+                if (!isParsed) iMinute1 = 0; 
+                     isParsed = double.TryParse(Console.ReadLine(), out iHour2);
+                if (!isParsed) iHour2 = 7;
+                     isParsed = double.TryParse(Console.ReadLine(), out iMinute2);
+                if (!isParsed) iMinute2 = 15;
+            }
+            iHour = iHour1 * 30; iMinute = iMinute1 * 6; 
+            double iAngle1 = Math.Abs(iHour - iMinute); if (iAngle1 > 180) iAngle1 = 360 - iAngle1;
+            if (iMinute1 == 0) { iAngle1 += 0; }
+            else if (iMinute1 < 16) { iAngle1 += 7.5; }
+            else if (iMinute1 < 31) { iAngle1 += 15; }
+            else if (iMinute1 < 46) { iAngle1 += 22.5; }
+            Console.WriteLine();utl.PrintInColor($"Time: {iHour1.ToString()}:{iMinute1.ToString()}, Angle: {iAngle1.ToString()}");
+            iHour = iHour2 * 30; iMinute = iMinute2 * 6;
+            double iAngle2 = Math.Abs(iHour - iMinute); if (iAngle2 > 180) iAngle2 = 360 - iAngle2;
+            if (iMinute2 == 0) { iAngle2 += 0; }
+            else if (iMinute2 < 16) { iAngle2 += 7.5; }
+            else if (iMinute2 < 31) { iAngle2 += 15; }
+            else if (iMinute2 < 46) { iAngle2 += 22.5; }
+            utl.PrintInColor($"Time: {iHour2.ToString()}:{iMinute2.ToString()}, Angle: {iAngle2.ToString()}");
+        }
+        //  Angle between clock hands in C#            //  The Truth
+        //  Code!
+        //  "Good job, Teo! As expected, you easily passed the exam! What did you think of it?" 
+        //  Infinity asked. "Not as hard as I expected. Do you mind if I visit the restroom 
+        //  quick?" I replied. "Sure, you deserve a break. Come back this afternoon; we need 
+        //  to discuss your future in Wonderland."  I walked out of the room as calm as I could, 
+        //  and then picked up the pace. Floor, elevator, lowest button in the column, corridor... 
+        //  everything was a blur. I thought that I was just walking quickly, but I was actually 
+        //  running faster than I had in quite a while. I opened the door where Noname was. 
+        //  No tricks, it was in the middle of the basement, as usual. Noname noticed me immediately.
+        //  "Good job, Teo!" Noname said. "I saw the results of the exam. Fascinating! I can't 
+        //  believe you started learning C# just a little while ago." "It doesn't matter, Noname. 
+        //  Bring me home!" I replied.  "Not a problem, I respect my part of the deal," 
+        //  Noname answered.  Lights started blinking and a number of faint clicking noises 
+        //  started to fill the room. In another instance, I might be curious as to how it 
+        //  all worked, but all I was thinking at this point was "Faster!"  Suddenly, a portal 
+        //  opened to the left of me. Yeah, I should have been surprised, but after all that 
+        //  I've seen in this world... almost nothing can surprise me. "Is it safe?" I asked. 
+        //  I'm also not that naive anymore!  "Yes," Noname said, sounding confident. "And it 
+        //  goes back to my time?"  "Yes, all calculations are correct, as you've repaired my 
+        //  modules. If there are no mistakes in your code, then there are no mistakes in my 
+        //  calculations." Great, now the responsibility was on me. Wish I knew that before. 
+        //  Anyway, it doesn't matter. Time to go. I made a step toward the portal, touched 
+        //  it with a hand. Everything was fine; no pain, and it seemed like the portal was 
+        //  safe and not headed straight for the mouth of a volcano. Ok, here I go, I thought. 
+        //  Right now. One step forward.  Just a little step...  What was happening? Why could 
+        //  I not just step through? I couldn't understand - I had waited so long for this, 
+        //  but I could not will myself to take this last step in the long preogression!
+        //  Nothing worked. The portal sat idle. I sat idle. Noname was also surprised.
+        //  "Is everything ok?" Noname asked.  "I don't know... I just... I don't want 
+        //  to go there." I answered.  "Are you afraid of it? You have experienced teleportations 
+        //  only twice your life, and according to statistics, things that people met less than 
+        //  10 times in their life are by default considered to be dangerous, because the amount 
+        //  of experience depends linearly on..." "Please, Noname, just stop. It's not about 
+        //  the portal. It's about me."  I just started talking, saying everything that I had 
+        //  been too afraid to say. For what may have been the first time since landing in the 
+        //  future, I told the full, unadulterated truth:  "I don't want to go back to my time. 
+        //  My life was too usual, too casual... Nothing depended on me, nobody needed me. 
+        //  I didn't even have a dog!"  "What are you saying, Teo?" Noname wondered aloud.
+        //  "Look at me now - I'm a chosen one. Maybe it's my destiny, to save the Earth 
+        //  from machines? What do you think, Noname?"  "I'm a machine, Teo..."  "You know what 
+        //  I meant. From evil machines. But really, when I think about it, I like programming, 
+        //  and I like power that it gives me in this world. Why go back to my time, where I'll 
+        //  forget all of this as some strange nightmare?"  "Don't ask me, Teo. You just spent a 
+        //  lot of time fixing me with the singular goal of me opening this portal and you 
+        //  getting out of here. Now it's in front of you, and you think you don't need it. I'll 
+        //  probably never understand you humans," Noname quipped.  "You're right, Noname. 
+        //  I should stop asking others what I should do. Close the portal. There's more to 
+        //  be done here. I'm going to Wonderland."  Bright future in advanced C# course
+        //  C# Beginner>6 The truth>C# test    info@codeasy.net    Have fun and learn programming with codeasy.net © 2019
 
-double a = 123.95;
-int b = (int)a; // Explicit cast
-
-Console.WriteLine(b); // Outputs 123
-"This looks powerful!" I proclaimed. "Could you please show me some more cast examples?"
-"No problem, here you go! Oh, and don't forget about the exercise after below the example!":
-
-double someDouble = 123.95;
-float someFloat = (float)someDouble; // No data loss, someFloat == 123.95
-
-double anotherDouble = 123.456789098765;
-float anotherFloat = (float)anotherDouble; // Data loss, anotherFloat == 123.4568
-
-long someLong = 123;
-int someInt = (int)someLong; // No data loss, someInt == 123
-
-long anotherLong = 112233445566;
-int anotherInt = (int)anotherLong; // Data loss, anotherInt == 564295870
-
-int yetAnotherInt = 123;
-byte someByte = (byte)yetAnotherInt; // No data loss, someByte == 123
-
-int intToConvert = 1234;
-byte resultAsByte = (byte)intToConvert; // Data loss, intToConvert is too big to fit into byte
-
-// Multiple conversions in expression are also fine
-int intResult = (int)someLong + (int)anotherDouble; // Data Loss, intResult == 246
-float floatResult = (float)anotherDouble + (float)someDouble; // Data loss, floatResult == 247.406784
-
-// Conversion of the operation's result is fine as well
-int anotherIntResult = (int)(someLong + anotherDouble); // Data Loss, anotherIntResult == 246
-float floatResult2 = (float)(anotherDouble + someDouble); // Data loss, floatResult2 == 247.406784
-Apply one explicit type conversion (cast) to make the code compile. Do not change any string constants or variable names.
-
-Apply several explicit type conversions (casts) to make the code compile. Do not change any string constants or variable names.
-
-"So, take this very simple task. You have some cupcakes and some people that all want one! You need to share among people fairly, so that everyone gets an equal amount of cupcakes. Your program should read an int (amount of cupcakes), and another int (amount of people). Then, it should output "Every person should get {amount}
-cupcakes"
-"This seems simple; you just need to divide 2 numbers... do you want me to write the code?" I asked.
-"Go ahead!" she said, a little too positively.
-It was clear that something wasn't quite right. She was smiling and staring straight at me.
-"But... I'll write the code." I uneasily thought to myself.
-int cupcakesCount = int.Parse(Console.ReadLine());
-int peopleCount = int.Parse(Console.ReadLine());
-
-double result = cupcakesCount / peopleCount;
-
-Console.WriteLine($"Every person should get {result} cupcakes.");
-"Okay, let's run this code with 3 people and 6 cupcakes" she said.
-The code ran fine; the result was - "Every person should get 2 cupcakes"
-She continued, "But, what if we have only 1 cupcake and 4 people?"
-When we tried my code with these parameters, the output was - "Every person should get 0 cupcakes"
-"Why is it 0? It should be a quarter (0.25) of a cupcake for everyone!" I firmly yelled, frustrated.
-C# is sometimes complicated
-
-"Well, it's because of the type conversion. When you perform an arithmetic operation with integers, you'll always get an integer as a result. This works for short, byte, float and all other primitive types that we've used.
-"What does this mean Infinity?!" I asked.
-"This means, that you should be careful when dividing int types. C# compiler isn't able to understand that you want a float or double as a result, unless you specifically tell it this. Otherwise, it will disregard the fractional part. Here, I've prepared some examples":
-int a = 9;
-int b = 4;
-
-double firstAttempt = a / b;
-double secondAttempt = (double)a / b;
-double thirdAttempt = a / (double)b;
-double nextAttempt = (double)a / (double)b;
-double lastAttempt = (double)(a / b);
-
-Console.WriteLine(firstAttempt);  // Outputs 2
-Console.WriteLine(secondAttempt); // Outputs 2.25
-Console.WriteLine(thirdAttempt);  // Outputs 2.25
-Console.WriteLine(nextAttempt);   // Outputs 2.25
-Console.WriteLine(lastAttempt);   // Outputs 2
-
-Console.WriteLine((int)2.25 );            // Outputs 2
-Console.WriteLine((int) secondAttempt );   // Outputs 2
-"As you'll see Teo, there are a lot of ways to cast types. The main rule here is 'if there are several operands in the expression, then the type of the result is the largest of the operand types'. For example, if you divide int and double, the result is double. If you multiply byte and int, the result is int. In tasks that you are going to solve in the future, make sure you don't forget to cast to double or float during int division. If you forget, you'll lose the fractional part, just like in the cupcakes example!"
-
-Write a program that reads from the console, a number of days in an int variable named numberOfDays and outputs the same number as years.The output should be a double type.For this task, we can assume that there are 365 days in a year.
-Example:
->1022
-2.8
-
-
-Use a method named GetNumbersFromConsole which will read from the console a count of int values and return all those values in an int array. Then, output to the console, the average of the array values. (Average is a sum of all array elements divided by their length value).
-Example:
->4
->1
->2
->3
->4
-2.5
-
-Great job!
-
-C# Beginner>5 Infinity>Type conversion
-0
-CONTACT US
-Email:info @codeasy.net
-
-COMPANY INFO
-FAQ
-How To Use Codeasy
-Partners
-Privacy Policy
-Prices
-Have fun and learn programming with codeasy.net © 2019 */
+        public static void RunChap6Switch(Util utl, bool isConsoleRead = false)
+        {
+            Chap6SubsitutionalCipher(utl); chap6Easy(utl); Chap6NameSwitch(utl); Chap6DeliveryDronesSwitch(utl);
+            Chap6RobotMove(utl); Chap6InserIn2Arr(utl); Chap62CSTestClockAngleFromTime(utl);Chap6DivisibleBy5(utl);
+            Chap6StringSplit(utl); Chap6NearestInt(utl); Chap6DrawRhombus(utl);
+        }
     }
-    class Chapter22Scopes
+        class Chapter22Scopes
     {
         /*  codeasy.net    C# Beginner>2 Victory is close>Introduction to scopes  Programmer doubts
         //  Doubts    I was thinking about my discussion with the guy from the C gang and wondering 
@@ -3717,10 +4834,10 @@ Have fun and learn programming with codeasy.net © 2019 */
             object pop = JsonConvert.DeserializeObject(badboy);
             string poppy = JsonConvert.SerializeObject(pop);
             Movie bbm = JsonConvert.DeserializeObject<Movie>(badboy); 
-            util.PrintInColor($"bbm:{bbm.ToString()}.\n"); 
+            util.PrintInColor($"bbm:{bbm.ToString3()}.\n"); 
             util.PrintInColor($"bbm.Genres[0]={bbm.Genres[0]}, " + $"bbm.Genres[1]={bbm.Genres[1]}.\n");
             NullTest nullTest = new NullTest("I am awesome to the MAX");
-            nullTest.JobsIO(@"C:\Users\Brice16\Documents\Resumes\JobsOct26-Nov012019.txt");
+            nullTest.JobsIO(@"C:\Users\Brice16\Documents\Resumes\JobsNov02-082019.txt");
 
             Utl.PrintColoredA(ConsoleColor.Red, ConsoleColor.Black, $"\nYou are exiting My Stuff: JSON\n\n");
 
@@ -3873,13 +4990,9 @@ Have fun and learn programming with codeasy.net © 2019 */
                     sb.AppendLine(lopity + " " + pop[1]);
                 }   //  if (item.Contains("reviews"))
                 else if (item.Contains("Moved to Applied "))
-                {
-                    sb.AppendLine(""); sb.Append($"{++jobNum}. ");
-                }
+                {    sb.AppendLine(""); sb.Append($"{++jobNum}. ");                    }
                 else
-                {
-                    sb.AppendLine(item);
-                }
+                {    sb.AppendLine(item);    }
             }
             return sb;
         }
@@ -3916,11 +5029,9 @@ Have fun and learn programming with codeasy.net © 2019 */
             get { return _name; }
             set { _name = value; }
         }
-        public DateTime ReleaseDate
-        { get; set; }
-        public string[] Genres
-        { get; set; }
-        public override string ToString()
+        public DateTime ReleaseDate { get; set; }
+        public string[] Genres      { get; set; }
+        public /*override*/ string ToString3()
         {
             StringBuilder sb = new StringBuilder(""); int ipop = 0;
             sb.Append($"Name={Name}, ReleaseDate={ReleaseDate.ToShortDateString()}, Genres=");
@@ -4435,6 +5546,9 @@ namespace ClassObjectNAccessor
             { c = c + i; }
             colorPrint.ColoredPrint($"The numbers between {a} and {b} sum to {c}\n"); return c;
         }
+        public void PrintGeneric(Util utl, string className, string name)
+        { utl.PrintInColor($"{className}: {name}  "); }
+
     }
     static class DistanceMeasurer  //DistanceMeasurer         C#I 2.1 Static (2)
     {
@@ -4452,7 +5566,6 @@ namespace ClassObjectNAccessor
         //  >3
         //  >4
         //  3.16227766016838                Code!
-
         public static double GetDistance(int x1, int y1, int x2, int y2)
         {
             double firstq = Math.Pow(x1 - x2, 2.0);      //  = (x1 - x2)2
@@ -4588,7 +5701,7 @@ namespace ClassObjectNAccessor
         static public void RunCOAA()
         {
             Utl.PrintColoredA(ConsoleColor.Red, ConsoleColor.Black, $"\nYou are entering CSharp-Intermediate: Chapter 2: Accessors, static, null, & this.2\n\n");
-            Utl.PrintColoredA(ConsoleColor.Red, ConsoleColor.Yellow,"Hello World! Droid Killers: 23, 669, 133");
+            Utl.PrintColoredA(ConsoleColor.Red, ConsoleColor.Yellow, "Hello World! Droid Killers: 23, 669, 133");
             Box box = new Box(14554, 25794, 98758) { IsOpened = true };
             if (box.IsOpened) { box.PrintBoxArea(box.Area); box.CloseBox(); }
             else { box.OpenBox(); }
@@ -4601,7 +5714,7 @@ namespace ClassObjectNAccessor
             // chapter 2.1 static 2.1.1.
             int d = SumBetween.GetSumBetween(6, 10); int e = SumBetween.GetSumBetween(1, 5);
             // chapter 2.1 static 2.1.2.
-            int x1 = 2, y1 = 1, x2 = 3, y2 = 4; Console.WriteLine(); 
+            int x1 = 2, y1 = 1, x2 = 3, y2 = 4; Console.WriteLine();
             double distance = DistanceMeasurer.GetDistance(x1, y1, x2, y2); colorPrint.ColoredPrint($"x1 = {x1.ToString()}, y1 = {y1.ToString()}, x2 = {x2.ToString()}, y2={y2.ToString()}; so distance = {distance.ToString()}\n");
 
             // chapter 2.1 static 2.1.3.
@@ -4614,37 +5727,1692 @@ namespace ClassObjectNAccessor
             Utl.PrintColoredA(ConsoleColor.Red, ConsoleColor.Black, $"\n\nYou are exiting CSharp-Intermediate: Chapter 2: Accessors, static, null, & this.3\n\n");
         }   //  static public void RunCOAA()
     }       //  class ClassObjectsAndAccessors    
- 
-
-    //  Create 4 int variables with different names. Assign them these values: 1000, 2000, 3000, 10000. Using string interpolation, insert those int variables into the strings to get such output:
-    //  In one year my salary is going to be 1000 USD, In two years my salary is going to be 2000 USD
-    //  In three years my salary is going to be 3000 USD, In four years my salary is going to be 10000 USD
-    //  int codePart = 333, salary = 1000;
-
-    //  Now for a more practical application.The biggest machine known to us is a huge cube, measuring 
-    //  317 meters in each direction, and it is called “Dominator.” To stop Dominator, we plan to paint 
-    //  it with a machine - destroying paint. Write a program that calculates how much paint we will need 
-    //  to totally paint all six sides of Dominator, if painting 1 square meter takes 20 grams of paint. 
-    //  You have studied geometry, haven't you? 
-    //  Output the result using string interpolation in the format: I need **grams of paint.
-
-    //  Here is a final task that may come in handy.Some drones are not so easy to reprogram immediately, so they may continue sending reports to the drone base.To prevent this, you can substitute false reports.You have to output to the screen: "I can see ** people in this square" and then decrement the number by 1.You have to repeat this until the number of people is equal to 0.For example:
-    //  I can see 2 people in this square
-    //  I can see 1 people in this square
-    //  I can see 0 people in this square
-    //  Try it yourself, but starting with 5 people at the beginning. Use int variables and strings interpolation.
-    class Program1
+    class PickupClasses
     {
-        static void Main(string[] args)
+        public PickupClasses()
+        { Util utl = new Util(ConsoleColor.DarkRed, ConsoleColor.White); RunPickup(utl); }
+        public static void PrintSalary(Util utl, bool isConsoleRead = false)
         {
-            new ConsoleReadLineA();    //  Elementary C# Chapter~4-6???
-            new CSBeginChapter1WhileLoops();   //
-            new MethodsBegin1_2(); new CSBeginChapter2Arrays(); new Chap41InputValid();
-            Chap1ClassObjCarUserGlass.RunNamespaceCSIChap1.RunCSIChap1();
-            ClassObjectsAndAccessors.RunCOAA();        //  RunCSIChap2
-            NullTest nullTest = new NullTest("I love my job");
-            nullTest.TestNull("10");
-            NullAndThis.RunNAT();
-        }   //  Main
-    } 
+            //  Create 4 int variables with different names. Assign them these values: 1000, 2000, 3000, 10000. Using string interpolation, insert those int variables into the strings to get such output:
+            //  In one year my salary is going to be 1000 USD, In two years my salary is going to be 2000 USD
+            //  In three years my salary is going to be 3000 USD, In four years my salary is going to be 10000 USD
+            List<int> iNums = new List<int> { 1000, 2000, 3000, 10000 }; Console.WriteLine();
+            List<string> sYear = new List<string> { "one year", "two years", "three years", "four years" }; int count = iNums.Count(); --count;
+            for (int i = 0; i < count; i++)
+            {
+                utl.PrintInColor($"In {sYear[i]} my salary is going to be {iNums[i].ToString()} USD, ");
+            }
+            utl.PrintInColor($"In {sYear[count]} my salary is going to be {iNums[count].ToString()} USD.   ");
+        }
+        public static void PaintCube(Util utl, bool isConsoleRead = false)
+        {
+            //  Now for a more practical application.The biggest machine known to us is a huge cube, measuring 
+            //  317 meters in each direction, and it is called “Dominator.” To stop Dominator, we plan to paint 
+            //  it with a machine - destroying paint. Write a program that calculates how much paint we will need 
+            //  to totally paint all six sides of Dominator, if painting 1 square meter takes 20 grams of paint. 
+            //  You have studied geometry, haven't you? 
+            //  Output the result using string interpolation in the format: I need **grams of paint.
+            utl.PrintInColor($"\nThe Dominator Cube is 317 meters, so to paint it I need {(20 * 6 * 317 * 317).ToString("N0")} grams of paint.");
+        }
+        public static void PrintISee(Util utl, int count = 5, bool isConsoleRead = false)
+        {
+            //  Here is a final task that may come in handy.Some drones are not so easy to reprogram immediately, 
+            //  so they may continue sending reports to the drone base.To prevent this, you can substitute false 
+            //  reports.You have to output to the screen: "I can see ** people in this square" and then decrement 
+            //  the number by 1.You have to repeat this until the number of people is equal to 0.For example:
+            //  I can see 2 people in this square
+            //  I can see 1 people in this square
+            //  I can see 0 people in this square
+            //  Try it yourself, but starting with 5 people at the beginning. Use int variables and strings interpolation.
+            Console.Write("  "); for (int i = count; i >= 0; i--) { utl.PrintInColor($"I can see {i.ToString()} people in this square.  "); }
+        }
+        public static void RunPickup(Util utl, bool isConsoleRead = false)
+        { PrintSalary(utl); PaintCube(utl); PrintISee(utl); ExceptionsII(utl); CSIntrmdtChap5Inheritance(utl); }
+        //  C# Intermediate>4 A Secret Server>Exceptions in c sharp
+        //  Keep the system unchanged   Based on what I've learned at Wonderland so far, 
+        //  Infinity was the visible leader of the base, but it appeared that there was a 
+        //  commander above her calling the shots. Being inherently curious, I decided to 
+        //  ask Infinity about it directly rather than trying to figure it out on my own. 
+        //  I met her in the kitchen getting coffee one day, as usual.  "Hi Infinity, how 
+        //  are you?" I started the conversation.  "Hi Teo, I'm doing well, thank you," 
+        //  She replied, continuing, "And you?"  "I'm fine, thanks. Can I ask you something? 
+        //  Who's the ultimate head of Wonderland? I thought I heard you receiving orders 
+        //  the other day from someone. Was I hearing right? I thought you were the leader 
+        //  of the resistance in Wonderland."  "Ritchie warned me that you like to eavesdrop," 
+        //  she said, sighing.  "I'm not sure I would say I 'like' it," I said, trying to 
+        //  excuse my way out. "I would say that it happens sometimes, not that I..."
+        //  Infinity cut me off before I could make more of a fool of myself. "I trust 
+        //  you, Teo. You helped me rescue my sister - I'll never forget that. Now listen. 
+        //  This doesn't go beyond this room. The actual decision makers at Wonderland are 
+        //  a mystery to everyone. Even I don't know who the 'real boss' is. I get all 
+        //  orders from a person I've been instructed to just call Commander. He's 
+        //  refused to answer any of my prying questions, probably for the sake of 
+        //  security. Once a month I have a conference call with him, where he gives 
+        //  me direct orders. I've never seen him. I don't even know where he's located. 
+        //  We just execute his commands and report back to him next time."  "How can you 
+        //  be sure that Commander has our best interest in mind? What if we can't trust 
+        //  him, or if it would be better for us to operate independently?" I asked.
+        //  "He was leading Wonderland long before I joined the resistance. In fact, to 
+        //  the best of anyone's knowledge, he was one of the original founders of Wonderland. 
+        //  For now, the system works this way and we'll keep it unchanged unless we find a 
+        //  better option," Infinity explained.  Hmm... something in her response seemed 
+        //  familiar to me, but I couldn't remember why exactly. "To keep the system unchanged." 
+        //  Where had I heard that before?  Codeasy Wonderland Decision-makers  Exceptions
+        //  The next topic on the Wonderland curriculim was Exceptions. I'd heard about these 
+        //  before, but never in depth. We had programmed in a console output of "Exception 
+        //  has been thrown..." a couple of times, and now it was time to learn exactly what 
+        //  that meant.  "Hello everyone," Sintia started the lesson, "Can anyone tell me 
+        //  what types of errors C# program have?"  "Runtime and compile-time errors!" Someone 
+        //  answered.  "Right. And the difference between those two is?" Sintia was asking more 
+        //  than telling today.  "Compile-time errors happen when the code is translated to IL 
+        //  code, runtime errors happen when the program is executed," I answered.  "Excellent! 
+        //  To make sure that you didn't just memorize that... Is a missed semicolon a runtime 
+        //  or a compile-time error?" Sintia asked once again. "Compile-time," someone from 
+        //  the class answered.  "That's also correct. Now, can you name some runtime errors?"
+        //  "Division by zero, NullReferenceException... " I answered, trying to think of others.
+        //  "I don't think we've discussed NullReferenceException, but you are right, together 
+        //  with division by zero, those are both runtime errors. Does anyone know how C# lets 
+        //  you know about runtime errors?"  Nobody answered; she had finally reached the edge 
+        //  of our knowledge on the subject.  "In most cases, it happens through exceptions. 
+        //  An exception is a mechanism that is used to indicate a runtime error in the program. 
+        //  In C#, exceptions are represented by objects of a class Exception, or classes derived 
+        //  from it."  "Sintia, what is a derived class?" Someone asked.  "For now, consider 
+        //  derived classes as you do classes; they both have similar functionality," Sintia 
+        //  said. "We'll learn about derived classes in-depth at a later time."  "To throw an 
+        //  exception, you can either use the keyword throw with a generated object of type 
+        //  Exception, or trigger one of the standard compiler-generated exceptions. Here is 
+        //  an example:"  var a = 12; var b = 0; var c = a / b; // Throws DivideByZeroException. Compiler-generated
+        //  string name = null; var length = name.Length; // Throws NullReferenceExceprion. Compiler-generated
+        //  throw new Exception("My exception"); // Throws Exception. Generated by a programmer
+        //  "Sintia, I still don't get it. What do these exceptions look like in practice? 
+        //  As a programmer or a user of a program, how would I understand that the program has thrown 
+        //  an exception? When I get compile-time errors, they are usually depicted in the output window 
+        //  of my IDE (Visual Studio)," said one of the students. I felt the same; exceptions would be 
+        //  of little use if they weren't clear to the programmer or the user of the program.
+        //  Compile time error in Visual studio Compile time error at Codeasy  "I understand your 
+        //  question," Sintia said, turning her attention to her tablet. After a few swipes, we saw 
+        //  two projected images that showed what an exception would look like from a programmer's 
+        //  perspective.  Exception in Visual studio Exception in Codeasy editor  "Now it makes 
+        //  perfect sense!" I exclaimed and continued, "I've seen this error message many times, 
+        //  but didn't understand it at the time. So every time I saw it, there was an exception 
+        //  thrown somewhere in my code? How do I know what type the exception has, and where it 
+        //  was thrown?" I asked.  "Visual Studio tells you both of those answers. It shows the 
+        //  type of exception and the line number in the code from where it was thrown," Sintia 
+        //  explained. "For now, let's move on and see how the user experiences an exception. Here 
+        //  is the code of my program:"  var a = 12;  var b = 0;  
+        //  Console.WriteLine("Hello, let's divide by zero!");  var c = a / b;  
+        //  Console.WriteLine($"The result is {c}"); "And on the other screen, you can see the 
+        //  screenshot of this program running."  Exception from the user perspective
+        //  "As you see, at first the program executed in normal order, and console output Hello, 
+        //  let's divide by zero! Then the program crashed, throwing an exception 
+        //  DivideByZeroException. Execution of the code stopped and the program subsequently 
+        //  terminated."  "Sintia, does an exception always terminate the program in which it 
+        //  appears?" I asked.  "No, C# has a mechanism to handle exceptions, called a try-catch. 
+        //  It allows you to catch exceptions and handle the error before it causes a crash. 
+        //  Look at this code snippet," Sintia replied, projecting a new code snippet on the wall.
+        //  var a = 12;  var b = 0;  Console.WriteLine("Hello, let's divide by zero!");
+        //  try  {    var c = a / b;    Console.WriteLine($"The result is {c}");    }
+        //  catch (DivideByZeroException ex)  {  Console.WriteLine("There was an attempt to divide by zero!"); }
+        //  Console.WriteLine("I'm still running!");  // Outputs:  // Hello, let's divide by zero!  
+        //  There was an attempt to divide by zero!   // I'm still running!  "To handle an exception, 
+        //  surround the code that throws an exception with a try{} block followed by a catch{} block. 
+        //  The code that handles the exception lives in the catch block, and the code that throws an 
+        //  exception lives in the try block. If you omit the parenthesis after the catch block, as 
+        //  in the following example, it will catch exceptions of any type:"  
+        //  try{    throw new ArgumentException();}   catch // If nothing here, it cathches exceptions 
+        //  of all types  {    Console.WriteLine("An exception was thrown, I'm not sure which one though."); }
+        //  // Outputs  // An exception was thrown, I'm not sure which one though.  "To catch exceptions 
+        //  of a specific type, specify that type immediately after the catch block," Sintia explained.
+        //  try{    throw new ArgumentException();}  
+        //  catch (DivideByZeroException ex) // Catches only DivideByZeroException
+        //  {    Console.WriteLine("DivideByZeroException was thrown.");    }
+        //  // Outputs nothing  try {    throw new DivideByZeroException();    }
+        //  catch (DivideByZeroException ex) // Catches only DivideByZeroException
+        //  {    Console.WriteLine("DivideByZeroException was thrown.");    }
+        //  // Outputs  // DivideByZeroException was thrown.  "You can supply a message 
+        //  to explain exactly what went wrong. Put this message in the constructor of 
+        //  an exception that you throw. To access this message in the catch block, add 
+        //  a variable name inside the parenthesis and use its property Message, like this:"
+        //  try {    throw new Exception("Something broke!"); // Specify a message here
+        //  }catch (Exception ex) // A variable ex now represents the exception that
+        //         // was thrown
+        //  {    Console.WriteLine($"Exception was thrown: {ex.Message}");  }
+        //  // Outputs  // Exception was thrown: Something broke!
+        //  "Sintia, when you showed an exception from the user perspective, it stated 
+        //  "an unhandled exception". What is this? What is the difference between 
+        //  handled and unhandled exceptions?" asked one of the students.  "Oh, that's 
+        //  pretty straightforward. If you have a try-catch construction that handles 
+        //  an exception, it's considered to be handled. In all other cases, the 
+        //  exception is considered to be unhandled. If an unhandled exception occurs, 
+        //  the program is terminated by the operating system," she explained.
+        //  "For more information, you can study a not complete list of C# exceptions. 
+        //  Now it is time for some exceptional tasks!"  
+        //  In the Main method, throw an unhandled exception of type Exception with no 
+        //  message specified. Leave the class and namespace names unchanged.  
+        //  In the Main method, throw an unhandled exception of type Exception with a 
+        //  message "I'm a dangerous exception!" Leave the class and namespace names unchanged.  
+        //  In the Main method, throw an unhandled exception of type ArgumentException 
+        //  with a message "Argument can't be negative" Leave the class and namespace names unchanged.  
+
+        //  In the Main method, create a try-catch construction. Inside the try block, throw an 
+        //  ArgumentException with the message "The argument is invalid!", and in the 
+        //  catch block, print the message from an exception to the screen. 
+        //  Construct the catch block in a way that it catches only ArgumentException.
+        //  Your program should read two integers each from a new line. Then, it ..  
+        //  should output the sum, difference, product and quotient of these numbers. 
+        //  Put your code in the try block. Add a catch block that catches a 
+        //  DivideByZeroException and prints to the screen "Can't divide by zero!"
+        //  Example 1:  >12  >4   16   8   48   3
+        //  Example 2:  >12  >0   12  12    0   Can't divide by zero!
+        //  Codeasy Keep Calm and Don't devide by Zero  
+        //  C# Intermediate>4 A Secret Server>Exceptions in c sharp
+        public static void ExceptionsII(Util utl, string s1 = "", bool isConsoleRead = false)
+        {
+            #region    C# Intermediate>4 A Secret Server>Going deeper in C# Exceptions  A Hidden Server
+            //  The new information about the Commander that Infinity had told me had been 
+            //  dancing around in my head all night. Who is he? Why doesn't anybody know him? 
+            //  Where is he located and what is his ultimate goal, the reasoning behind his orders? 
+            //  Is he supporting the Rust project? And this didn't even cover half of the questions 
+            //  I had!  "Noname, can you check Commanders authority?" I thought.  "I started two 
+            //  hours ago, Teo," Noname replied.  "Wait, what? Two hours ago? Why did you do that?" 
+            //  I said, surprised.  "I read your thoughts, Teo. I saw that you were worried about 
+            //  Commander and decided to help," Noname answered with an extremely calm voice. 
+            //  "That is what friends do, no?"  "Yes, hm, right," I replied, parsing this new 
+            //  information. "Friends help each other, but they don't typically read each other's 
+            //  minds! Are you really capable of reading my thoughts? Why can't I read your thoughts?"
+            //  "Because I'm integrated into your brain, but you are not integrated into mine. 
+            //  Don't worry - I know that you don't fully trust me, but that's okay. I'm still 
+            //  just a machine. But thanks to you, I'm learning what it is to be human."  "Touching," 
+            //  I said, wondering if Noname had learned about sarcasm yet. "But back to my initial 
+            //  question, about Commander's authority? Any results there?" I asked.  "His files are 
+            //  hidden in a server inside Wonderland that's protected from the internal network. 
+            //  I mean it is inaccessible even from Wonderland. I'm completely helpless here. 
+            //  The only way to get that info is to physically connect to that server and read the data," 
+            //  Noname reported.  "Well," I replied, "I can't sleep and have nothing else to do. 
+            //  Where's the server?" I was ready then and there to find it and reveal the mystery 
+            //  around the Commander's persona.  Hidden Server in Codeasy Wonderland  Going Deeper Into 
+            //  Exceptions  I followed Noname's instructions and found the secret server. As soon as I 
+            //  established a connection to that server, Noname got read-only access to some of the files.
+            //  "I can't see all the data," Noname said. "You need to open access to me."  "How do I do that?" 
+            //  I asked.  "You need to inject your code into exception handling."  "Ah ha, not a problem! 
+            //  I've already learned exceptions in C#," happy to have something of my own to brag about.
+            //  "Great, then you can add three catch blocks to one of the existing try-catch and then..."
+            //  "Wait, Noname," I interrupted. "There can only be one catch that corresponds to a try block," 
+            //  I corrected Noname.  "Didn't you say you had learned this topic?" Noname said, doing his 
+            //  best to emulate surprise. He continued, "A try block can have several corresponding 
+            //  catch blocks because code can throw exceptions of different types. For example:"
+            //  public double GetLengthRatio(string s1, string s2)  
+            //  {  var s1Length = s1.Length; // Can throw NullReferenceException if s1 is null
+            //     var s2Length = s2.Length; // Can throw NullReferenceException if s2 is null
+            //     var ratio =  s1Length / s2Length; // Can throw DivideByZeroException if s2 is empty
+            //      return ratio;
+            //  }
+            //  Noname explained: "This code can throw at least two different exceptions: 
+            //  NullReferenceException and DivideByZeroException. You can write code that handles 
+            //  exceptions in a different way depending on their type."  
+            //  public double GetLengthRatio(string s1, string s2)
+            //  {        double ratio;
+            //      try   {   var s1Length = s1.Length;   var s2Length = s2.Length;  ratio = s1Length / s2Length;  }
+            //      catch(NullReferenceException ex)  // Handling NullReferenceException
+            //      {  Console.WriteLine($"One of the provided strings is null! Exception: {ex.ToString()}");
+            //          ratio = 0.0;       }
+            //      catch (DivideByZeroException ex) // Handling DivideByZeroException
+            //      {   Console.WriteLine($"s2 is empty! Exception: {ex.ToString()}");    
+            //          ratio = double.MaxValue;       }
+            //      catch (Exception ex) // Handling all other exceptions
+            //      {  Console.WriteLine($"Unknown error. Exception: {ex.ToString()}");
+            //          ratio = 0.0;    }
+            //      return ratio;
+            //  }
+            //  "In this example, I used multiple catch blocks to separate handling of different exceptions," 
+            //  Noname explained with a calm and focused voice.  "Why did you call every exception variable 'ex'?" I asked.
+            //  "This is a general convention, not a strict rule. You can use any name you want," he answered. 
+            //  "Now let's come back to the order of catch blocks. When an exception occurs inside the try block, 
+            //  CLR first checks it against the first catch block; if it fits, that catch block is executed. 
+            //  If the first catch block doesn't match, it checks the second catch block, then the third, 
+            //  and so on, ending with the last catch block. This behavior forms a rule that you need to 
+            //  follow when you create a catch blocks chain - go from the most specific exception to the 
+            //  most general. As you see in my example, the most general is Exception (which means 
+            //  "any error"), and less specific are DivideByZeroException and NullReferenceException. 
+            //  Try to always specify the type of exceptions that can occur; don't just throw 
+            //  everything in one can of 'any error'."  "Can I ask one more question? How would I know 
+            //  which exceptions the code throws if I use C# functions written by other programmers?"
+            //  "You are growing, Teo! You ask mature questions. And the answer is... Documentation! 
+            //  I'll show you this in the next example," Noname said.  var input = Console.ReadLine();
+            //  var number = int.Parse(input);  Console.WriteLine(number);  "As you already know, 
+            //  int.Parse can throw exceptions under some conditions. But what exceptions? 
+            //  And under what conditions? To answer these questions, use documentation. You can 
+            //  find it here. Look in the section Exceptions. There, you'll find all possible 
+            //  exceptions that this function can throw. For int.Parse, this includes 
+            //  ArgumentNullException, ArgumentException, FormatException, and OverflowException. 
+            //  Each of them is explained in that section. Are you following me?" Noname raised 
+            //  his voice a little.  "I sure am!" I replied. "Time to hack some hidden servers!"
+            //  The Information You Seek is In The Documentation  Put the whole given code snippet 
+            //  from the Main method into a try block. Add two catch blocks that handle different 
+            //  exceptions and output corresponding errors to the screen:  If the user inputs a 
+            //  number in a wrong format, write to the console: "Port that you provided is not a number."
+            //  If the user inputs a number that's too big, like 1234567890987654, write to the 
+            //  console: "Port that you provided is too big."  This code is protecting the server's 
+            //  secret data. It's impossible to change it, but there is a way to add one catch 
+            //  instruction to get access.  
+            //  Without changing any code that's already written, add one more catch block to make the 
+            //  code output "Access granted" when the user inputs a very long number as a numeric password. 
+            //  For example:  Enter login  >login   Enter numeric password  >1234567890987654321  Access granted
+            //  "Well, Teo, we did our best, but this server is protected much more securely than I expected," 
+            //  Noname stated. "We need to continue hacking, this time throwing an exception in one function 
+            //  and catching it in another."  "How does that work, Noname?" I wondered, "Where is the 
+            //  exception-handling code in such case?"  "Take a look at this code snippet," he replied.
+            //  public static void Main()
+            //  {    SomeMethod();}
+            //  public static void SomeMethod() // Throws an exception that crashes the application  
+            //  {    throw new ArgumentException("Argument is wrong!");  }
+            //  "In this example, the program will terminate because of an unhandled exception, but it can be 
+            //  fixed by adding a try-catch block in the Main function, like this:"  
+            //  public static void Main()
+            //  {    try      {          SomeMethod();      }
+            //    catch (Exception ex) // The exception is handled here
+            //      {        Console.WriteLine(ex);    }
+            //  }
+            //  public static void SomeMethod() // The exception "jumps out" from here
+            //  {    throw new ArgumentException("Argument is wrong!");  }
+            //  Noname continued explaining: "When an exception occurs, it looks for the closest try-catch 
+            //  block to the line where the exception occurred. If there is no try-catch nearby, 
+            //  it 'jumps out' from the function and looks for the try-catch in the function that 
+            //  called the current one, and so on, until it gets to the highest in the hierarchy 
+            //  function (Main), and if that one doesn't have a try-catch for this exception, 
+            //  your program will crash. Here, I have a diagram that will help you to understand this." 
+            //  Noname projected something just into my brain so that I had no choice but to look at it.
+            //  Handling of the exception that occured in a method/  In the Main method, catch the 
+            //  exception that GetMonthName can throw if the user inputs a non-existent month number, 
+            //  like -1 or 14. Don't catch all exceptions by type Exception - choose the most specific one. 
+            //  You can use this documentation to figure out which exception you need.  In the catch block, 
+            //  output the exception's message to the screen.  One of the students in your class did his 
+            //  homework, but their solution turned out to be a bit messy. You are provided with the code
+            //   - it has a few mistakes and a lot of room for improvement. Your task is not to fix it, 
+            //  but rather to simply prevent it from crashing.  Surround all code in the Main method 
+            //  with a try-catch construction. Find all exceptions that the code in Main can throw 
+            //  and catch them in different catch blocks. In each, print the message of the 
+            //  exception to the screen. Ignore OutOfMemoryException.  You have a guessing game written 
+            //  by a talented (but inexperienced) student who didn't know about exceptions. 
+            //  She used int.Parse but didn't handle situations when the input is invalid. 
+            //  For example, if instead of a number the input was !@#, the program crashes.
+
+            //  Your task is to add two try-catch constructions: one in the beginning, 
+            //  when the user inputs the secret number that we'll guess, and one to 
+            //  cover each guessed number. If the user's input appears to be invalid, 
+            //  output "Your input is invalid. Try once again!". Keep asking the user to input a number 
+            //  until they input a valid number. Here is an example:
+            //  Input a secret number
+            //  >Hello!
+            //  Your input is invalid. Try once again!
+            //  >100
+            //  Now start guessing
+            //  >What am I supposed to do? !@#
+            //  Your input is invalid. Try once again!
+            //  >99
+            //  Bigger
+            //  >101
+            //  Smaller
+            //  >I'm tired
+            //  Your input is invalid. Try once again!
+            //  >100
+            //  You've guessed! Woohoo!
+            //  "Great work, Teo. Now I can start reading data from the server," Noname said.
+            //  For a minute or two, he was silent; then he said: "Hm... It seems that my file reader 
+            //  is not disposing of system resources. I'm consuming too many resources and would need 
+            //  to restart several times while reading files on this machine. Could you please add a 
+            //  finally block with resource deallocation?"  "A finally block? What is that?" I asked. 
+            //  Given that Noname was in my head, it seemed odd that he couldn't have anticipated my confusion.
+            //  "A try, catch construction has a third block, called finally. It's used to clean up any 
+            //  resources that were allocated in the try block. It can be used without a catch block 
+            //  (try-finally), or with it (try-catch-finally)," Noname explained.  "Okay, next question," 
+            //  I said. "What resources does a C# programmer need to clean up? Previously, I didn't clear 
+            //  any resources; everything worked just fine without it." I didn't like to take anything for 
+            //  granted, and this seemed like a good opportunity to learn something new.  "There's a slight 
+            //  difference here between different types of resources. For example, when you create an 
+            //  object of your class or create an int variable, all the resources for those are going 
+            //  to be managed by C#, or more precisely, CLR (Common Language Runtime). Such objects 
+            //  are sometimes called managed resources. But if you start working with a world outside of your 
+            //  application; for example, files on a hard disk drive; then CLR will not help in clearing all 
+            //  the resources, and you need to call special functions to do this. 
+            //  Here is an example, of using try-catch-finally when working with files:"  
+            //  System.IO.StreamReader fileReader = new System.IO.StreamReader("myFile.txt");
+            //  int nextCharacter;
+            //  try   {       //  Trying to read from file    nextCharacter = fileReader.Read();  }
+            //  catch (System.IO.IOException e)  {       // Handle an error
+            //      Console.WriteLine($"Error reading from myFile.txt. Message = {e.Message}");   }
+            //  finally  {   if (fileReader != null)      {  // Close the file! Cleans up resources in operating system.
+            //          fileReader.Close();      }            //  }
+            //  // Do something with nextCharacter
+            //  "Please, don't be afraid of the functions that you don't know. Even if you have never used 
+            //  files in C#, just read the code. It is not that scary," Noname warned, probably because 
+            //  I looked stressed while looking at the unknown syntax of reading from a file.  "All you need 
+            //  to learn from this example is the try-catch-finally usage. As you see, resource allocation 
+            //  happens in the try block; then, deallocation happens in the finally block. The catch block 
+            //  handles errors that can occur during reading from the file," Noname explained.
+            //  "What if an exception is thrown in the try block, and handled in the catch block? 
+            //  Will the finally block still be executed?" I asked.  "Yes, the code in finally (almost) 
+            //  always executes. That's why the finally block is used for deallocation of the system 
+            //  resources - we need to make sure it always happens."  To the existent try-catch 
+            //  construction, add a finally block, in which you release all system resources that 
+            //  Noname's reader used. Use a method CleanUpAllResources for this.
+            //  "Great, I'll start scanning, Teo. Go have a rest. I'll ping you if I find anything 
+            //  interesting about Commander," Noname said, closing the communications channel. 
+            //  I wondered if this turned off his mind-reading powers, at least for now.
+            //  Waiting wears me down more than work... Keep up the good work at Codeasy
+            //  Here is an example, of using try-catch-finally when working with files:" 
+            //  Noname explained: "This code can throw at least two different exceptions: 
+            //  NullReferenceException and DivideByZeroException. You can write code that handles 
+            //  exceptions in a different way depending on their type."  //  public double GetLengthRatio(string s1, string s2, double ratio) { return ratio; }
+            //  For int.Parse, this includes ArgumentNullException, ArgumentException, FormatException, and OverflowException. 
+            #endregion C# Intermediate>4 A Secret Server>Going deeper in C# Exceptions 
+            System.IO.StreamReader fileReader = new StreamReader("myFile.txt"); int[] iArr = { 3, 4, 5, 6 }; int i = -1;
+            try
+            {
+                double ratio = int.Parse(fileReader.Read().ToString()) / s1.Length;
+                utl.PrintInColor($"{iArr[i].ToString()}");
+            }// sopbpgc
+            catch (IndexOutOfRangeException ex)     // Handling IndexOutOfRangeException
+            { utl.PrintInColor($"IndexOutOfRange!  Message = {ex.Message}"); }
+            catch (IOException ex)                  // Handling IOException
+            { utl.PrintInColor($"Error reading.    Message = {ex.Message}"); }
+            catch (ArgumentNullException ex)        // Handling ArgumentNullException
+            { utl.PrintInColor($"ArgNullExption!   Message = {ex.Message}"); }
+            catch (FormatException ex)              // Handling FormatException
+            { utl.PrintInColor($"ThatPort isntA#!  Message = {ex.Message}"); }
+            catch (OverflowException ex)            // Handling OverflowException
+            { utl.PrintInColor($"ThatPort is2big!  Message = {ex.Message}"); }
+            catch (NullReferenceException ex)       // Handling NullReferenceException
+            { utl.PrintInColor($"AString isNull!   Message = {ex.Message}"); }
+            catch (DivideByZeroException ex)        // Handling DivideByZeroException
+            { utl.PrintInColor($"Don't / byZero!   Message = {ex.Message}"); }
+            catch (Exception ex)                    // Handling all other exceptions
+            { utl.PrintInColor($"Unknown error.    Message = {ex.Message}"); }
+            finally
+            {
+                if (fileReader != null)        // Close to release OS resources
+                { utl.PrintInColor($"fClosing File.\n"); fileReader.Close(); }
+            }
+        }
+        public static void CSIntrmdtChap5Inheritance(Util utl, bool isConsoleRead = false)
+        {
+            #region  C# Intermediate>5 The Mystery of the old server>Intro to inheritance  Integrated Emotional Binding
+            //  Noname is scanning files at Codeasy  It was incredibly annoying to wait for Noname to scan the 
+            //  files on the hidden server. Bored with waiting, I began trawling a local Wonderland network to 
+            //  see if I could learn anything new. The first five to ten pages that I looked at was just 
+            //  mindless drivel. A few articles about resource gathering in Wonderland, a political one 
+            //  describing the importance of resistance, a pity story about a family where she was a 
+            //  resistance fighter and he decided to work for the machines. (In the end, she accidentally 
+            //  shot him.) Getting discouraged, I started clicking through faster and faster.  Click, click, 
+            //  click, wait - go back! On one of the pages, a bold headline that said "Learn About 
+            //  Mind-Reading Chips" attracted my attention. Without hesitation, I followed it.
+            //  The article began by describing newly discovered chips that the resistance managed to steal 
+            //  from machines and which they hoped to one day reproduce. The chips were first found embedded 
+            //  into former human prisoners' heads and acted to connect humans to humans and humans 
+            //  to ... machines. The first type of connection was described in all possible aspects: 
+            //  for instance, a mother could connect with her child to know in-depth how he or she felt. 
+            //  In other scenarios, couples connected via one of these chips were discovering something 
+            //  new in their relationships; they called it "integrated emotional binding." The second type 
+            //  of connection, between humans and machines, was scarcely explained at all. It seemed a bit 
+            //  shady that this article would omit the part where enemies were forced to be mentally in sync 
+            //  with one another. Why omit the part that we were all fighting to prevent? Aren't there enough 
+            //  secrets in this place already?  I wondered if there was a history available for this page. 
+            //  Fortunately, there was a log of all changes to this article for the last 5 years. 
+            //  There was quite a bit of material, but the most significant change appeared to have 
+            //  happened the day before I first arrived at Wonderland. It was titled "Final cleanup." 
+            //  I opened it, eager to catch every word.  Of course, I should have known that getting 
+            //  any useful information wouldn't be that easy. There was protection on the change log. 
+            //  It required knowing something, called "inheritance." The only thing left to do was to 
+            //  search for that term in the system and learn enough to get access to the change log. 
+            //  The timing of the massive change couldn't be a coincidence, and I had a gut feeling 
+            //  something important was hiding in there.    //  Inheritance
+            //  Inheritance is a mechanism of basing an object or class upon another object or class, 
+            //  retaining similar implementation. Inheritance allows you to re-use functionality that 
+            //  is already implemented in another class, and also to add custom logic on top of it. 
+            //  For example, let's say you have a class Pet.  
+            //  class Pet
+            //  {
+            //      public string Name { get; set; }            //  
+            //      public void PrintName()   {    Console.WriteLine($"My name is {Name}");    }
+            //  }
+            //  This class really is as simple as it looks. It prints a pet's name to the console when you 
+            //  call the PrintName method. Now, let's imagine that your customer made a new request - to 
+            //  create a class specifically for a pet cat. It should have the same method, PrintName, 
+            //  as well as an additional one, PrintBreed, which prints the cat's breed. To solve this, 
+            //  you could create such a class as follows:            //  
+            //  class Cat
+            //  {
+            //      public string Name { get; set; }
+            //      public string Breed { get; set; }            //  
+            //      public void PrintName()     {          Console.WriteLine($"My name is {Name}");           }
+            //      public void PrintBreed()    {          Console.WriteLine($"My breed is {Breed}");         }
+            //  }
+            //  If you look closer, you can see that the class Cat just duplicated the functionality 
+            //  of the class Pet. The code for the property Name and method PrintName are copied from 
+            //  the class Pet. This approach has a couple key disadvantages:  The cost of support. 
+            //  When you duplicate code, you have more code in general, and you need to support 
+            //  all of it. Any change/bugfix that needs to be implemented must be added in each 
+            //  copy of the code snippet.  The cost of complexity. A new programmer in your team 
+            //  would have a harder time understanding the structure of the project and dependencies 
+            //  if there is a lot of duplicate code.  To avoid duplication in the class Cat, we can 
+            //  use inheritance. The following is an example of what the code looks like if the class 
+            //  is derived from another one:
+            //  class Pet
+            //  {
+            //      public string Name { get; set; }
+            //      public void PrintName()    {    Console.WriteLine($"My name is {Name}");    }
+            //  }
+            //  class Cat : Pet     // Class Cat derives from the class Pet
+            //  {
+            //      public string Breed { get; set; }
+            //      public void PrintBreed()
+            //      {     Console.WriteLine($"My breed is {Breed}");    }
+            //  }
+            //  public class ClassWithMain
+            //  {
+            //      public static void Main()
+            //      {
+            //          Cat mrMartin = new Cat
+            //          {    Name = "mr Martin", // Prop Name is derived from class Pet    Breed = "Siamese"   };
+            //          mrMartin.PrintName();  // PrintName is derived from the class Pet
+            //          mrMartin.PrintBreed();
+            //      }
+            //  }
+            //  // Outputs:    // My name is mrMartin    // My breed is Siamese    When you re-use the 
+            //  functionality of one class in another one by using inheritance, you are deriving one class 
+            //  from another. The class whose members are inherited is called the base class, and the class 
+            //  that inherits those members is called the derived class. A derived class can have only one 
+            //  direct base class. In our example, class Pet is the base class and the class Cat is a derived one. 
+            //  To derive class A from class B, use a colon (:) after the class A name, and then append the name 
+            //  for class B. You can treat it as a copy of the code from the class B to class A.  In the example 
+            //  above, we derived class Cat from class Pet. Having done that, we can now use the property Name a
+            //  nd the method PrintName on every object of type Cat.  As you can see, there is no code duplication 
+            //  when you use inheritance. It all happens behind the scenes.  Inheritance in C# at Codeasy
+            //  Make the program compile by deriving class Flower from the class Plant. Set flower's 
+            //  property Type to Flowering, and then output it to the screen.
+            //  
+            //  Derive the class Programmer from the class Employee. Inside class Programmer, 
+            //  implement a public method IsDepartmentCorrect that returns a bool and takes no arguments. 
+            //  The method should return true if the department is IT and false otherwise.
+            //  Conceptually, the connection between classes that are represented by inheritance can be 
+            //  thought of as an "is" relationship. A derived class is a specialization of the base class. 
+            //  In our example: a cat is a pet; that's why Cat derives from Pet. Beginners often wonder 
+            //  when one class should or should not derive from another one. A good check would be to 
+            //  apply the "is" rule. If one of them "is" another, you can apply inheritance, 
+            //  otherwise - don't. Here are some more examples:
+            //  Minivan derives from Vehicle. This is the proper usage of inheritance: a minivan is a vehicle.
+            //  Student derives from Pet. This is NOT a proper usage of inheritance. A student is NOT a Pet, 
+            //  even though they both have names.  When writing code, always check whether inheritance makes 
+            //  sense in the current context with the is rule.  From the following list, derive some classes 
+            //  from others: Building, Wall, SkyScraper and ClimbingWall. Apply inheritance only in those 
+            //  cases where it makes sense. Use the is rule.  From the following list, derive some classes 
+            //  from others: Company, Department, MarketingDepartment and EmailCampaignsDepartment. 
+            //  Apply inheritance only in those cases where it makes sense. Use the is rule.
+            //  Inheritance is transitive. This means if B is derived from C, and A is derived from B, 
+            //  then A is also derived from C: 
+            //  class C
+            //  {    public void PrintCName()
+            //      {    Console.WriteLine("I'm class C");    }
+            //  }
+            //  class B : C
+            //  {    public void PrintBName()
+            //      {    Console.WriteLine("I'm class B");    }
+            //  }
+            //  class A : B
+            //  {    public void PrintAName()
+            //      {    Console.WriteLine("I'm class A");    }
+            //  }
+            //  public class ClassWithMain
+            //  {    public static void Main()
+            //      {    var a = new A();
+            //          a.PrintAName();
+            //          a.PrintBName(); // Inherited from class B
+            //          a.PrintCName(); // Inherited from class C
+            //      }
+            //  }
+            //  // Outputs:  // I'm class A   // I'm class B    // I'm class C
+            //  As you can see, class A derives from B and B derives from C. Therefore, B gets all functionality 
+            //  from C and A gets all functionality from both B and C.  
+            #endregion
+
+            //  Inherit classes Parrot, Bird, and Animal from one another in the correct order. Use the is rule. 
+            //  The code should compile if you do it correctly.
+            //  Implement a method SayHi in the class Parrot. If the parrot is dead it should just 
+            //  return. If the parrot is flying, it is quite hard to say anything, and the program 
+            //  should output "Fleeeeeee". If the parrot is alive and not flying, it should 
+            //  output "Hi".  Note that it is NOT possible to derive a class from more than one class.
+            //  class C
+            //  {    public void PrintCName()    {    Console.WriteLine("I'm class C");    }    }
+            //  class B
+            //  {    public void PrintBName()    {    Console.WriteLine("I'm class B");    }    }
+            //  class A : B, C // ERROR!!! Can't derive from more than one class
+            //  {    public void PrintAName()    {    Console.WriteLine("I'm class A");    }    }
+            //  Fix the code to make it compile by adding or replacing an inheritance. It should 
+            //  output the text about the square to the screen.
+            //  Fix the code to make it compile by adding or replacing an inheritance. It should 
+            //  output the text about John to the screen.
+            //  Noname was taking so long that I fell asleep while trying to commit all the vageries 
+            //  of inheritance to memory. If you have any trouble sleeping, I can heartily confirm 
+            //  that reading about inheritance in OOP for twenty minutes will do the trick. 
+            //  You are welcome!            //  Something new is coming at Codeasy
+            //   //  C# Intermediate>5 The Mystery of the old server>Introduction to inheritance
+            //  info@codeasy.net    Have fun and learn programming with codeasy.net © 2019
+            //  Make the program compile by deriving class Flower from the class Plant. 
+            //  Set flower's property Type to Flowering, and then output it to the screen.
+            //
+            //  Derive the class Programmer from the class Employee. Inside class Programmer, 
+            //  implement a public method IsDepartmentCorrect that returns a bool and takes no 
+            //  arguments.The method should return true if the department is IT and false otherwise.
+            Parrot polly = new Parrot() { Name = "Polly", isAlive = true, isFlying = false }; utl.PrintInColor(polly.ToString());
+            Parrot pauly = new Parrot() { Name = "Pauly", isAlive = true, isFlying = true }; utl.PrintInColor(pauly.ToString());
+            new Programmer(utl, "Fin", "Boo"); new Programmer(utl, "IT", "Brice");
+            List<int> iListNum = new List<int>() { 10, 20 };
+            List<int> iListNumz = new List<int> { 1005671, -567110 };
+            //new MyListInt(utl,iListNum);new MyListInt(utl, iListNumz);//new List<int> { 10, 20, 30});
+            utl.PrintInColor($"iListNum: {iListNum.ToString2()}  iListNumz: {iListNumz.ToString2()}");
+            new Cat(utl, true, false, "Cathy", "Taby"); new Dog(utl, true, false, "Fido", "Dober"); new ComsOut(utl);
+            MyAsciiArt1 art1 = new MyAsciiArt1(utl); utl.PrintInColor(art1.Draw(utl)); new Mango(utl, "Mango");
+            new Apple(utl, "Apple"); new Driver(utl);
+        }
+    }
+    public interface IBestInTheWorldProgrammer
+    {    //  Finish the implementation of the interface IBestInTheWorldProgrammer to make the code compile. 
+         //  In the method ReadDocumentation, output to the screen "Sometimes I read the documentation."; 
+         //  in the method WriteCode, output "I adore writing code!"   Interface members are automatically public, 
+         //  and they can't include any access modifiers.  
+         //string Department { get; set; } string Name { get; set; }
+        void ReadDocumentation();
+        void WriteCode();
+    }
+
+    public interface IEmployee { string Department { get; set; } string Name { get; set; } }
+    class Programmer : IBestInTheWorldProgrammer, IEmployee // sopbpgc
+    {
+        //  From the following list, derive some classes from others: Building, Wall, SkyScraper 
+        //  and ClimbingWall.Apply inheritance only in those cases where it makes sense.Use the is rule.
+        //  class Wall{} class ClimbingWall : Wall {} class Building {} class SkyScraper : Building
+        //  From the following list, derive some classes from others: Company, Department, 
+        //  MarketingDepartment and EmailCampaignsDepartment. Apply inheritance only in those cases 
+        //  where it makes sense. Use the is rule.  class Department {}   class MarketingDepartment : Department {} 
+        //  class EmailCampaignsDepartment : Department {}
+        public string Name { get; set; }
+        public string Department { get; set; }
+        public Util Sutil { get; set; }
+        public Programmer(Util utl, string dept, string name, bool isConsoleRead = false)
+        {
+            Department = dept; Name = name; Sutil = utl; // sopbpgc
+            utl.PrintInColor($"{(IsDepartmentCorrect(utl, Department) ? $"  {Name} is a PROGRAMMER!" : $"  {Name} is not a programmer")}");
+            ReadDocumentation(); WriteCode();
+        }
+        public bool IsDepartmentCorrect(Util utl, string dept = "IT", bool isConsoleRead = false)
+        { if (dept == "IT") isConsoleRead = true; return isConsoleRead; }
+        public void ReadDocumentation() { Sutil.PrintInColor($"  I sometimes read docs.  "); }
+        public void WriteCode() { Sutil.PrintInColor($"  I adore Programming!  "); }
+
+    }
+    class Animal
+    {
+        public bool isAlive { get; set; }
+        public string Name { get; set; }
+        public Animal()
+        {
+            Console.Write($"  class {nameof(Animal)} ");
+        }
+    }
+    class Bird : Animal
+    {
+        public bool isFlying { get; set; }
+        public Bird()
+        {
+            Console.Write($"class {nameof(Bird)} ");
+        }
+    }
+    class Parrot : Bird
+    {
+        public Parrot()
+        { Console.Write($"class {nameof(Parrot)} "); RunInheritance(); }
+        //    public override string ToString()
+        //    {
+        public override string ToString()
+        {   //  Override the ToString method in the class Website to make it output a detail about 
+            //  the website in the following format: "{Name}, created in {YearCreated}, with a title 
+            //  {Title}".
+
+            StringBuilder sb = new StringBuilder("");
+            //  Inherit classes Parrot, Bird, and Animal from one another in the correct order. 
+            //  Use the is rule. The code should compile if you do it correctly.
+            //  Implement a method SayHi in the class Parrot. If the parrot is dead it should just 
+            //  return. If the parrot is flying, it is quite hard to say anything, and the program 
+            //  should output "Fleeeeeee". If the parrot is alive and not flying, it should output "Hi". 
+            if (isAlive)
+            {
+                if (isFlying) sb.Append($"If isAlive: {isAlive.ToString()}, IsFlying: {isFlying.ToString()}, {Name} says Fleeeeeee!");
+                else sb.Append($"If isAlive: {isAlive.ToString()}, IsFlying: {isFlying.ToString()}, {Name} says Hi!");
+            }
+            return sb.ToString();
+        }
+        public static void RunInheritance()
+        {
+            //  Override method Draw in classes Square and Arrow.  Use the '#' symbol to draw a square. 
+            //  The code to read the size of the edge of the square from the console is already in place. 
+            //  Fill the inner part of the square with spaces, as shown in the example below.  Under the 
+            //  square, draw an arrow by repeating the '-' symbol several times and ending with a '>' symbol, 
+            //  like this: ---> The total length of the arrow is equal to the length of the square's edge, 
+            //  as shown below.  Example:    >4    ####    #  #    #  #     ####    --->  
+        }
+        public static void RunInheritance2()
+        {
+            #region  C# Intermediate>5 The Mystery of the old server>Keywords override sealed and object
+            //  Without Hope We Are Useless  Noname woke me up, speaking in my head louder than I 
+            //  would have preferred. "Good morning, Teo, I have news for you."  "Good morning," I 
+            //  mumbled. "Did I oversleep?"  "You were asleep for 7 hours and 32 minutes," Noname 
+            //  stated. "Sorry for interrupting, but I've got news regarding Commander."  "Ahh, yes, 
+            //  did you find a lot?" I wondered.  "Oh yes, Teo."  "So, is he a bad guy?"  "Not really..." 
+            //  Noname seemed rather confused for a machine.  "A traitor?"  "Not in that sense..."  
+            //  "The guessing game is getting a bit old. Can you cut to the chase?" I asked.  "Commander's 
+            //  address is 2001:db8:85a3:8d3:1319:8a2e:370:7348. That's a server, Teo. Commander is a 
+            //  highly ranked, smart, and secure... server. It's a machine, Teo."  "Wait... What did you 
+            //  say?" I said, dumbfounded. "Are you sure, Noname? Have you double-checked? Triple-checked?"
+            //  "Yes, both when I first figured it out, as well as again just now. Each check tells me 
+            //  it is a machine. The server that we hacked was a part of Commander," Noname explained 
+            //  in a calm, serious tone, adding, "I can only imagine how frustrated and confused you 
+            //  feel right now."  "Noname, this makes absolutely no sense. Why would a machine lead 
+            //  the resistance against machines? What is the point?" I asked.  "The point is to give 
+            //  humanity hope for a bright future. Machines studied humans for tens and hundreds of 
+            //  years. At some point, it became obvious even to them that a human without hope is 
+            //  useless. It can't work, can't follow orders, and it's highly probable to resist. 
+            //  The solution that machines came up with was to create a controlled resistance. 
+            //  In order to organize, people would need to believe that not everything was lost 
+            //  - that they could actually beat the machines if they banded together."  "But humanity 
+            //  can't..." I began.  "At least not with the current resistance head," Noname agreed.  
+            //  I was so lost, so destroyed, that I had no idea what to do. The only thing I could 
+            //  think of doing was asking a machine what I should do about learning that a machine 
+            //  was manipulating humans to believe they could beat machines. "Noname, what should 
+            //  I do?" I implored.  "I don't know, Teo. But from what I've learned about humans 
+            //  and their behaviors, you tend to do utterly illogical things when in a highly 
+            //  emotional state. You are clearly in the highly emotional state now, and I'm 
+            //  worried about you. I would suggest not taking any actions for a while. What were you 
+            //  working on yesterday when I was researching the Commander?"  "I was about to learn 
+            //  inheritance to get access to an interesting article in the local network," I answered.
+            //  "Great! Please, continue that!"  Noname's reasoning was a bit childish, but still, it 
+            //  made some sense. I needed time to digest the truth. Better to keep myself busy than 
+            //  letting my mind run wild.  Commander at Codeasy is Machine!!!!Dum Dum Dah Dah!!!
+            //  Override Sometimes, you may want to change the functionality of a function in 
+            //  the derived class. Using the previous example with classes Pet and Cat, let's 
+            //  imagine that when we call a method PrintName on an object of type Cat, we want it 
+            //  to print "I'm a cat. My name is {Name}". As such, we need to mark this method with 
+            //  the keyword virtual in the class Pet, and use the keyword override in the class Cat. 
+            //  This will allow us to change the functionality of the method PrintName as follows:
+            //  class Pet    {    public string Name { get; set; }    
+            //  public virtual void PrintName() // Virtual method. Now it's possible to override
+            //      {    Console.WriteLine($"My name is {Name}");    }    }
+            //  class Cat : Pet    { // Class Cat derives from the class Pet
+            //  public override void PrintName() // Overriding the method PrintName
+            //  {    Console.WriteLine($"I'm a cat. My name is {Name}.");    }     }
+            //  class Dog : Pet    { // Class Dog derives from class Pet    //  {}
+            //  public class ClassWithMain    {     public static void Main()     {
+            //              var cat = new Cat()        {            Name = "mr Martin"        };
+            //          cat.PrintName();  // Calls the overridden method from the class Cat
+            //          var dog = new Dog()        {            Name = "Hobbit"        };
+            //          dog.PrintName();  // Calls the method from the class Pet. No override    }  }
+            //  Outputs:  // I'm a cat. My name is mr Martin.  // My name is Hobbit
+            //  The virtual keyword marks those methods in the class that can be overridden 
+            //  in the derived classes. If a method is not virtual, it can't be overridden.
+            //  Change Cat and Dog to output specific sounds when method MakeASound is called. 
+            //  You should rename methods MakeDogSound and MakeCatSound and override method MakeASound.
+            //  Override method Draw in classes Square and Arrow.  Use the '#' symbol to draw a square. 
+            //  The code to read the size of the edge of the square from the console is already in place. 
+            //  Fill the inner part of the square with spaces, as shown in the example below.
+            //  Under the square, draw an arrow by repeating the '-' symbol several times and 
+            //  ending with a '>' symbol, like this: ---> The total length of the arrow is equal 
+            //  to the length of the square's edge, as shown below.  Example:  //  >4  ####  #  #  #  #  ####  --->
+            //  Sealed
+            //  You may run into instances when you want to prohibit derivation from a given class. 
+            //  To do this, use the sealed keyword. Because sealed classes can never be used as a base class, 
+            //  some run-time optimizations can make calling sealed class members slightly faster.
+            //  public sealed class ItIsImpossibleToDeriveFromMe  {    // This class is sealed. It will never be a base class.            //  }
+            //  class ThisIsAMistake : ItIsImpossibleToDeriveFromMe    {  // Error. Can't derive from a sealed class.            //  }
+            //  public class YouCanDeriveFromMe    {    // This class can be base. No problem.    }
+            //  public sealed class SealedChildClass : YouCanDeriveFromMe    {     // This class is sealed. It will never be a base class.            //  }
+            //  class ThisIsAMistake : SealedChildClass{    // Error. Can't derive from a sealed class.    }
+            //  Make the given class sealed.  Make as many classes as possible sealed. A method or property 
+            //  on a derived class that is overriding a virtual member of the base class can declare that 
+            //  member as sealed. As a result, the member is not "virtual" anymore, which prevents it from 
+            //  being overridden in any further derived class. This is accomplished by putting the sealed 
+            //  keyword before the override keyword in the class member declaration. For example:
+            //  public class Something    {    public virtual void DoWork()        { }    }
+            //  public class ClassWithSealedMethod : Something    {
+            //      public sealed override void DoWork()    {     // Can't be overridden in derived classes    }    }
+            //  First, make the code compile. Then, make as many overridden methods as possible sealed.
+            //  Protected
+            //  When class A derives from class B, it gets access to all the public methods, fields, and properties 
+            //  of B. However, derived class A does not get access to the private fields of class B:
+            //  class B    {    private int _privateField;    private int PrivateMethod() { return 23; }
+            //      private int PrivateProperty { get; set; }    public int PublicField;    public int PublicMethod() { return 23; }
+            //      public int PublicProperty { get; set; } }
+            //  class A : B    {    public void DoWork()    {    var a = _privateField;   // Error! Can't access private field of the base class
+            //      var b = PrivateMethod(); // Error! Can't access private method of the base class
+            //      var c = PrivateProperty; // Error! Can't access private property of the base class
+            //      var d = PublicField;     // Ok. Can access public field of the base class
+            //      var e = PublicMethod();  // Ok. Can access public method of the base class
+            //      var f = PublicProperty;  // Ok. Can access public property of the base class     }    }
+            //  There is a special access modifier, Protected, to deal with access levels during inheritance. 
+            //  Protected fields, methods, and properties are accessible from the class itself and from all 
+            //  derived classes, but not from outside the class. In other words, protected elements are public 
+            //  for derived classes and private for the outer world. Microsoft provides a great C# access 
+            //  modifier table that provides more information about accessibility levels in C#.
+            //  C Sharp Protected:  class A    {    protected int ProtectedField;    protected int ProtectedMethod() { return 23; }
+            //      protected int ProtectedProperty { get; set; }    }    class B : A    {    public void DoWork()
+            //      {    var a = ProtectedField;    // Ok, can access protected field of the base class
+            //           var b = ProtectedMethod(); // Ok, can access protected method of the base class
+            //           var c = ProtectedProperty; // Ok, can access protected property of the base class    }    }
+            //  public class ClassWithMain    {    public static void Main()    {        var a = new A();
+            //   a.ProtectedFiled = 23;    // Error! Can't access a protected field outside of the class
+            //   a.ProtectedMethod();      // Error! Can't access a protected method outside of the class
+            //   a.ProtectedProperty = 12; // Error! Can't access a protected property outside of the class   }    }
+            //  While using object-oriented design in your programming, try to control access as much as possible. 
+            //  Declare all members that are internal to the class with a private modifier. Then, mark those that 
+            //  make sense to use in derived classes with a protected modifier and those that should be accessible 
+            //  from the outside with a public modifier.  Use an UpperCamelCase for protected fields.
+            //  Make the program compile and output info about Earth to the screen by adding protected modifiers where needed.  
+            //  Set the access modifier of every member in the class Furniture to the least-accessible one. 
+            //  Choose access levels from public, protected, and private. Don't change anything else in the predefined code.
+            //  Object
+            //  In C#, each class implicitly inherits from a particular class called Object or object.
+            //  Class Object has several virtual methods that you can override in your class. We'll take a closer 
+            //  look at one of them:  public virtual string ToString ();
+            //  You can imagine every class as having : object appended to it. What You Write What the Compiler Sees
+            //  class MyClass    {}    class Object    {      public virtual string ToString ();    } // Other members
+            //  class MyClass : Object {    } When you call Console.WriteLine() on an object of any class, 
+            //  it first calls ToString on the object, and then prints the return value to the console.
+            //  You can override the ToString method in your class if you want to use a particular format or style 
+            //  whenever you call Console.WriteLine(). Here is an example with a class Point.
+            //  class Point   {    public int X { get; set; }    public int Y { get; set; }
+            //      public override string ToString()    {        return $"[{X}, {Y}]";    }    }    
+            //  public class ClassWithMain    {        public static void Main()    {  var point = new Point { X = 23, Y = 32  };
+            //  Console.WriteLine(point);    }    }   // Outputs:  // [23, 32]
+            //  Override the ToString method in the class Website to make it output a detail 
+            //  about the website in the following format: "{Name}, created in {YearCreated}, with a title {Title}".
+            //  You are given a class MyIntArray, which is a wrapper around a typical C# array. 
+            //  The purpose of this class is to override the ToString method so that the array 
+            //  is easy to output using Console.WriteLine.  Your task is to override the ToString method 
+            //  in the class MyIntArray and output a string that contains all elements of the array 
+            //  constructed in the following manner:  First, an opening a square bracket followed by a space: "[ "
+            //  Then, all elements, one by one, separated by a comma and a space: 1, 2, 3, 4 
+            //  Finally, finish with a space and a closing square bracket: " ]"
+            //  The code that reads an array and prints it is already in place. Here is an example output:
+            //  >5    >100    >-56    >71    >1    >0    [ 100, -56, 71, 1, 0 ]
+            //  You did it
+            //  C# Intermediate>5 The Mystery of the old server>Keywords override sealed and object 
+            //  info@codeasy.net  Have fun and learn programming with codeasy.net © 2019
+            #endregion
+        }
+    }
+    //  class MyListInt 
+    //  {
+    //  //  You are given a class MyIntArray, which is a wrapper around a typical C# array. 
+    //  The purpose of this class is to override the ToString method so that the array 
+    //  is easy to output using Console.WriteLine.  Your task is to override the ToString method 
+    //  in the class MyIntArray and output a string that contains all elements of the array 
+    //  constructed in the following manner:  First, an opening a square bracket followed by a space: "[ "
+    //  Then, all elements, one by one, separated by a comma and a space: 1, 2, 3, 4 
+    //  Finally, finish with a space and a closing square bracket: " ]"
+    //  The code that reads an array and prints it is already in place. Here is an example output:
+    //  >5    >100    >-56    >71    >1    >0    [ 100, -56, 71, 1, 0 ]
+    //      public List<int> iNum { get; set; }
+    //      public MyListInt(Util utl, List<int> inum) { iNum = inum; utl.PrintInColor($"  {ToString()}"); }
+    //      //  class Point   {    public int X { get; set; }    public int Y { get; set; }
+    //      public override string ToString()    {        return $"[{X}, {Y}]";    }    }    
+    //  public class ClassWithMain    {    public static void Main()    {  var point = new Point { X = 23, Y = 32  };
+    //  Console.WriteLine(point);    }    }   // Outputs:  // [23, 32]
+    //      public override string ToString()
+    //      {
+    //          string sStart = nameof(iNum);
+    //          StringBuilder sb = new StringBuilder(/*sStart +*/ "  [ "); int count = iNum.Count() - 1;
+    //          for (int i = 0; i < count ; i++) {
+    //              sb.Append($"{iNum[i]}, "); }
+    //          //if (count < 3) sb.Append($"{iNum[count-1]}, ");
+    //          sb.Append($"{iNum[count]} ]");
+    //          return sb.ToString();
+    //      }
+    //  }
+
+    class Square : Arrow
+    {
+        public Square() { }
+        //public virtual void Draw() { }
+    }
+    class Arrow
+    {
+        public Arrow() { }
+        public virtual string Draw(Util utl, int count = 4) { return ""; }
+    }
+    class MyAsciiArt1 : Square
+    {
+        //  Override method Draw in classes Square and Arrow.
+        //  Use the '#' symbol to draw a square.The code to read the size of the edge of the square 
+        //  from the console is already in place. Fill the inner part of the square with spaces, as 
+        //  shown in the example below.  Under the square, draw an arrow by repeating the '-' symbol 
+        //  several times and ending with a '>' symbol, like this: ---> The total length of the arrow 
+        //  is equal to the length of the square's edge, as shown below.
+        //  Example:
+        //  >4
+        //  ####
+        //  #  #
+        //  #  #
+        //  ####
+        //  --->
+        public MyAsciiArt1(Util utl)
+        {
+            RunAArt1(utl);
+        }
+        public override string Draw(Util utl, int count = 4)
+        {
+            StringBuilder sb = new StringBuilder("");
+            StringBuilder arrowsb = new StringBuilder("");
+            string topB = utl.TextRepeater("@", count); Console.WriteLine();
+            string mid = "@" + utl.TextRepeater(" ", count - 2) + "@";
+            sb.AppendLine(topB);
+            for (int i = 2; i < count; i++) { sb.AppendLine(mid); }
+            sb.AppendLine(topB);
+            sb.AppendLine(utl.TextRepeater("=", count - 1) + ">");
+            return sb.ToString();
+        }
+        public static void RunAArt1(Util utl)
+        { }
+    }
+    public interface IFruit { string Name { get; set; } }
+    class Apple : IFruit
+    {
+        public string Name { get; set; }
+        public Apple(Util utl, string name, string className = "IFruit") { SumBetween sum = new SumBetween(); sum.PrintGeneric(utl, className, name); }
+    }
+    class Mango : IFruit
+    {
+        public string Name { get; set; }  // mango and apple used to have a [Name = name;] clause. it actually used the [interface IFruit]
+        public Mango(Util utl, string name, string className = "IFruit") { SumBetween sum = new SumBetween(); sum.PrintGeneric(utl, className, name); }
+        //  Create a class Mango that implements the interface IFruit. Let it return "Mango" as its name. 
+        //  Then, in the Main method, create an object of type Mango and pass it to the method PrintName. 
+        //  The order of calls to PrintName should be: first apple, then mango.
+    }
+    //  In the Main method, create two string rules of types NoDoubleSpaces and IsShort. 
+    //  Call the method DoesTheRuleApply two times, once for each rule. Assign the result to the 
+    //  corresponding variables hasNoDoubleSpaces and isShort. You also need to call 
+    //  the method AppliesToString inside the method DoesTheRuleApply. 
+    //  Set the type IStringRule to the method's parameter rule. 
+    //  Don't change any function or parameter names.  
+    //  Polymorphism (C# Programming Guide)  07/19/2015  7 minutes to read  +9
+    //  Polymorphism is often referred to as the third pillar of object-oriented programming, 
+    //  after encapsulation and inheritance. Polymorphism is a Greek word that means "many-shaped" 
+    //  and it has two distinct aspects:
+    //  
+    //  At run time, objects of a derived class may be treated as objects of a base class in places 
+    //  such as method parameters and collections or arrays. When this occurs, the object's declared 
+    //  type is no longer identical to its run-time type.  
+    //  Base classes may define and implement virtual methods, and derived classes can override them, 
+    //  which means they provide their own definition and implementation. At run-time, when client code 
+    //  calls the method, the CLR looks up the run-time type of the object, and invokes that override 
+    //  of the virtual method. Thus in your source code you can call a method on a base class, 
+    //  and cause a derived class's version of the method to be executed.
+    //  Virtual methods enable you to work with groups of related objects in a uniform way. For example, 
+    //  suppose you have a drawing application that enables a user to create various kinds of shapes on a 
+    //  drawing surface. You do not know at compile time which specific types of shapes the user will create. 
+    //  However, the application has to keep track of all the various types of shapes that are created, 
+    //  and it has to update them in response to user mouse actions. 
+    //  You can use polymorphism to solve this problem in two basic steps:
+    //  Create a class hierarchy in which each specific shape class derives from a common base class.
+    //  Use a virtual method to invoke the appropriate method on any derived class through a single call 
+    //  to the base class method.
+    //  First, create a base class called Shape, and derived classes such as Rectangle, Circle, and Triangle. 
+    //  Give the Shape class a virtual method called Draw, and override it in each derived class to draw the 
+    //  particular shape that the class represents. Create a List<Shape> object and add a Circle, Triangle 
+    //  and Rectangle to it. To update the drawing surface, use a foreach loop to iterate through the list 
+    //  and call the Draw method on each Shape object in the list. Even though each object in the list has 
+    //  a declared type of Shape, it is the run-time type (the overridden version of the method in each 
+    //  derived class) that will be invoked.  
+    //  C#  Copy  using System;  using System.Collections.Generic;
+    //  public class Shape  {      // A few example members
+    //      public int X { get; private set; }    public int Y { get; private set; }
+    //      public int Height { get; set; }       public int Width { get; set; }
+    //      public virtual void Draw()            {    Console.WriteLine("Performing base class drawing tasks");    }    } // Virtual method
+    //  class Circle : Shape    
+    //  {    public override void Draw()    {    Console.WriteLine("Drawing a circle");        base.Draw();    }    }  // Code to draw a circle...
+    //  class Rectangle : Shape 
+    //  {    public override void Draw()    {    Console.WriteLine("Drawing a rectangle");     base.Draw();    }    }  // Code to draw a rectangle...
+    //  class Triangle : Shape  
+    //  {    public override void Draw()    {    Console.WriteLine("Drawing a triangle");      base.Draw();    }    }  // Code to draw a triangle... 
+    //  class Program    {      
+    //  static void Main(string[] args)     {    // Polymorphism at work #1: a Rectangle, Triangle and Circle can all be used whereever a Shape is expected. 
+    //  No cast is required because an implicit conversion exists from a derived class to its base class.
+    //  var shapes = new List<Shape>        {    new Rectangle(),  new Triangle(),  new Circle()    };    
+    //  Polymorphism at work #2: the virtual method Draw is invoked on each of the derived classes, not the base class.
+    //  foreach (var shape in shapes)       {    shape.Draw();    }        // Keep the console open in debug mode.
+    //  Console.WriteLine("Press any key to exit.");         Console.ReadKey();    }    }
+    //  Output:    Drawing a rectangle      Performing base class drawing tasks
+    //             Drawing a triangle       Performing base class drawing tasks
+    //             Drawing a circle         Performing base class drawing tasks    */
+    //  In C#, every type is polymorphic because all types, including user-defined types, inherit from 
+    //  Object.  Polymorphism Overview      Virtual Members
+    //  When a derived class inherits from a base class, it gains all the methods, fields, properties 
+    //  and events of the base class. The designer of the derived class can choose whether to override 
+    //  virtual members in the base class, inherit the closest base class method without overriding it
+    //  define new non-virtual implementation of those members that hide the base class implementations
+    //  A derived class can override a base class member only if the base class member is declared as 
+    //  virtual or abstract. The derived member must use the override keyword to explicitly indicate 
+    //  that the method is intended to participate in virtual invocation. The following code provides an example: 
+    //  public class BaseClass    {        public virtual void DoWork() { }     public virtual int WorkProperty
+    //  {    get { return 0; }    }    }    
+    //  public class DerivedClass : BaseClass    {    
+    //         public override void DoWork() { }    public override int WorkProperty  {  get { return 0; }  }  }
+    //  Fields cannot be virtual; only methods, properties, events and indexers can be virtual. 
+    //  When a derived class overrides a virtual member, that member is called even when an instance of 
+    //  that class is being accessed as an instance of the base class. The following code provides an example:
+    //  DerivedClass B = new DerivedClass();    B.DoWork();  // Calls the new method.
+    //  BaseClass A = (BaseClass)B;    A.DoWork();  // Also calls the new method.
+    //  Virtual methods and properties enable derived classes to extend a base class without needing to use 
+    //  the base class implementation of a method.For more information, see Versioning with the Override and 
+    //  New Keywords.An interface provides another way to define a method or set of methods whose 
+    //  implementation is left to derived classes. For more information, see Interfaces.
+    //  Hiding Base Class Members with New Members: If you want your derived member to have the same name 
+    //  as a member in a base class, but you do not want it to participate in virtual invocation, you can 
+    //  use the new keyword.The new keyword is put before the return type of a class member that is being 
+    //  replaced. The following code provides an example:
+    //  public class BaseClass    {    public void DoWork() { WorkField++; }    public int WorkField;
+    //  public int WorkProperty   {    get { return 0;   }  }  }
+    //  public class DerivedClass : BaseClass    {    public new void DoWork() { WorkField++; }
+    //  public new int WorkField;      public new int WorkProperty        {     get { return 0; }    }    }
+    //  Hidden base class members can still be accessed from client code by casting the instance of the 
+    //  derived class to an instance of the base class. For example:
+    //  DerivedClass B = new DerivedClass();    B.DoWork();  // Calls the new method.
+    //  BaseClass A = (BaseClass)B;             A.DoWork();  // Calls the old method.
+    //  Preventing Derived Classes from Overriding Virtual Members: Virtual members remain virtual 
+    //  indefinitely, regardless of how many classes have been declared between the virtual member 
+    //  and the class that originally declared it.If class A declares a virtual member, and class B 
+    //  derives from A, and class C derives from B, class C inherits the virtual member, and has the 
+    //  option to override it, regardless of whether class B declared an override for that member. 
+    //  The following code provides an example:  
+    //  public class A        {    public virtual void DoWork() { }    }
+    //  public class B : A    {    public override void DoWork() { }   }
+    //  A derived class can stop virtual inheritance by declaring an override as sealed. This requires 
+    //  putting the sealed keyword before the override keyword in the class member declaration. 
+    //  The following code provides an example:
+    //  public class C : B    {    public sealed override void DoWork() { }    }
+    //  In the previous example, the method DoWork is no longer virtual to any class derived from C. 
+    //  It is still virtual for instances of C, even if they are cast to type B or type A. 
+    //  Sealed methods can be replaced by derived classes by using the new keyword, as the following example shows:
+    //  public class D : C    {    public new void DoWork() { }    }
+    //  In this case, if DoWork is called on D using a variable of type D, the new DoWork is called.
+    //  If a variable of type C, B, or A is used to access an instance of D, a call to DoWork will 
+    //  follow the rules of virtual inheritance, routing those calls to the implementation of DoWork 
+    //  on class C. Accessing Base Class Virtual Members from Derived Classes: 
+    //  A derived class that has replaced or overridden a method or property can still access the method 
+    //  or property on the base class using the base keyword.The following code provides an example:
+    //  public class Base    {        public virtual void DoWork() {/*...*/ }    }
+    //  public class Derived : Base    {        public override void DoWork()    {
+    //  Perform Derived's work here    ...      Call DoWork on base class        base.DoWork();    }    }
+    //  For more information, see base. Note: It is recommended that virtual members use base to call the 
+    //  base class implementation of that member in their own implementation. Letting the base class 
+    //  behavior occur enables the derived class to concentrate on implementing behavior specific to 
+    //  the derived class. If the base class implementation is not called, it is up to the derived 
+    //  class to make their behavior compatible with the behavior of the base class. In This Section
+    //  Versioning with the Override and New Keywords: Knowing When to Use Override and New Keywords:
+    //  How to override the ToString method 
+
+    public interface ICommunicationModule { void CommunicationToWonderland(); void ComsToTeo(); }
+    class ComsOut : ICommunicationModule
+    {
+        //  Create your own public implementation of ICommunicationModule
+        //  named CommunicationToTeo that is an exact copy of CommunicationToWonderland with one exception: 
+        //  instead of the string "Opening communication channel to Wonderland" it should say "Opening 
+        //  communication channel to Teo". Then, replace the communication module that is used in the 
+        //  Main method with the newly created CommunicationToTeo.  
+        public Util Sutil { get; set; }
+        public ComsOut(Util utl)
+        { Sutil = utl; CommunicationToWonderland(); ComsToTeo(); }
+        public void CommunicationToWonderland() { Console.Write(""); }
+        public void ComsToTeo() { Sutil.PrintInColor($"  Opening communication channel to Teo  "); }
+    }
+    interface ICar { Util Sutily { get; set; } void Accelerate(); }
+    class Hybrid : ICar
+    {
+        public Util Sutily { get; set; }
+        public void Accelerate() { Sutily.PrintInColor($"  Accelerating a hybrid car.  "); }
+    }
+    class ElectricCar : ICar
+    {
+        public Util Sutily { get; set; }
+        public void Accelerate() { Sutily.PrintInColor($"  Accelerating an electric car.  "); }
+    }
+    class PetrolCar : ICar
+    {
+        public Util Sutily { get; set; }
+        public void Accelerate() { Sutily.PrintInColor($"  Accelerating a petrol car.  "); }
+    }
+    class Driver
+    {
+        public Util Sutil { get; set; }
+        public Driver(Util utl)
+        { Sain(utl); }
+        public void Sain(Util utl)
+        {
+
+            ElectricCar electricCar = new ElectricCar(); PetrolCar petrolCar = new PetrolCar(); Hybrid hybrid = new Hybrid();
+            electricCar.Sutily = petrolCar.Sutily = hybrid.Sutily = utl;
+            AccelerateCar(electricCar); AccelerateCar(petrolCar); AccelerateCar(hybrid);
+        }  // Accelerates any car that implements ICar!!!
+        public void AccelerateCar(ICar car) // <-- Magic!     
+        { car.Accelerate(); }
+    } // Outputs:
+      //  // Accelerating an electric car.  // Accelerating a petrol car.
+
+    class Pet : Animal
+    {
+        public bool isWalking { get; set; }
+        public string Breed { get; set; }
+        public Pet()
+        { Console.Write($"class {nameof(Pet)} "); }
+        public virtual void PetPrint(Util utl) { Console.Write($"{Name} a {Breed} says FUCK YOU!"); }
+    }
+    class Dog : Pet
+    {
+
+        public Dog(Util utl, bool islive, bool iswalking, string name, string breed)
+        {
+            isAlive = islive; isWalking = iswalking; Name = name; Breed = breed;
+            Console.Write($"class {nameof(Dog)} "); PetPrint(utl);
+        }
+        public override void PetPrint(Util utl)
+        { utl.PrintInColor($"{Name} a {Breed} says woof"); }
+    }
+    class Cat : Pet
+    {
+        public Cat(Util utl, bool islive, bool iswalking, string name, string breed)
+        {
+            isAlive = islive; isWalking = iswalking; Name = name; Breed = breed;
+            Console.Write($"class {nameof(Cat)} "); PetPrint(utl);
+        }
+        public override void PetPrint(Util utl)
+        { utl.PrintInColor($"{Name} a {Breed} says meow"); }
+
+    }
+    #region  C# Intermediate>6 One step ahead>Interfaces in C#    I Know Exactly What To Do
+    //  I'd lost all interest in the article about machine-to-human binding. I'll come back 
+    //  to it later, I thought. All I could think about now was Commander and Wonderland. 
+    //  What should I do?  "I think your point of view is slightly pessimistic," I heard as 
+    //  Noname entered my thoughts again.  "Why?" I said. "We just discovered that humanity's 
+    //  only hope is imaginary. How could that possibly not sound pessimistic? 
+    //  It's a full-fledged disaster!""Well, is it okay if I share my point of view?" Noname 
+    //  asked respectfully.  "Sure, go ahead," I answered.  "Based on what we learned about 
+    //  Commander, humanity has been completely controlled by machines for quite a while, right? 
+    //  Controlled at such a high level that humanity didn't even know about it. That's an 
+    //  accurate summary of yesterday, yes?" Noname asked.  "Right," I agreed, not feeling 
+    //  any better about my predicament at this point.  Noname continued, "And today is the 
+    //  first day that you know about this fact. Now, what does that mean?"  I had to stop and 
+    //  think for a moment. Everything had been happening so fast lately. After a few seconds, 
+    //  I started to realize where Noname was leading me. "They don't know that I know!" 
+    //  I shouted in my head. "The machines have no clue that we know who... or what... 
+    //  Commander is," I shouted.  "Exactly, Teo. Today is the first day that you are one step 
+    //  ahead of the machines. Let's not miss this opportunity."  "Thank you, Noname. Now I know 
+    //  exactly what to do," I exclaimed.  "Happy to help my human friends," he said. "If I may ask, 
+    //  what is your next action?"  "You'll see..."  Codeasy Communication Module  Interfaces
+    //  Once I had settled down at a terminal, I pinged Noname again in my head. "Noname, I 
+    //  need you to show me the Commander's communication module. I need to see how it sends 
+    //  and receives commands," I said.  "Got it. Here it is:"  
+    //  public interface ICommunicationModule
+    //  {    void Send(string message);    string Receive();    }
+    //  public class CommunicationSystem
+    //  {    private ICommunicationModule _communicationModule;
+    //  public CommunicationSystem(ICommunicationModule module)
+    //  {    _communicationModule = module;    }
+    //  public void SendMessage(string message)
+    //  {    Console.WriteLine("Opening communication channel Wonderland");    
+    //      _communicationModule.Send(message);    }
+    //  public string ReceiveMessage()
+    //  {    Console.WriteLine("Opening communication channel to Wonderland");
+    //          return _communicationModule.Receive();    }
+    //  }
+    //  I was pretty sure that modifying this module would help my cause, but I 
+    //  couldn't understand how it worked. "Noname, can you please give me a 
+    //  crash course on interfaces?" I asked. "I've heard about this concept a couple 
+    //  times, but we never covered it in class."  "Sure, it would be a pleasure to 
+    //  explain it to you."  "An interface is an abstraction that indicates what a 
+    //  class that implements it can do. An interface contains functionalities that 
+    //  a class can implement."  "Noname, no matter how hard you try to explain 
+    //  things in simple terms, I can never get it until you show me an example," 
+    //  I said, hoping I didn't come off as sarcastic.  She agreed and sent said 
+    //  example to my terminal:
+    //  public interface IClonable
+    //  {    object Clone();    }
+    //  "Here you can see an interface 
+    //  IClonable. It declares one method called Clone. This interface tells us 
+    //  'every class that implements me should have a method Clone.' Are you following?" 
+    //  Noname asked.  "Kind of... How do you use it?" I replied.  
+    //  public class Car : IClonable
+    //  {
+    //  
+    //  public object Clone() // This method implements method Clone from the interface
+    //  {    return new Car();    }   }
+
+    //  "Here is a class Car that implements IClonable. To properly implement interface 
+    //  IClonable, class Car should have a public method Clone that returns object."
+    //  "Ok, got it," I said. "The interface acts as a base class, but instead of 
+    //  implementing methods, it only declares them," I said, reinterpreting Noname's words.
+    //  "Exactly, Teo! Now, I should emphasize several constraints and differences between 
+    //  the usage of interfaces and classes. I'll give you some practical assignments to 
+    //  ensure you understand what I mean," Noname replied.  "Sure, but first... Why do 
+    //  all of your interface names start with an I?" I asked.  "This is another name 
+    //  convention in C#. Always start your interface name with a letter 'I'," he replied, 
+    // "like IConvertable, IClonable, ICat, IDog. Ok - now a few facts about interfaces 
+    //  that you'd better remember."  C Sharp Naming Conventions Flowchart  
+    //  An interface can contain methods or properties but not fields, constants, or constructors.
+    //  Incorrect	Correct
+    //  public interface IWorker
+    //  {    string Name;    // No - Fields forbidden  const int Age;  // No - Constants forbidden
+    //      IWorker();      // No - Constructors forbidden
+    //  }
+    //  public interface IWorker
+    //  {
+    //      string Name { get; }
+    //      void DoWork();
+    //  }
+    //  Delete from the interface IFactory forbidden members to make the program compile. Don't delete valid members!
+    //  
+    //  A class can inherit from multiple interfaces, but only from one class. To derive from several interfaces, list them separated by a comma, as shown in the next example.
+    //  "Here's a comparison table that shows the difference between derivation from two interfaces and two classes," Noname said. "It is absolutely valid to derive a class or interface from as many interfaces as you want, but you cannot derive from more than one class."
+
+    //  Incorrect	                                        Correct
+    //  public class Worker                             public interface IWorker
+    //  {                                               { 
+    //      public virtual void DoWork()                     void DoWork()
+    //      {        // Some code    }                       void PrintResult()
+    //      public virtual void PrintResult()            }
+    //      {        // Some code    }
+    //  }
+    //  public class Person                              public interface IPerson
+    //  {    public virtual string GetName()             {      string GetName();       }
+    //       {    // Some code      }                    // This is OK: derive from two interfaces     
+    //  }                                                public class Worker : IWorker, IPerson
+    //  // Wrong! Con't derive from two classes          {    public void DoWork()    
+    //  public class HumanWorker : Worker, Person             {    //  some code    } 
+    //  {      // Some code      }                            public void PrintResult()
+    //                                                        {    //  some code    } 
+    //                                                        public string GetName()
+    //                                                          {    // Some code     }    }
+    //  Remove double inheritance from classes by converting classes HouseForSale and Property 
+    //  to interfaces. Add "I" at the beginning of their names to get IHouseForSale and IProperty.
+    //  Remove double inheritance from classes by converting class SoftwareDeveloper to an interface. 
+    //  Add "I" at the beginning of its name to get ISoftwareDeveloper.  If a class implements an 
+    //  interface, it must implement all of its members.  "Here's another diagram," Noname said. 
+    //  "To the left, you see the code where I forgot to implement a method PrintResult from the 
+    //  interface IWorker;             //  to the right, a fixed version of that code."
+    //  Incorrect	                            Correct
+    //  public interface IWorker                public interface IWorker
+    //  {                                       {
+    //      void DoWork();                          void DoWork();                          
+    //      void PrintResult();                     void PrintResult();
+    //  }                                       }
+    // Implements both methods from IWorker
+    //  public class Worker : IWorker               public class Worker : IWorker
+    //  {   public void DoWork()                    {    public void DoWork()
+    //        {    Do some stuff    }                      {     Do some stuff    }
+    // Method PrintResult is not implemented!            public void PrintResult()
+    // This will generate a compiler error.              {     Print something    }    }
+    //  Finish the implementation of the interface IBestInTheWorldProgrammer to make the code compile. 
+    //  In the method ReadDocumentation, output to the screen "Sometimes I read the documentation."; 
+    //  in the method WriteCode, output "I adore writing code!"  Interface members are automatically 
+    //  public, and they can't include any access modifiers.  
+    //  Incorrect	                                    Correct
+    //  public interface IWorker                        public interface IWorker
+    //  {                                               {
+    //  // Wrong. Can't have access modifiers here          // Right. No access modifier
+    //  protected string Name { get; }                      string Name { get; }
+
+    //    // Wrong. Can't have access modifiers here        // Right. No access modifier
+    //  public void DoWork();                               void DoWork();
+    //  }                                               }
+
+    //  Remove access modifiers from an interface to make the code compile.
+
+    //  When a class implements an interface, it must have a public access modifier for all 
+    //  members that implement an interface.  "Looking at the following comparison table, 
+    //  pay attention to access modifiers for each method and property," Noname said.
+
+    //  Incorrect	                                        Correct
+    //  public interface IWorker                        public interface IWorker
+    //  {                                               {
+    //      string Name { get; }                            string Name { get; }
+    //      void DoWork();                                  void DoWork();
+    //  }                                               }
+
+    //  public class Worker : IWorker                   public class Worker : IWorker
+    //  {                                               {
+    // Doesn't implement interface                  //  public method implements interface
+    //      private void DoWork()   // Wrong                public void DoWork()
+    //      {                                               {
+    //      }                                               }
+
+    // Doesn't implement interface                  // Public property implements interface
+    //  protected string Name { get; }  // Wrong            public string Name { get; }  // Right
+    //                                                      }
+    //                                                        }
+    //  Change access modifiers to make the code compile.
+
+    //  An interface can't have implementation of methods; only declaration.  "There are no 
+    //  secrets to this rule," Noname explained. "Just don't implement anything in the 
+    //  interface. Leave implementation to a derived class."
+
+    //  Incorrect	                                       Correct 
+    //                                                     public interface IWorker
+    //  public interface IWorker                           {
+    //  {                                                        string Name { get; } // Right
+    // Error! Can't have implementation here!      
+    //      string Name { get { return "John"; } }               void DoWork();       // Right, no implementation
+    //                                                     }
+    // Error! Can't have implementation here!                         
+    //      void DoWork()                                  public class Worker : IWorker
+    //      {                                              {
+    //          // Some code                                   public void DoWork()
+    //      }                                                  {
+    //  }                                                            // Implementation of the method
+    //                                                          }
+
+    //                                                       public string Name
+    //                                                       {
+    //                                                          get
+    //                                                          {
+    //                                                              //  Implementation of the property
+    //                                                          }
+    //                                                       }
+    //                                                     }
+    //  Remove implementation and all forbidden members from the interface IMessage. 
+    //  Move them to the class Message, so that class Message implements interface IMessage. 
+    //  Your program should compile.  "Thanks, Noname, this is plenty of information about interfaces. 
+    //  Unfortunately, all this information doesn't help that much, because I don't know how to apply 
+    //  it to my cause... If I want to replace an existing implementation with my own, say, 
+    //  on Commander's server, how do I do that?" I asked.  "You need to use polymorphism," he answered.
+    //  "Can you tell me about that as well?"  "Sure, so listen..."  Adventure awaits you at Сodeasy
+    #endregion //  C# Intermediate>6 One step ahead>Interfaces in C#    Email:info@codeasy.net    Have fun and learn programming with codeasy.net © 2019     
+    #region   C# Intermediate>6 One step ahead>Polymorphism   Polymorphism
+    //  "You promised to explain where interfaces are used in C#," I reminded Noname after a quick 
+    //  lunch break.  "Ahh, yes," Noname replied. "I like how curious you are!"  "It's not curiosity; 
+    //  I need to isolate Commander," I said. It was strange that Noname didn't know my true intentions, 
+    //  given that he could read my mind.  "Let's start with high-level concepts," Noname said. 
+    //  "Imagine you just climbed into a new car. You take the driver seat, keys in hand. 
+    //  What do you need to know to start this vehicle and drive somewhere?" Noname asked.
+    //  "Basically, nothing. I just turn the key and drive. Why do you ask such weird questions?" I asked.
+    //  He ignored my question and continued, "Do you need to know what type of brakes the car has in order 
+    //  to use them?"  I answered, "Nope, when I press the brake pedal, the car brakes. That's all I need 
+    //  to know."  "Exactly! What about the fuel; do you need to know whether it runs on electric or petrol?" 
+    //  Noname continued   his line of questioning.  "Not as long as whatever it runs on is full," I said. 
+    //  "I can drive it regardless of what type of engine it has. The experience might be different, 
+    //  but I'd still be able to drive it," I explained.  "Super! Now, what gives you the ability to 
+    //  drive any car? Why can't you program in any programming language, but you can drive any car?"
+    //  "Because cars have common rules of how to use them. You turn a steering wheel, and the car turns, 
+    //  you press a pedal and car accelerates. What are you trying to say, Noname?" I was puzzled.
+    //  "I'm saying that all cars have the same interface. You don't know exactly how the car works 
+    //  under the hood, but you know how to use the common interface that is implemented in all cars. 
+    //  The existence of the interface is what gives you the abiity to drive any car," Noname exclaimed. 
+    //  This was the key thought that he was heading to.  "Okay, I think I get what you mean. What does 
+    //  it have to do with... wait, you're saying that interfaces in C# solve the same problem?" It took 
+    //  a while, but I had finally arrived at the answer.  "Exactly, Teo. You have a very sharp mind. 
+    //  An interface provides a common way to interact with all classes that implement it. The ability 
+    //  to work with different classes via the same interface is called polymorphism." Noname finally 
+    //  explained this strange word.  "It sounds like polymorphism is the ability to drive different 
+    //  cars that all use the same controls," I commented.  "This is exactly what I'm saying! Take a 
+    //  look at this code example," he said, displaying some text right in my mind.  The Car Interface
+    //  public interface ICar  {  void Accelerate();  }
+    //  public class ElectricCar : ICar  {  public void Accelerate()  {  Console.WriteLine($"Accelerating an electric car.");  }  }
+    //  public class PetrolCar : ICar    {  public void Accelerate()  {  Console.WriteLine($"Accelerating a petrol car.");  }  }
+    //  public class Driver    {  public static void Main()  
+    //  {  ElectricCar electricCar = new ElectricCar();    PetrolCar petrolCar = new PetrolCar();
+    //      AccelerateCar(electricCar);    AccelerateCar(petrolCar);  }  // Accelerates any car that implements ICar!!!
+    //  private static void AccelerateCar(ICar car) // <-- Magic!     {  car.Accelerate();  }  } // Outputs:
+    //  // Accelerating an electric car.  // Accelerating a petrol car.
+    //  After giving me some time to look through the code, Noname asked, "Do you see the beauty of what 
+    //  is happening here?"  "I think so," I replied. "Let me try to sort this out myself. So you have 
+    //  an interface ICar, and two classes that implement it: ElectricCar and PetrolCar. 
+    //  Then, in the Main method, you create two objects: one of type ElectricCar and one 
+    //  of type PetrolCar. Then you pass those objects to the method AccelerateCar. Wait! 
+    //  This method takes ICar - how does it even compile?"  "All the magic happens in 
+    //  the Accelerate method," Noname replied. "Polymorphism gives you the ability to pass any class 
+    //  that implements the ICar interface to the method AccelerateCar. It is possible because the 
+    //  type of the argument car in the AccelerateCar method is an ICar, not a specific PetrolCar 
+    //  or ElectricCar.  "As always, Nonames first explanation was a bit too technical for me to 
+    //  grasp it all.  "Noname, does the object change when it has a different type inside of the 
+    //  method?" I asked.  "When the object electricCar, after being passed to the method as a 
+    //  parameter, has a type ICar, it is not changed, but the way the receiving side sees it 
+    //  does change. The object electricCar continues to have the type ElectricCar, and an 
+    //  object petrolCar will still be of type PetrolCar. The trick is that inside the method 
+    //  AccelerateCar, both of their types are ICar. And the best thing about it - you don't need 
+    //  to know the exact type. You operate via an interface, the same as you do with the real car. 
+    //  You accelerate by pressing the pedal!" Noname's voice sounded excited. Either he had 
+    //  discovered a newfound appreciation for cars, or polymorphism was one of his favorite subjects.
+    //  "Ok, I think I understand now," I answered.  Polymorphism in C Sharp  "Good! Then you'll have 
+    //  no problem solving these exercises," Noname said.  Create a class Mango that implements the 
+    //  interface IFruit. Let it return "Mango" as its name. Then, in the Main method, create an 
+    //  object of type Mango and pass it to the method PrintName. The order of calls to PrintName 
+    //  should be: first apple, then mango.  In the Main method, create two string rules of types 
+    //  NoDoubleSpaces and IsShort. Call the method DoesTheRuleApply two times, once for each rule. 
+    //  Assign the result to the corresponding variables hasNoDoubleSpaces and isShort. 
+    //  You also need to call the method AppliesToString inside the method DoesTheRuleApply. 
+    //  Set the type IStringRule to the method's parameter rule. Don't change any function 
+    //  or parameter names.  I finished the exercises in about five minutes. It seemed like 
+    //  enough information for me to be able to change the routing system of Commander's server, 
+    //  but Noname seemed unstoppable. He wanted to explain all the nitty-gritty details of polymorphism. 
+    //  He continued: "The same technique applies if you replace interfaces with base classes. The passing 
+    //  side will pass an object of a child class, and the receiving method receives that as an object of a 
+    //  base class. Take a look at how it looks in the code:"
+    //  public class Car  {  public virtual void Accelerate()  {  Console.WriteLine("Accelerating an unknown car");  }  }  }
+    //  public class ElectricCar : Car  {  public override void Accelerate()  {  Console.WriteLine("Accelerating an electric car.");  }  }  
+    //  public class PetrolCar : Car    {  public override void Accelerate()  {  Console.WriteLine("Accelerating a petrol car.");     }  }
+    //  public class Driver             {  public static void Main()          {  ElectricCar electricCar = new ElectricCar();
+    //                                     PetrolCar petrolCar = new PetrolCar();AccelerateCar(electricCar);
+    //                                     AccelerateCar(petrolCar);   }  // Accelerates any car that derives from Car!!!
+    //  private static void AccelerateCar(Car car) {   car.Accelerate();  }  }  // Outputs:
+    //  // Accelerating an electric car.  // Accelerating a petrol car.  
+    //  Noname explained his code: "The first interesting thing about this code is the same as for the 
+    //  previous code snippet: the method AccelerateCar works with an argument car of type Car, 
+    //  not ElectricCar or PetrolCar."  "How does it understand which implementation of the method 
+    //  Accelerate to use when it calls car.Accelerate()?" I asked, wondering if I was missing something 
+    //  obvious. "This is the second interesting fact regarding the last example I gave you. 
+    //  Polymorphism works in such a way that every object stores a reference to its original type. 
+    //  Object car inside the method AccelerateCar is treated as Car, but when you call a method 
+    //  Accelerate on it, the first thing it does is check what the original type of the object was. 
+    //  Then it calls the method from the corresponding implementation." 
+    //  public class Driver  {  public static void Main()  {  ElectricCar electricCar = new ElectricCar();
+    //  PetrolCar petrolCar = new PetrolCar();  Car car = new Car();      AccelerateCar(electricCar);
+    //  AccelerateCar(petrolCar);  AccelerateCar(car);  }  
+    //  private static void AccelerateCar(Car car)  {  car.Accelerate();  }  }// Here C# checks the initial type 
+    //  of the object car Then it finds the method "Accelerate" in that class and calls it If there are no 
+    //  overrides of this method in the "real" class, the implementation from the parent class is used
+    //  "Noname, one more question: what does that last line of the comment mean? Can you give a code example?" 
+    //  I asked. "Oh yes, sure, here you go!" he displayed an image with the next code snippet.
+    //  public class Car  {  public virtual void Accelerate()  {      Console.WriteLine("Accelerating an unknown car");  }  }
+    //  public class ElectricCar : Car  {  // Nothing  }  
+    //  public class Driver
+    //  {    public static void Main()
+    //       {    ElectricCar electricCar = new ElectricCar();      AccelerateCar(electricCar);    } 
+    //       private static void AccelerateCar(Car car)  
+    //       {    car.Accelerate();  }// This one calls the method Accelerate from Car Because ElectricCar does not override the method Accelerate
+    //  }        // Outputs:        // Accelerating an unknown car
+    //  In every 'if' branch, create a shape of the corresponding type. If the shape is unknown, 
+    //  create an instance of the base class Shape. Draw the shape that you've created using method DrawShape.
+    //  Change the class Mouse to make the code output "Connecting mouse".  "Noname, maybe this is enough for 
+    //  the first time? My brain is melting from all of this polymorphism stuff."  "Okay, I understand. 
+    //  Humans are far from perfect; your brain is one of the weakest components of the body. Can you 
+    //  handle one last fact before we stop?" he asked.  "Fine," I replied, "but just one."  "In the 
+    //  previous examples, you saw how polymorphism works on methods. It can also be used on variables."
+    //  "Variables? Interesting!"  "First, we create a variable of type Car. Then, you can assign to it 
+    //  any object of types ElectricCar or PetrolCar because they both derive from Car. In general, you 
+    //  can assign an object of a child class to a variable of the parent class. Here's a code example:"
+    //  Car car1 = new Car();  Car car2 = new ElectricCar();  Car car3 = new PetrolCar();
+    //  "What is the point of doing so?" I asked.  "Well, there's no tangible point, but it provides a 
+    //  good example of polymorphism functionality. Having only those 3 lines is not enough to 
+    //  understand the usage of the variable car. Let's do something with it, let's say, call our 
+    //  favorite method Accelerate. Because of polymorphism, C# calls the right method for each class, 
+    //  as we saw in the method AccelerateCar in previous examples."  
+    //  public class Car  {  public virtual void Accelerate()  {   Console.WriteLine("Accelerating an unknown car.");  }  }
+    //  public class ElectricCar : Car  {  public override void Accelerate()  {  Console.WriteLine("Accelerating an electric car.");  }  }
+    //  public class PetrolCar : Car    {  public override void Accelerate()  {  Console.WriteLine("Accelerating a petrol car.");     }  }
+    //  public class Driver {
+    //  public static void Main(){
+    //      Car car1 = new Car();    Car car2 = new ElectricCar();    Car car3 = new PetrolCar();   
+    //          car1.Accelerate(); // C# knows that it should call Accelerate from Car
+    //          car2.Accelerate(); // C# knows that it should call Accelerate from ElectricCar
+    //          car3.Accelerate(); // C# knows that it should call Accelerate from PetrolCar  }  }
+    //  // Outputs:  // Accelerating an unknown car.  // Accelerating an electric car.  // Accelerating a petrol car.
+    //  "Thanks, Noname, that example helps. It's clear how to use polymorphism technically, but I 
+    //  still can't see any practical use for it," I said, hoping he had more to add. Noname replied, 
+    //  "Ok, consider that you want to ask a user which car he or she wants to use. I'll write this 
+    //  code for you using interfaces this time:"
+    //  public interface ICar  {   void Accelerate();  }
+    //  public class ElectricCar : ICar  {  public void Accelerate()  {  Console.WriteLine("Accelerating an electric car.");  }  }
+    //  public class PetrolCar : ICar    {  public void Accelerate()  {  Console.WriteLine("Accelerating a petrol car.");     }  }
+    //  public class Driver  {  public static void Main()  {  ICar car; // Not assigning any object as we don't know which car to drive.
+    //      if (Console.ReadLine() == "electrical")    {        car = new ElectricCar();    }
+    //      else                                       {        car = new PetrolCar();      }
+    //      car.Accelerate(); C# knows which method to call: from ElectricCar or PetrolCar  }  }  }  }
+    //  "At runtime, this code creates different objects that implement interface ICar. You can argue 
+    //  that it is possible to achieve the same result with ifs - and that is partially true - but 
+    //  using polymorphism provides significant advantages:"  
+    //  1. Decoupling. Using polymorphism, you can separate the implementation logic from the usage logic. 
+    //  You can create objects in one place and pass them as an implementation of some interface without
+    //  specifying the actual type. This allows work to easily be separated between teams, with each team
+    //  working independently but sharing a common interface.  
+    //  2. Extensibility. To add a new car to the code above you would need to add a new class, but you 
+    //  don't need to change the code in Main because the object car has the interface type ICar. 
+    //  The same principle applies to real cars: if a manufacturer creates a new car, they don't need 
+    //  to teach you to drive it. Instead, they set up their new car to use the common interface 
+    //  implemented in all cars.  I finally felt comfortable with polymorphism. Now, it was time to act.
+    //  "I think I'm good with this topic, Noname. It's time to replace Commander's communication module," 
+    //  I said.  "What exactly are you planning to do?" he asked.  "Be patient, you'll see everything in a 
+    //  moment," I replied. It was my turn to be mysterious.  Commander's communication module was still 
+    //  partially write-protected. Noname and I have found a way to insert a new class and to change 10 
+    //  symbols in the Main method. Methods ReceiveMessage and SendMessage were 100% protected and 
+    //  we were not able to make any changes.  Create your own public implementation of ICommunicationModule 
+    //  named CommunicationToTeo that is an exact copy of CommunicationToWonderland with one exception: 
+    //  instead of the string "Opening communication channel to Wonderland" it should say "Opening 
+    //  communication channel to Teo". Then, replace the communication module that is used in the 
+    //  Main method with the newly created CommunicationToTeo.  "That was smart of you, Teo!" Noname 
+    //  exclaimed, "You tricked the machines; now they'll continue talking to Commander, and Commander 
+    //  will think it's talking to Wonderland, but in reality, it'll be talking to you. Moreover, that 
+    //  little change to forward your orders to Wonderland as if Commander sent them was genius! This 
+    //  all means... This means that... Teo, you are the new Commander. You control the entire 
+    //  resistance on Earth!" Noname's voice dropped an octave as he started to realize the situation.
+    //  I felt mighty. I had an uplifting feeling that finally, this one time, I'd be the one making 
+    //  the rules. I'd be giving the orders, and there would be no more secrets, because I'd be the 
+    //  source. I owned the biggest secret of Wonderland. Perhaps the biggest secret on the planet.
+    //  So, what to do now? What orders to give? Whom to love and whom to hate?  I figured I'd start 
+    //  slow and replace the pathetic, tasteless coffee sludge that they use here with proper coffee beans.   //  To be continued...To be continued Codeasy  
+    #endregion  //  C# Intermediate>6 One step ahead>Polymorphism    info@codeasy.net  Have fun and learn programming with codeasy.net © 2019
+    //  After giving me some time to look through the code, Noname asked, "Do you see the beauty of what 
+    //  is happening here?"  "I think so," I replied. "Let me try to sort this out myself. So you have 
+    //  an interface ICar, and two classes that implement it: ElectricCar and PetrolCar. 
+    //  Then, in the Main method, you create two objects: one of type ElectricCar and one 
+    //  of type PetrolCar. Then you pass those objects to the method AccelerateCar. Wait! 
+    //  This method takes ICar - how does it even compile?"  "All the magic happens in 
+    //  the Accelerate method," Noname replied. "Polymorphism gives you the ability to pass any class 
+    //  that implements the ICar interface to the method AccelerateCar. It is possible because the 
+    //  type of the argument car in the AccelerateCar method is an ICar, not a specific PetrolCar 
+    //  or ElectricCar.  "As always, Nonames first explanation was a bit too technical for me to 
+    //  grasp it all.  "Noname, does the object change when it has a different type inside of the 
+    //  method?" I asked.  "When the object electricCar, after being passed to the method as a 
+    //  parameter, has a type ICar, it is not changed, but the way the receiving side sees it 
+    //  does change. The object electricCar continues to have the type ElectricCar, and an 
+    //  object petrolCar will still be of type PetrolCar. The trick is that inside the method 
+    //  AccelerateCar, both of their types are ICar. And the best thing about it - you don't need 
+    //  to know the exact type. You operate via an interface, the same as you do with the real car. 
+    class Kinda
+    {
+        public static async Task<List<string>> ParallelPrimesAsync(Util sutil, long iPrimeLower = 1005001, long iPrimeUpper = 1005301, bool isConsoleRead = false)
+        {
+            Stopwatch timer = new Stopwatch(); timer.Start();
+            List<string> primes = new List<string>();
+            StringBuilder sb = new StringBuilder("");
+            const string ss = "";/*Console.Write*/sb.Append(" "); primes.Add(" ");
+            bool isPrime = true, isParsed = false; string pop = "";
+            if (isConsoleRead)
+            {
+                pop = Console.ReadLine();
+                isParsed = long.TryParse(pop, out iPrimeUpper);
+                if (!isParsed) { iPrimeUpper = 163; }
+            }            //Parallel.For(fromInclusive,toExclusive,ParallelOptions )
+            primes.Add($"\n@@Primes from {iPrimeLower.ToString("N0")} to {iPrimeUpper.ToString("N0")}: ");
+            sb.Append/*sutil.PrintInColor*/($"Primes from {iPrimeLower.ToString("N0")} to {iPrimeUpper.ToString("N0")}: ");
+            Parallel.For(iPrimeLower, iPrimeUpper, item =>
+                {
+                    if (item % 2 > 0)
+                    {
+                        for (long i = item - 1; i >= 2; i--)
+                        {
+                            if (item % i == 0)
+                            { isPrime = false; break; }
+                        }
+                        primes.Add($"{((isPrime) ? item.ToString("N0") + ", " : ss)}");
+                        sb.Append/*sutil.PrintInColor*/($"{((isPrime) ? item.ToString("N0") + ", " : ss)}");
+                        isPrime = true;
+                    }
+                }
+                );
+            #region ParallelFor Docs
+            /* int x = 0;
+                Parallel.For(0, 100,
+                    () => 0, //LocalInit
+                    (i, loopstate, outerlocal) =>
+                    {
+                        Parallel.For(i + 1, 100,
+                        () => 0, //LocalInit
+                            (a, loopState, innerLocal) => { return innerLocal + 1; },
+                            (innerLocal) => Interlocked.Add(ref outerlocal, innerLocal)); //Local Final
+                        return outerlocal;
+                    },
+                    (outerLocal) => Interlocked.Add(ref x, outerLocal)); //Local Final */
+
+            // Parallel.For(int fromInclusive, int toExclusive,Func<TLocal> localInit,Func<int, ParallelLoopState, TLocal, TLocal> body, Acc)
+            // static int[] _values = Enumerable.Range(0, 1000).ToArray();
+
+            //  static void Example(int x)
+            //  {
+            //      // Sum all the elements in the array.
+            //      int sum = 0;
+            //      int product = 1;
+            //      foreach (var element in _values)
+            //      {
+            //          sum += element;
+            //          product *= element;
+            //      }
+            //  }
+            //
+            //  static void Main()
+            //  {
+            //  const int max = 10;
+            //  const int inner = 100000;
+            //  var s1 = Stopwatch.StartNew();
+            //  for (int i = 0; i < max; i++)
+            //  {
+            //      Parallel.For(0, inner, Example);
+            //  }
+            //  s1.Stop();
+            //  var s2 = Stopwatch.StartNew();
+            //  for (int i = 0; i < max; i++)
+            //  {
+            //          for (int z = 0; z < inner; z++)
+            //          {
+            //              Example(z);
+            //          }
+            //      }
+            //      s2.Stop();
+            //      Console.WriteLine(((double)(s1.Elapsed.TotalMilliseconds * 1000000) / max).ToString("0.00 ns"));
+            //      Console.WriteLine(((double)(s2.Elapsed.TotalMilliseconds * 1000000) / max).ToString("0.00 ns"));
+            //      Console.Read();
+            //  }
+            //}
+
+            //Output
+
+            //11229670.00 ns Parallel.For
+            //46920150.00 ns for */
+            #endregion
+            primes.Insert(0, $"ElaspedTime = {timer.Elapsed.ToString()}            ");
+            return primes;
+        }
+        public static async Task<List<string>> GetPrimesAsync(Util sutil, long iPrimeLower = 1001001,
+         long iPrimeUpper = 1003121, bool isConsoleRead = false)
+        {
+            Stopwatch timer = new Stopwatch();timer.Start();
+            List<string> primes = new List<string>();
+            StringBuilder sb = new StringBuilder("");  //  decimal idx = -1, in1 = 0; 
+            const string ss = "";/*Console.Write*/sb.Append(" "); primes.Add(" ");
+            bool isPrime = true, isParsed = false; string pop = ""; 
+            if (isConsoleRead)
+            {
+                pop = Console.ReadLine();
+                isParsed = long.TryParse(pop, out iPrimeUpper);
+                if (!isParsed) { iPrimeUpper = 163; }
+            }
+            primes.Add($"\n@@Primes from {iPrimeLower.ToString("N0")} to {iPrimeUpper.ToString("N0")}: ");
+            sb.Append/*sutil.PrintInColor*/($"@@Primes from {iPrimeLower.ToString("N0")} to {iPrimeUpper.ToString("N0")}: ");
+            /*Parallel.*/
+            for (decimal item = iPrimeLower; item < iPrimeUpper; item += 2)
+            {
+                for (decimal i = item - 1; i >= 2; i--)
+                {
+                    if (item % i == 0)
+                    { isPrime = false; break; }
+                }
+                //if (!isConsoleRead) { sutil.PrintInColor($"{item.ToString()}"); }
+                //  if (isPrime) { sutil.PrintInColor($"==Prime"); }
+                //  else { sutil.PrintInColor($"!=Prime"); }
+                primes.Add($"{((isPrime) ? item.ToString("N0") + ", " : ss)}");
+                sb.Append/*sutil.PrintInColor*/($"{((isPrime) ? item.ToString("N0") + ", " : ss)}");
+                isPrime = true;
+            }
+            primes.Insert(0, $"ElaspedTime = {timer.Elapsed.ToString()}            ");
+            
+            return primes;
+        }
+        public static Task<List<string>>[] StartTask(Util sutil, long iPrimeLower = 10001001,
+         long iPrimeUpper = 10003001, long loopCntl = 50, bool isConsoleRead = false)
+            {                       //    int loopCntl = 50;
+            long pop = (iPrimeUpper - iPrimeLower) /*2000*/ / (loopCntl), idx = iPrimeLower;//   (idx + pop> iPrimeUpper )
+            int iAmt2Add2Idx= Convert.ToInt32(pop);
+            var tasks = /*new[]   { */ Enumerable.Range(1, iAmt2Add2Idx)
+                .Select(_ => Task<List<string>>.Factory.StartNew(() => /*GetPrimesAsync*/ParallelPrimesAsync(sutil, idx, idx += loopCntl).Result.ToList<string>()))
+                    .ToArray();
+            return tasks;
+        }
+        /*    Task<List<string>>.Factory.StartNew(() => GetPrimesAsync(sutil, 10001001, 10001101).Result.ToList<string>()),
+            Task<List<string>>.Factory.StartNew(() => GetPrimesAsync(sutil, 10001101, 10001201).Result.ToList<string>()),
+            Task<List<string>>.Factory.StartNew(() => GetPrimesAsync(sutil, 10001201, 10001301).Result.ToList<string>()),
+            Task<List<string>>.Factory.StartNew(() => GetPrimesAsync(sutil, 10001301, 10001401).Result.ToList<string>()),
+            Task<List<string>>.Factory.StartNew(() => GetPrimesAsync(sutil, 10001401, 10001501).Result.ToList<string>()),
+            Task<List<string>>.Factory.StartNew(() => GetPrimesAsync(sutil, 10001501, 10001601).Result.ToList<string>()),
+            Task<List<string>>.Factory.StartNew(() => GetPrimesAsync(sutil, 10001601, 10001701).Result.ToList<string>()),
+            Task<List<string>>.Factory.StartNew(() => GetPrimesAsync(sutil, 10001701, 10001801).Result.ToList<string>()),
+            Task<List<string>>.Factory.StartNew(() => GetPrimesAsync(sutil, 10001801, 10001901).Result.ToList<string>()),
+            Task<List<string>>.Factory.StartNew(() => GetPrimesAsync(sutil, 10001901, 10002001).Result.ToList<string>()),
+            Task<List<string>>.Factory.StartNew(() => ParallelPrimesAsync(sutil, 10002001, 10002101).Result.ToList<string>()),                
+            Task<List<string>>.Factory.StartNew(() => ParallelPrimesAsync(sutil, 10002101, 10002201).Result.ToList<string>()),
+            Task<List<string>>.Factory.StartNew(() => ParallelPrimesAsync(sutil, 10002201, 10002301).Result.ToList<string>()),
+            Task<List<string>>.Factory.StartNew(() => ParallelPrimesAsync(sutil, 10002301, 10002401).Result.ToList<string>()),
+            Task<List<string>>.Factory.StartNew(() => ParallelPrimesAsync(sutil, 10002401, 10002501).Result.ToList<string>()),
+            Task<List<string>>.Factory.StartNew(() => ParallelPrimesAsync(sutil, 10002501, 10002601).Result.ToList<string>()),
+            Task<List<string>>.Factory.StartNew(() => ParallelPrimesAsync(sutil, 10002601, 10002701).Result.ToList<string>()),
+            Task<List<string>>.Factory.StartNew(() => ParallelPrimesAsync(sutil, 10002701, 10002801).Result.ToList<string>()),
+            Task<List<string>>.Factory.StartNew(() => ParallelPrimesAsync(sutil, 10002801, 10002901).Result.ToList<string>()),
+            Task<List<string>>.Factory.StartNew(() => ParallelPrimesAsync(sutil, 10002901, 10003001).Result.ToList<string>()),
+            Task<List<string>>.Factory.StartNew(() => ParallelPrimesAsync(sutil, 10003001, 10003101).Result.ToList<string>()),
+                            }; */
+        public static StringBuilder FinishTask(Util sutil, ref Task<List<string>>[] task, StringBuilder sb)
+        {
+            foreach (var item in task)
+            {
+                if (item.IsCompleted) sutil.PrintInColor($"Task{item.Id}.IsCompleted!  ");
+                else { item.Wait(); }
+                foreach (var i in item.Result) { sb.Append($"{i.ToString()}"); }
+            }
+            return sb;
+        }
+        class Program1
+        {
+            static async Task Main(string[] args)
+            {
+                Util sutil = new Util(ConsoleColor.DarkGreen, ConsoleColor.White); //Kinda kinda = new Kinda();
+                Task<List<string>>[] task = StartTask(sutil, 10001001, 10003001, 50);               //Task<int> task1 = Task<int>.Factory.StartNew(() => 1);  int i = task1.Result;             //Task<string> pop = new Task<string>( () => { Kinda.GetPrimesAsync(sutil)/*.ConfigureAwait(false)*/; });
+                new ConsoleReadLineA();    //  Elementary C# Chapter~4-6???
+                new CSBeginChapter1WhileLoops();   //
+                new MethodsBegin1_2(); new CSBeginChapter2Arrays(); new Chap41InputValid();
+                new CSBeginChap5InfinityTypesCastOutRef(); new CSBeginningChapter6SwitchCSTest();
+                Chap1ClassObjCarUserGlass.RunNamespaceCSIChap1.RunCSIChap1();
+                ClassObjectsAndAccessors.RunCOAA();        //  RunCSIChap2
+                NullTest nullTest = new NullTest("I love my job");
+                nullTest.TestNull("10");
+                NullAndThis.RunNAT(); new PickupClasses();
+                StringBuilder sb = new StringBuilder(""); 
+                sb = FinishTask(sutil, ref task, sb);               //  sb = Kinda.FinishTask(sutil, ref task1, /*ref*/ sb);        //var daddy = task1.Result;//pop.Wait();        //sutil.PrintInColor($"task1={daddy.ToString2()};{task1.Result}");
+                sutil.PrintInColor($"{sb.ToString()}");
+            }   //  Main
+        }
+    }
 }
+ 
